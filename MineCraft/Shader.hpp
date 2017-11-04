@@ -15,7 +15,7 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
-#include <glm/glm.hpp>
+#include "glm/glm.hpp"
 
 // GLEW
 #define GLEW_STATIC

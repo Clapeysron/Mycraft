@@ -14,7 +14,6 @@
 		183E5BC91F9C3529001316C0 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 183E5BC81F9C3529001316C0 /* IOKit.framework */; };
 		183E5BCB1F9C3567001316C0 /* libGLEW.2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 183E5BCA1F9C3567001316C0 /* libGLEW.2.1.0.dylib */; };
 		183E5BCF1F9C3584001316C0 /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 183E5BCE1F9C3584001316C0 /* libglfw3.a */; };
-		183E5BD61F9C3B4F001316C0 /* Cube.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 183E5BD41F9C3B4F001316C0 /* Cube.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -41,8 +40,6 @@
 		183E5BCE1F9C3584001316C0 /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglfw3.a; path = ../../../../usr/local/lib/libglfw3.a; sourceTree = "<group>"; };
 		183E5BD01F9C368F001316C0 /* Shader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Shader.hpp; sourceTree = "<group>"; };
 		183E5BD21F9C36F6001316C0 /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
-		183E5BD41F9C3B4F001316C0 /* Cube.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cube.cpp; sourceTree = "<group>"; };
-		183E5BD51F9C3B4F001316C0 /* Cube.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Cube.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,8 +62,6 @@
 		183E5BAE1F9C34E5001316C0 = {
 			isa = PBXGroup;
 			children = (
-				183E5BD41F9C3B4F001316C0 /* Cube.cpp */,
-				183E5BD51F9C3B4F001316C0 /* Cube.hpp */,
 				183E5BB91F9C34E5001316C0 /* MineCraft */,
 				183E5BB81F9C34E5001316C0 /* Products */,
 				183E5BC11F9C34F4001316C0 /* Frameworks */,
@@ -162,7 +157,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				183E5BD61F9C3B4F001316C0 /* Cube.cpp in Sources */,
 				183E5BBB1F9C34E5001316C0 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -294,6 +288,7 @@
 				183E5BC01F9C34E5001316C0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
