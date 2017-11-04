@@ -96,8 +96,8 @@ int main()
     glViewport(0, 0, width, height);
     
     
-    Shader lightingShader("/Users/apple/Desktop/OpenGL/OpenGLBoxes/lighting.vs", "/Users/apple/Desktop/OpenGL/OpenGLBoxes/lighting.frag");
-    Shader lampShader("/Users/apple/Desktop/OpenGL/OpenGLBoxes/lamp.vs", "/Users/apple/Desktop/OpenGL/OpenGLBoxes/lamp.frag");
+    Shader lightingShader("/Users/Clapeysron/Desktop/Minecraft/lighting.vs", "/Users/Clapeysron/Desktop/Minecraft/lighting.frag");
+    Shader lampShader("/Users/Clapeysron/Desktop/Minecraft/lamp.vs", "/Users/Clapeysron/Desktop/Minecraft/lamp.frag");
     
     
     // Set up vertex data (and buffer(s)) and attribute pointers
