@@ -12,6 +12,7 @@
 #include "opengl_header.h"
 #include "game_settings.h"
 #include "Game.hpp"
+
 class Render
 {
 public:
@@ -19,12 +20,13 @@ public:
     void initial();
     void render(Game& game);
     GLFWwindow* window;
-    glm::mat4 view;
-    glm::mat4 projection;
     Shader Block_Shader;
 private:
     static float deltaTime;
     float lastFrame;
+    glm::mat4 view;
+    glm::mat4 projection;
+    static float frustumPlanes[6][4];
     static glm::vec3 cameraPos;
     static glm::vec3 cameraFront;
     static glm::vec3 cameraUp;

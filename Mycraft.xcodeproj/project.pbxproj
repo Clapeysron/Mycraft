@@ -7,13 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18A2A4951FC04A2000B4100E /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = 18A2A4941FC04A2000B4100E /* glad.c */; };
+		18A2A4971FC04B0700B4100E /* libGLEW.2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2A4961FC04B0700B4100E /* libGLEW.2.1.0.dylib */; };
+		18A2A4991FC04B2C00B4100E /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2A4981FC04B2C00B4100E /* libglfw3.a */; };
+		18A2A49B1FC10E0800B4100E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2A49A1FC10E0800B4100E /* Cocoa.framework */; };
+		18A2A49D1FC10E1000B4100E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2A49C1FC10E1000B4100E /* IOKit.framework */; };
+		18A2A49F1FC1130F00B4100E /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2A49E1FC1130F00B4100E /* CoreVideo.framework */; };
 		370EA5C51FBAC4CA0049B0EB /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 370EA5C41FBAC4C20049B0EB /* OpenGL.framework */; };
-		370EA5C71FBAC4D90049B0EB /* libGLEW.2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 370EA5C61FBAC4D90049B0EB /* libGLEW.2.1.0.dylib */; };
-		370EA5C91FBAC4E90049B0EB /* libglfw.3.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 370EA5C81FBAC4E90049B0EB /* libglfw.3.3.dylib */; };
 		37DEA6DE1FBADA0C00E6BABC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37DEA6DD1FBADA0C00E6BABC /* main.cpp */; };
 		37DEA6E41FBAE00200E6BABC /* Render.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37DEA6E31FBAE00200E6BABC /* Render.cpp */; };
 		37DEA6E71FBAE06900E6BABC /* Game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37DEA6E51FBAE06900E6BABC /* Game.cpp */; };
-		37DEA6EB1FBAE9D600E6BABC /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = 37DEA6EA1FBAE9D600E6BABC /* glad.c */; };
 		37DEA6EE1FBAEC0F00E6BABC /* Block.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37DEA6EC1FBAEC0F00E6BABC /* Block.cpp */; };
 		37DEA6F71FBB050200E6BABC /* ChunkData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37DEA6F51FBB050200E6BABC /* ChunkData.cpp */; };
 /* End PBXBuildFile section */
@@ -31,10 +34,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		18A2A4941FC04A2000B4100E /* glad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = glad.c; path = Mycraft/library/glad.c; sourceTree = SOURCE_ROOT; };
+		18A2A4961FC04B0700B4100E /* libGLEW.2.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.1.0.dylib; path = ../../../../../usr/local/lib/libGLEW.2.1.0.dylib; sourceTree = "<group>"; };
+		18A2A4981FC04B2C00B4100E /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglfw3.a; path = ../../../../../usr/local/lib/libglfw3.a; sourceTree = "<group>"; };
+		18A2A49A1FC10E0800B4100E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		18A2A49C1FC10E1000B4100E /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
+		18A2A49E1FC1130F00B4100E /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
 		370EA5B61FBAC41B0049B0EB /* Mycraft */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Mycraft; sourceTree = BUILT_PRODUCTS_DIR; };
 		370EA5C41FBAC4C20049B0EB /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
-		370EA5C61FBAC4D90049B0EB /* libGLEW.2.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.1.0.dylib; path = ../../../../usr/local/Cellar/glew/2.1.0/lib/libGLEW.2.1.0.dylib; sourceTree = "<group>"; };
-		370EA5C81FBAC4E90049B0EB /* libglfw.3.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libglfw.3.3.dylib; path = ../../../../usr/local/lib/libglfw.3.3.dylib; sourceTree = "<group>"; };
 		370EA5CA1FBAC6F20049B0EB /* opengl_header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = opengl_header.h; sourceTree = "<group>"; };
 		370EA5CD1FBAC77F0049B0EB /* stb_c_lexer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stb_c_lexer.h; sourceTree = "<group>"; };
 		370EA5CF1FBAC77F0049B0EB /* README.header.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.header.md; sourceTree = "<group>"; };
@@ -677,7 +684,6 @@
 		37DEA6E51FBAE06900E6BABC /* Game.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Game.cpp; sourceTree = "<group>"; };
 		37DEA6E81FBAE08900E6BABC /* Render.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Render.hpp; sourceTree = "<group>"; };
 		37DEA6E91FBAE09C00E6BABC /* Game.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Game.hpp; sourceTree = "<group>"; };
-		37DEA6EA1FBAE9D600E6BABC /* glad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = glad.c; path = ../../../../A4/A4/glad.c; sourceTree = "<group>"; };
 		37DEA6EC1FBAEC0F00E6BABC /* Block.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Block.cpp; sourceTree = "<group>"; };
 		37DEA6ED1FBAEC0F00E6BABC /* Block.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Block.hpp; sourceTree = "<group>"; };
 		37DEA6F11FBAF4B900E6BABC /* Block.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Block.vs; sourceTree = "<group>"; };
@@ -692,8 +698,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				370EA5C91FBAC4E90049B0EB /* libglfw.3.3.dylib in Frameworks */,
-				370EA5C71FBAC4D90049B0EB /* libGLEW.2.1.0.dylib in Frameworks */,
+				18A2A49F1FC1130F00B4100E /* CoreVideo.framework in Frameworks */,
+				18A2A49D1FC10E1000B4100E /* IOKit.framework in Frameworks */,
+				18A2A49B1FC10E0800B4100E /* Cocoa.framework in Frameworks */,
+				18A2A4991FC04B2C00B4100E /* libglfw3.a in Frameworks */,
+				18A2A4971FC04B0700B4100E /* libGLEW.2.1.0.dylib in Frameworks */,
 				370EA5C51FBAC4CA0049B0EB /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -740,6 +749,7 @@
 		370EA5C11FBAC4630049B0EB /* src */ = {
 			isa = PBXGroup;
 			children = (
+				18A2A4941FC04A2000B4100E /* glad.c */,
 				37DEA6DD1FBADA0C00E6BABC /* main.cpp */,
 				370EA5CA1FBAC6F20049B0EB /* opengl_header.h */,
 				37DEA6DF1FBADE3600E6BABC /* game_settings.h */,
@@ -749,7 +759,6 @@
 				37DEA6E81FBAE08900E6BABC /* Render.hpp */,
 				37DEA6EC1FBAEC0F00E6BABC /* Block.cpp */,
 				37DEA6ED1FBAEC0F00E6BABC /* Block.hpp */,
-				37DEA6EA1FBAE9D600E6BABC /* glad.c */,
 				37DEA6E51FBAE06900E6BABC /* Game.cpp */,
 				37DEA6E91FBAE09C00E6BABC /* Game.hpp */,
 			);
@@ -759,8 +768,11 @@
 		370EA5C31FBAC4C10049B0EB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				370EA5C81FBAC4E90049B0EB /* libglfw.3.3.dylib */,
-				370EA5C61FBAC4D90049B0EB /* libGLEW.2.1.0.dylib */,
+				18A2A49E1FC1130F00B4100E /* CoreVideo.framework */,
+				18A2A49C1FC10E1000B4100E /* IOKit.framework */,
+				18A2A49A1FC10E0800B4100E /* Cocoa.framework */,
+				18A2A4981FC04B2C00B4100E /* libglfw3.a */,
+				18A2A4961FC04B0700B4100E /* libGLEW.2.1.0.dylib */,
 				370EA5C41FBAC4C20049B0EB /* OpenGL.framework */,
 			);
 			name = Frameworks;
@@ -1687,8 +1699,8 @@
 				37DEA6F71FBB050200E6BABC /* ChunkData.cpp in Sources */,
 				37DEA6DE1FBADA0C00E6BABC /* main.cpp in Sources */,
 				37DEA6E41FBAE00200E6BABC /* Render.cpp in Sources */,
-				37DEA6EB1FBAE9D600E6BABC /* glad.c in Sources */,
 				37DEA6EE1FBAEC0F00E6BABC /* Block.cpp in Sources */,
+				18A2A4951FC04A2000B4100E /* glad.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1814,6 +1826,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -1822,6 +1835,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

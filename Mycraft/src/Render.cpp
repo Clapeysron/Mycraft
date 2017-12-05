@@ -7,7 +7,6 @@
 //
 
 #include "Render.hpp"
-#include "Game.hpp"
 
 bool Render::firstMouse = true;
 float Render::yaw   =  -90.0f;
@@ -15,7 +14,7 @@ float Render::pitch =  0.0f;
 float Render::fov   =  45.0f;
 float Render::lastX =  800.0f / 2.0;
 float Render::lastY =  600.0 / 2.0;
-glm::vec3 Render::cameraPos   = glm::vec3(0.0f, 0.0f,  20.0f);
+glm::vec3 Render::cameraPos   = glm::vec3(8.0f, 135.0f,  8.0f);
 glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 float Render::deltaTime = 0.0f;
@@ -23,8 +22,8 @@ float Render::deltaTime = 0.0f;
 Render::Render() {
     deltaTime = 0.0f;
     lastFrame = 0.0f;
-    glm::mat4 view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-    glm::mat4 projection = glm::perspective(glm::radians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+    view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    projection = glm::perspective(glm::radians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 }
 
 void Render::initial() {
@@ -44,7 +43,7 @@ void Render::initial() {
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
@@ -65,7 +64,8 @@ void Render::render(Game& game) {
     view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    char *ret = game.testchunk.readChunk();
+    game.test.draw(cameraPos, view, projection, Block_Shader);
+    /*char *ret = game.testchunk.readChunk();
     for(int i = 0; i < 256; i++)
     {
         for(int j = 0; j < 16; j++)
@@ -75,7 +75,9 @@ void Render::render(Game& game) {
                 game.block.draw(glm::vec3(0.0f+j,0.0f+i,0.0f+k), view, projection, Block_Shader, ret[256*i+16*j+k]);
             }
         }
-    }
+    }*/
+    //game.block.test(view, projection, Block_Shader);
+    
     glfwSwapBuffers(window);
     glfwPollEvents();
 }
@@ -131,4 +133,5 @@ void Render::processInput(GLFWwindow *window)
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         fov += cameraSpeed;
 }
+
 
