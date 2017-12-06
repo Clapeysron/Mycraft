@@ -13,7 +13,7 @@
 #include "Block.hpp"
 class Game {
 public:
-    VisibleChunks test = VisibleChunks(8, 135, 8);
+    VisibleChunks test = VisibleChunks(8, 125,  8);
     Chunk testchunk = Chunk(0, 0);
     Block block;
     glm::vec3 user_position;

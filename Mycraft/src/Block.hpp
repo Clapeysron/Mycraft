@@ -10,6 +10,7 @@
 #define Block_hpp
 
 #include "opengl_header.h"
+#include "game_settings.h"
 #include <vector>
 
 class Block {

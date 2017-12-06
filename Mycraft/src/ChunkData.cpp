@@ -31,7 +31,7 @@ bool SubChunk::inFrustum(int x, int y, int z){
         {
             if(frustumPlanes[i][0]*tmpx+frustumPlanes[i][1]*tmpy+frustumPlanes[i][2]*tmpz+
                frustumPlanes[i][3] > 0)
-            return true;
+                return true;
         }
     }
     return false;
@@ -68,7 +68,7 @@ void SubChunk::updateQuads(){
             for(int k = 0; k <16; k++)
             {
                 if(BlockType[i][j][k] == (char)AIR)
-                continue;
+                    continue;
                 
                 xNegType = (j == 0)? ((xNeg)? xNeg->BlockType[i][15][k]: BOUND) : BlockType[i][j-1][k];
                 xPosType = (j == 15)? ((xPos)? xPos->BlockType[i][0][k]: BOUND) : BlockType[i][j+1][k];
@@ -129,7 +129,7 @@ void SubChunk::updateQuads(int side)
             }
         }
         if(dataChange)
-            bufferObject.updateBuffer(false, &Quads[0], Quads.size()); //更新VBO绑定数据
+            bufferObject.updateBuffer(false, &Quads[0], Quads.size()); //更新VBO绑定数据*/
     }
     else if(side == RIGHT)
     {
@@ -184,7 +184,7 @@ void SubChunk::updateQuads(int side)
     }
 }
 
-//向vector中添加一个面的数据(48个float)
+//向vector中添加一个面的数据(QUAD_SIZE个float)
 void SubChunk::addVertices(int dir, int y, int x, int z)
 {
     if(dir < XNEG || dir > YPOS)
@@ -194,15 +194,15 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
         {
             Quads.reserve(Quads.size()+VECTOR_OFFSET);
         }
-        float tmp[48];
-        memcpy(tmp, vertex[dir], 48*sizeof(float));
-        for(int m = 0; m < 48; m = m+8)
+        float tmp[QUAD_SIZE];
+        memcpy(tmp, vertex[dir], QUAD_SIZE*sizeof(float));
+        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE)
         {
             tmp[m] += x+this->x;
             tmp[m+1] += y+this->y;
             tmp[m+2] += z+this->z;
         }
-        Quads.insert(Quads.end(), tmp, tmp+48);
+        Quads.insert(Quads.end(), tmp, tmp+QUAD_SIZE);
     }
 }
 
@@ -235,7 +235,7 @@ void SubChunk::adjBlocksEnqueue(){
         scanQueue.push(yNeg);
     }
     if((adjVisibility&UP) != 0 && yPos != NULL && yPos->pathHistory == 0 && (pathHistory & DOWN) == 0 /*&&
-       inFrustum(x, y+16, z)*/)
+                                                                                                       inFrustum(x, y+16, z)*/)
     {
         yPos->pathHistory |= UP|pathHistory;
         scanQueue.push(yPos);
@@ -245,9 +245,9 @@ void SubChunk::adjBlocksEnqueue(){
 //更新方块的邻接可见性（在新建区块和放置非透明区块时候调用）
 void SubChunk::updateVisibility(){
     if(count == 4096)
-    adjVisibility = NO_DIR;
+        adjVisibility = NO_DIR;
     else if(count < 256)
-    adjVisibility = ALL_DIR; //非透明方块等于4096邻接可见性均为false，小于256，所有邻接可见性均为true
+        adjVisibility = ALL_DIR; //非透明方块等于4096邻接可见性均为false，小于256，所有邻接可见性均为true
     else{
         for(int i = 0; i < 16; i++)
         {
@@ -712,7 +712,7 @@ bool VisibleChunks::updataChunks(float y, float x, float z){
             {
                 Chunks[i][j] = Chunks[i][j+1];
             }
-
+            
             delete tmp;
             Chunks[i][2*RADIUS] = new Chunk(ChunkX+(i-RADIUS)*16, ChunkZ+RADIUS*16);
         }
@@ -749,7 +749,7 @@ void VisibleChunks::updateQuads(int dir){
         {
             for(int j = 0; j < 16; j++)
             {
-                Chunks[1][i]->subChunks[j]->updateQuads(dir);
+                Chunks[1][i]->subChunks[j]->updateQuads();
                 Chunks[0][i]->subChunks[j]->updateQuads();
                 Chunks[0][i]->subChunks[j]->updateVisibility();
             }
@@ -761,7 +761,7 @@ void VisibleChunks::updateQuads(int dir){
         {
             for(int j = 0; j < 16; j++)
             {
-                Chunks[2*RADIUS-1][i]->subChunks[j]->updateQuads(dir);
+                Chunks[2*RADIUS-1][i]->subChunks[j]->updateQuads();
                 Chunks[2*RADIUS][i]->subChunks[j]->updateQuads();
                 Chunks[2*RADIUS][i]->subChunks[j]->updateVisibility();
             }
@@ -774,7 +774,7 @@ void VisibleChunks::updateQuads(int dir){
         {
             for(int j = 0; j < 16; j++)
             {
-                Chunks[i][1]->subChunks[j]->updateQuads(dir);
+                Chunks[i][1]->subChunks[j]->updateQuads();
                 Chunks[i][0]->subChunks[j]->updateQuads();
                 Chunks[i][0]->subChunks[j]->updateVisibility();
             }
@@ -787,7 +787,7 @@ void VisibleChunks::updateQuads(int dir){
         {
             for(int j = 0; j < 16; j++)
             {
-                Chunks[i][2*RADIUS-1]->subChunks[j]->updateQuads(dir);
+                Chunks[i][2*RADIUS-1]->subChunks[j]->updateQuads();
                 Chunks[i][2*RADIUS]->subChunks[j]->updateQuads();
                 Chunks[i][2*RADIUS]->subChunks[j]->updateVisibility();
             }
@@ -835,8 +835,8 @@ void VisibleChunks::updateNeighbor(int dir){
                 Chunks[2*RADIUS-1][i]->subChunks[j]->xPos = Chunks[2*RADIUS][i]->subChunks[j];
             }
             
-            Chunk *zNegChunk = (i > 0)? Chunks[0][i-1]: NULL;
-            Chunk *zPosChunk = (i < 2*RADIUS)? Chunks[0][i+1]: NULL;
+            Chunk *zNegChunk = (i > 0)? Chunks[2*RADIUS][i-1]: NULL;
+            Chunk *zPosChunk = (i < 2*RADIUS)? Chunks[2*RADIUS][i+1]: NULL;
             Chunks[2*RADIUS][i]->updateNeighbor(Chunks[2*RADIUS-1][i], NULL, zNegChunk, zPosChunk);
         }
     }
@@ -877,8 +877,8 @@ void VisibleChunks::updateNeighbor(int dir){
                 Chunks[i][2*RADIUS-1]->subChunks[j]->zPos = Chunks[i][2*RADIUS]->subChunks[j];
             }
             
-            Chunk *xNegChunk = (i > 0)? Chunks[i-1][0]: NULL;
-            Chunk *xPosChunk = (i < 2*RADIUS)? Chunks[i+1][0]: NULL;
+            Chunk *xNegChunk = (i > 0)? Chunks[i-1][2*RADIUS]: NULL;
+            Chunk *xPosChunk = (i < 2*RADIUS)? Chunks[i+1][2*RADIUS]: NULL;
             Chunks[i][2*RADIUS]->updateNeighbor(xNegChunk, xPosChunk, Chunks[i][2*RADIUS-1], NULL);
         }
     }
@@ -946,7 +946,7 @@ void VisibleChunks::getRenderingSubChunks(int y, int x, int z){
     else{
         renderQueue.push(curSubChunk);
     } //只渲染当前区块
-//    return renderQueue;
+    //    return renderQueue;
 }
 
 //洪水填充，判断是否处在一个封闭的自区块中 TODO: 判断是否处于面壁状态
@@ -958,7 +958,7 @@ bool VisibleChunks::floodFill(int y, int x, int z){
         int z;
         Coordinate(int y, int x, int z){ this->x = x; this->y = y; this->z = z;}
     };
-    stack<Coordinate *> s;
+    stack<Coordinate> s;
     Coordinate *tmp;
     const int offsety[6] = {1, -1, 0, 0, 0, 0};
     const int offsetx[6] = {0, 0, 1, -1, 0, 0};
@@ -978,11 +978,11 @@ bool VisibleChunks::floodFill(int y, int x, int z){
     
     int visited[16][16][16] = {0};
     visited[y][x][z] = 1;
-    s.push(new Coordinate(y, x, z));
+    s.push(Coordinate(y, x, z));
     
     while(!s.empty())
     {
-        tmp = s.top();
+        tmp = &s.top();
         if(tmp->x == 0 || tmp->x == 15 || tmp->y == 0 || tmp->y == 15 ||
            tmp->z == 0 || tmp->z == 15)
         {
@@ -1001,7 +1001,7 @@ bool VisibleChunks::floodFill(int y, int x, int z){
                 if((curSubChunk->BlockType[tmpy][tmpx][tmpz] & 0x80) != 0 &&
                    !visited[tmpy][tmpx][tmpz])
                 {
-                    s.push(new Coordinate(tmpy, tmpx, tmpz));
+                    s.push(Coordinate(tmpy, tmpx, tmpz));
                     visited[tmpy][tmpx][tmpz] = 1;
                 }
             }
@@ -1027,31 +1027,27 @@ void VisibleChunks::clearPathHistory(){
 
 //渲染物体
 void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader){
-    static int flag = 0;
-    static int j = 0;
     calcFrustumPlane(view, projection);
     cout<<"y:"<<(int)cameraPos.y<<" x:"<<(int)cameraPos.x<<" z:"<<(int)cameraPos.z<<endl;
     /*if(flag == 0){
-        //getRenderingSubChunks((int)cameraPos.y, (int)cameraPos.x, (int)cameraPos.z);//float为负数时候怎么rounding？？？？
-        flag = 1;
-    }*/
+     //getRenderingSubChunks((int)cameraPos.y, (int)cameraPos.x, (int)cameraPos.z);//float为负数时候怎么rounding？？？？
+     flag = 1;
+     }*/
     updataChunks((int)cameraPos.y, (int)cameraPos.x, (int)cameraPos.z);
     getRenderingSubChunks((int)cameraPos.y, (int)cameraPos.x, (int)cameraPos.z);//float为负数时候怎么rounding？？？？
     SubChunk *tmp;
-    for(; j < 0; j++){
-        renderQueue.pop();
-    }
     Block_Shader.use();
     glm::mat4 model(1);
     //model = glm::translate(model, position);
     Block_Shader.setMat4("view", view);
     Block_Shader.setMat4("projection", projection);
     Block_Shader.setMat4("model", model);
+    cout<<renderQueue.size()<<endl;
     for(int i = 0; i < renderQueue.size(); i++)
     {
         tmp = renderQueue.front();
         glBindVertexArray(tmp->bufferObject.getVAO());
-        glDrawArrays(GL_TRIANGLES, 0, (int)(tmp->Quads.size()/8));
+        glDrawArrays(GL_TRIANGLES, 0, (int)(tmp->Quads.size()/VERTEX_SIZE));
         renderQueue.pop();
         renderQueue.push(tmp);
     }

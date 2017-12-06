@@ -7,6 +7,8 @@
 //
 
 #include "Render.hpp"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb/stb_image.h"
 
 bool Render::firstMouse = true;
 float Render::yaw   =  -90.0f;
@@ -14,7 +16,7 @@ float Render::pitch =  0.0f;
 float Render::fov   =  45.0f;
 float Render::lastX =  800.0f / 2.0;
 float Render::lastY =  600.0 / 2.0;
-glm::vec3 Render::cameraPos   = glm::vec3(8.0f, 135.0f,  8.0f);
+glm::vec3 Render::cameraPos   = glm::vec3(8.0f, 125.0f,  8.0f);
 glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 float Render::deltaTime = 0.0f;
@@ -53,6 +55,25 @@ void Render::initial() {
     //glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     Block_Shader = Shader("shader/Block.vs","shader/Block.fs");
+    texture_init();
+}
+
+void Render::texture_init() {
+    glGenTextures(1, &texture_pic);
+    glBindTexture(GL_TEXTURE_2D, texture_pic);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    int width, height, nrChannels;
+    unsigned char *data = stbi_load("picture/texture_rock.png", &width, &height, &nrChannels, 0);
+    if (data) {
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    } else {
+        std::cout << "****** Failed to load texture ******" << std::endl;
+    }
+    stbi_image_free(data);
 }
 
 void Render::render(Game& game) {
@@ -64,6 +85,7 @@ void Render::render(Game& game) {
     view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glBindTexture(GL_TEXTURE_2D, texture_pic);
     game.test.draw(cameraPos, view, projection, Block_Shader);
     /*char *ret = game.testchunk.readChunk();
     for(int i = 0; i < 256; i++)

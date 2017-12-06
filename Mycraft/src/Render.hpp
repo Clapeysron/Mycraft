@@ -13,6 +13,7 @@
 #include "game_settings.h"
 #include "Game.hpp"
 
+
 class Render
 {
 public:
@@ -22,6 +23,7 @@ public:
     GLFWwindow* window;
     Shader Block_Shader;
 private:
+    unsigned int texture_pic;
     static float deltaTime;
     float lastFrame;
     glm::mat4 view;
@@ -36,6 +38,7 @@ private:
     static float fov;
     static float lastX;
     static float lastY;
+    void texture_init();
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
     static void processInput(GLFWwindow *window);
