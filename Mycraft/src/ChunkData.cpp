@@ -189,6 +189,8 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
 {
     if(dir < XNEG || dir > YPOS)
         return;
+    if(dir == YNEG)
+        int i = 1;
     else{
         if(Quads.size()+QUAD_SIZE >= Quads.capacity())
         {
@@ -458,7 +460,7 @@ float PerlinNoise(float x, float y, float persistence, int n)
     }
     return total;
 }
-
+ 
 Chunk::Chunk(int x, int z){
     this->x = x;
     this->z = z;
@@ -525,6 +527,9 @@ bool Chunk::generateMap(bool isSea, int seaLevel)
                     if(tmpHeight > height[j][k])
                     {
                         subChunks[m]->BlockType[i][j][k] = AIR;
+                    }
+                    else if(tmpHeight == height[j][k]) {
+                        subChunks[m]->BlockType[i][j][k] = GRASSLAND;
                     }
                     else if(tmpHeight > heightRock[j][k])
                     {

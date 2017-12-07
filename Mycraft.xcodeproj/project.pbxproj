@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1824F3111FD8F65400F59C9B /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1824F3101FD8F65400F59C9B /* libglfw3.a */; };
+		1824F3121FD8F66E00F59C9B /* libGLEW.2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 1824F30E1FD8F62A00F59C9B /* libGLEW.2.1.0.dylib */; };
 		18A2A4951FC04A2000B4100E /* glad.c in Sources */ = {isa = PBXBuildFile; fileRef = 18A2A4941FC04A2000B4100E /* glad.c */; };
-		18A2A4971FC04B0700B4100E /* libGLEW.2.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2A4961FC04B0700B4100E /* libGLEW.2.1.0.dylib */; };
-		18A2A4991FC04B2C00B4100E /* libglfw3.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2A4981FC04B2C00B4100E /* libglfw3.a */; };
 		18A2A49B1FC10E0800B4100E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2A49A1FC10E0800B4100E /* Cocoa.framework */; };
 		18A2A49D1FC10E1000B4100E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2A49C1FC10E1000B4100E /* IOKit.framework */; };
 		18A2A49F1FC1130F00B4100E /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2A49E1FC1130F00B4100E /* CoreVideo.framework */; };
@@ -34,9 +34,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1824F30E1FD8F62A00F59C9B /* libGLEW.2.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.1.0.dylib; path = ../../../../../../usr/local/lib/libGLEW.2.1.0.dylib; sourceTree = "<group>"; };
+		1824F3101FD8F65400F59C9B /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglfw3.a; path = ../../../../../../usr/local/lib/libglfw3.a; sourceTree = "<group>"; };
 		18A2A4941FC04A2000B4100E /* glad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = glad.c; path = Mycraft/library/glad.c; sourceTree = SOURCE_ROOT; };
-		18A2A4961FC04B0700B4100E /* libGLEW.2.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libGLEW.2.1.0.dylib; path = ../../../../../usr/local/lib/libGLEW.2.1.0.dylib; sourceTree = "<group>"; };
-		18A2A4981FC04B2C00B4100E /* libglfw3.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libglfw3.a; path = ../../../../../usr/local/lib/libglfw3.a; sourceTree = "<group>"; };
 		18A2A49A1FC10E0800B4100E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		18A2A49C1FC10E1000B4100E /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		18A2A49E1FC1130F00B4100E /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
@@ -698,11 +698,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1824F3121FD8F66E00F59C9B /* libGLEW.2.1.0.dylib in Frameworks */,
+				1824F3111FD8F65400F59C9B /* libglfw3.a in Frameworks */,
 				18A2A49F1FC1130F00B4100E /* CoreVideo.framework in Frameworks */,
 				18A2A49D1FC10E1000B4100E /* IOKit.framework in Frameworks */,
 				18A2A49B1FC10E0800B4100E /* Cocoa.framework in Frameworks */,
-				18A2A4991FC04B2C00B4100E /* libglfw3.a in Frameworks */,
-				18A2A4971FC04B0700B4100E /* libGLEW.2.1.0.dylib in Frameworks */,
 				370EA5C51FBAC4CA0049B0EB /* OpenGL.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -768,11 +768,11 @@
 		370EA5C31FBAC4C10049B0EB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				1824F3101FD8F65400F59C9B /* libglfw3.a */,
+				1824F30E1FD8F62A00F59C9B /* libGLEW.2.1.0.dylib */,
 				18A2A49E1FC1130F00B4100E /* CoreVideo.framework */,
 				18A2A49C1FC10E1000B4100E /* IOKit.framework */,
 				18A2A49A1FC10E0800B4100E /* Cocoa.framework */,
-				18A2A4981FC04B2C00B4100E /* libglfw3.a */,
-				18A2A4961FC04B0700B4100E /* libGLEW.2.1.0.dylib */,
 				370EA5C41FBAC4C20049B0EB /* OpenGL.framework */,
 			);
 			name = Frameworks;
