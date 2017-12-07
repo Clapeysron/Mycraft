@@ -72,8 +72,6 @@ public:
     //如果在边界，重新判断邻接可见性
     //直接update本块和所有邻接块
     void BlockClicked(char type, int y, int x, int z);
-    
-    
 private:
     int x;
     int y;
@@ -93,8 +91,8 @@ private:
     //Quads need rendering
     vector<float> Quads;
     Block bufferObject;
-    
     bool inFrustum(int x, int y, int z);
+    void set_texture(float* tmp, char type, int dir);
 };
 
 
@@ -107,7 +105,6 @@ public:
     bool readFile(string filePath); //TO-DO, called by initChunks or updateChunks
     bool writeFile(string filePath); //TO-DO, called by updateChunks
     char* readChunk(); //called by render(test ver)
-    
 private:
     SubChunk *subChunks[16];
     int height[16][16];
@@ -122,10 +119,7 @@ private:
     //called by updateChunks
     void updateNeighbor(Chunk *xNegChunk, Chunk *xPosChunk, Chunk *zNegChunk, Chunk *zPosChunk);
     void setCoordinate(int x, int z);
-    
-
 };
-
 
 class VisibleChunks{
 public:
@@ -137,8 +131,6 @@ public:
     SubChunk *getCurSubChunk();
     void getRenderingSubChunks(int y, int x, int z); //called by render
     void draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader);
-    
-    
 private:
     Chunk *curChunk;
     SubChunk *curSubChunk;
@@ -153,7 +145,4 @@ private:
     bool floodFill(int y, int x, int z); //called by getRenderingSubChunks，TO-DO：face-wall culling
     void calcFrustumPlane(glm::mat4 view, glm::mat4 projection);
 };
-
-
-
 #endif /* ChunkData_hpp */

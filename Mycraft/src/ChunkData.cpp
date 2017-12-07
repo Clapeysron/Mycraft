@@ -202,7 +202,26 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
             tmp[m+1] += y+this->y;
             tmp[m+2] += z+this->z;
         }
+        set_texture(tmp, SubChunk::BlockType[y][x][z], dir);
         Quads.insert(Quads.end(), tmp, tmp+QUAD_SIZE);
+    }
+}
+
+void SubChunk::set_texture(float* tmp, char type, int dir) {
+    if (type == SOIL) {
+        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE)
+        {
+            if (dir == YPOS) {
+                tmp[m+6] += GRASSLAND_TOP_X;
+                tmp[m+7] += GRASSLAND_TOP_Y;
+            } else if (dir == YNEG) {
+                tmp[m+6] += SOIL_X;
+                tmp[m+7] += SOIL_Y;
+            } else {
+                tmp[m+6] += SOIL_X;
+                tmp[m+7] += SOIL_Y;
+            }
+        }
     }
 }
 
@@ -467,7 +486,7 @@ bool Chunk::generateMap(bool isSea, int seaLevel)
     {
         for(int j = 0; j < 16; j++)
         {
-            height[i][j] = (int)(120+PerlinNoise(x+i, z+j, 0.1, 5)*64);
+            height[i][j] = (int)(120+PerlinNoise(x+i, z+j, 0.1, 5)*128);
             if(max < height[i][j])
                 max = height[i][j];
         }
@@ -480,7 +499,7 @@ bool Chunk::generateMap(bool isSea, int seaLevel)
     {
         for(int j = 0; j < 16; j++)
         {
-            int tmpHeight = (int)(115+PerlinNoise(x+i, z+j, 0.1, 5)*64);
+            int tmpHeight = (int)(115+PerlinNoise(x+i, z+j, 0.1, 5)*128);
             if(tmpHeight >= height[i][j]-SOIL_THICKNESS)
                 heightRock[i][j] = height[i][j]-SOIL_THICKNESS;
             else
@@ -927,11 +946,11 @@ void VisibleChunks::getRenderingSubChunks(int y, int x, int z){
         }
         if(curSubChunk->yNeg != NULL){
             scanQueue.push(curSubChunk->yNeg);
-            curSubChunk->yNeg->pathHistory |= UP;
+            curSubChunk->yNeg->pathHistory |= DOWN;
         }
         if(curSubChunk->yPos != NULL){
             scanQueue.push(curSubChunk->yPos);
-            curSubChunk->yPos->pathHistory |= DOWN;
+            curSubChunk->yPos->pathHistory |= UP;
         }
         while(!scanQueue.empty())
         {

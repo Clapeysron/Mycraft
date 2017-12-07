@@ -13,6 +13,7 @@
 #define SCREEN_HEIGHT 720
 
 #define QUAD_SIZE 48
+#define QUAD_FACE_SIZE 8
 #define VERTEX_SIZE 8
 
 //transparent material or model (MSB = 1)
@@ -52,5 +53,17 @@
 
 //visible region radius (TO DO: 16)
 #define RADIUS 3
+
+//texture place
+#define ROCK_X 0.3f
+#define ROCK_Y 0.0f
+#define SOIL_X 0.1f
+#define SOIL_Y 0.0f
+#define GRASSLAND_TOP_X 0.0f
+#define GRASSLAND_TOP_Y 0.0f
+#define GRASSLAND_SIDE_X 0.1f
+#define GRASSLAND_SIDE_Y 0.0f
+
+#define TRUNK 0x04
 
 #endif /* game_settings_h */
