@@ -8,56 +8,6 @@
 
 #include "Block.hpp"
 
-float vertices[QUAD_SIZE/VERTEX_SIZE][QUAD_SIZE]={
-    //Backface
-    -1.0f,-1.0f,-1.0f,0.0f,0.0f,-1.0f,0.0f,0.0f,//Bottom-left
-    1.0f,1.0f,-1.0f,0.0f,0.0f,-1.0f,1.0f,1.0f,//top-right
-    1.0f,-1.0f,-1.0f,0.0f,0.0f,-1.0f,1.0f,0.0f,//bottom-right
-    -1.0f,-1.0f,-1.0f,0.0f,0.0f,-1.0f,0.0f,0.0f,//bottom-left
-    -1.0f,1.0f,-1.0f,0.0f,0.0f,-1.0f,0.0f,1.0f,//top-left
-    1.0f,1.0f,-1.0f,0.0f,0.0f,-1.0f,1.0f,1.0f,//top-right
-    
-    //Frontface
-    -1.0f,-1.0f,1.0f,0.0f,0.0f,1.0f,0.0f,0.0f,//bottom-left
-    1.0f,-1.0f,1.0f,0.0f,0.0f,1.0f,1.0f,0.0f,//bottom-right
-    1.0f,1.0f,1.0f,0.0f,0.0f,1.0f,1.0f,1.0f,//top-right
-    -1.0f,-1.0f,1.0f,0.0f,0.0f,1.0f,0.0f,0.0f,//bottom-left
-    1.0f,1.0f,1.0f,0.0f,0.0f,1.0f,1.0f,1.0f,//top-right
-    -1.0f,1.0f,1.0f,0.0f,0.0f,1.0f,0.0f,1.0f,//top-left
-    
-    //Leftface
-    -1.0f,1.0f,1.0f,-1.0f,0.0f,0.0f,1.0f,1.0f,//top-right
-    -1.0f,1.0f,-1.0f,-1.0f,0.0f,0.0f,0.0f,1.0f,//top-left
-    -1.0f,-1.0f,-1.0f,-1.0f,0.0f,0.0f,0.0f,0.0f,//bottom-left
-    -1.0f,1.0f,1.0f,-1.0f,0.0f,0.0f,1.0f,1.0f,//top-right
-    -1.0f,-1.0f,-1.0f,-1.0f,0.0f,0.0f,0.0f,0.0f,//bottom-left
-    -1.0f,-1.0f,1.0f,-1.0f,0.0f,0.0f,1.0f,0.0f,//bottom-right
-    
-    //Rightface
-    1.0f,1.0f,1.0f,1.0f,0.0f,0.0f,0.0f,1.0f,//top-left
-    1.0f,-1.0f,-1.0f,1.0f,0.0f,0.0f,1.0f,0.0f,//botetom-right
-    1.0f,1.0f,-1.0f,1.0f,0.0f,0.0f,1.0f,1.0f,//top-right
-    1.0f,1.0f,1.0f,1.0f,0.0f,0.0f,0.0f,1.0f,//top-left
-    1.0f,-1.0f,1.0f,1.0f,0.0f,0.0f,0.0f,0.0f,//bottom-left
-    1.0f,-1.0f,-1.0f,1.0f,0.0f,0.0f,1.0f,0.0f,//bottom-right
-    
-    //Bottomface
-    -1.0f,-1.0f,-1.0f,0.0f,-1.0f,0.0f,1.0f,1.0f,//top-right
-    1.0f,-1.0f,-1.0f,0.0f,-1.0f,0.0f,0.0f,1.0f,//top-left
-    1.0f,-1.0f,1.0f,0.0f,-1.0f,0.0f,0.0f,0.0f,//bottom-left
-    -1.0f,-1.0f,-1.0f,0.0f,-1.0f,0.0f,1.0f,1.0f,//top-right
-    1.0f,-1.0f,1.0f,0.0f,-1.0f,0.0f,0.0f,0.0f,//bottom-left
-    -1.0f,-1.0f,1.0f,0.0f,-1.0f,0.0f,1.0f,0.0f,//bottom-right
-    
-    //Topface
-    -1.0f,1.0f,-1.0f,0.0f,1.0f,0.0f,0.0f,1.0f,//top-left
-    1.0f,1.0f,1.0f,0.0f,1.0f,0.0f,1.0f,0.0f,//bottom-right
-    1.0f,1.0f,-1.0f,0.0f,1.0f,0.0f,1.0f,1.0f,//top-right
-    -1.0f,1.0f,-1.0f,0.0f,1.0f,0.0f,0.0f,1.0f,//top-left
-    -1.0f,1.0f,1.0f,0.0f,1.0f,0.0f,0.0f,0.0f,//bottom-left
-    1.0f,1.0f,1.0f,0.0f,1.0f,0.0f,1.0f,0.0f//bottom-right
-};
-
 float vertex[QUAD_SIZE/VERTEX_SIZE][QUAD_SIZE] = {
     // x-
     0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
@@ -120,18 +70,18 @@ Block::Block() {
     //glBindVertexArray(VAO);
 }
 
-void Block::updateBuffer(bool isNew, float *vertices, unsigned long size) {
+void Block::updateBuffer(bool isNew, float *vertex, unsigned long size) {
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     if(isNew) {
-        glBufferData(GL_ARRAY_BUFFER, size*sizeof(float), vertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, size*sizeof(float), vertex, GL_STATIC_DRAW);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_SIZE * sizeof(float), (void*)0);
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_SIZE * sizeof(float), (void*)(6*sizeof(float)));
     }
     else {
         //glBufferData(GL_ARRAY_BUFFER, size*sizeof(float), vertices, GL_STATIC_DRAW);
         //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, size*sizeof(float), vertices);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, size*sizeof(float), vertex);
         /*void * ptr = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
         memcpy(ptr, vertices, sizeof(vertices));
         glUnmapBuffer(GL_ARRAY_BUFFER);*/
@@ -155,7 +105,7 @@ void Block::draw(glm::vec3 position, glm::mat4 view, glm::mat4 projection, Shade
     Block_Shader.setMat4("model", model);
     glBindVertexArray(VAO);
     if (type != 0) {
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof(vertices)/(VERTEX_SIZE*sizeof(float)));
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, sizeof(vertex)/(VERTEX_SIZE*sizeof(float)));
     }
 }
 
