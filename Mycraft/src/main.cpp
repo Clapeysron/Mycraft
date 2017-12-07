@@ -16,11 +16,10 @@
 
 int main(int argc, const char * argv[]) {
     Render render;
-    render.initial();
     Game game;
+    render.initial(game);
     game.testchunk.generateMap();
     while (!glfwWindowShouldClose(render.window)) {
-        
         render.render(game);
     }
     glfwTerminate();
