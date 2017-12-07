@@ -18,7 +18,7 @@ int main(int argc, const char * argv[]) {
     Render render;
     Game game;
     render.initial(game);
-    game.testchunk.generateMap();
+    game.chunk.generateMap();
     while (!glfwWindowShouldClose(render.window)) {
         render.render(game);
     }

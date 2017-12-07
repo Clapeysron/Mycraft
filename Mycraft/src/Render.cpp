@@ -38,7 +38,7 @@ Render::Render() {
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
-    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
@@ -87,7 +87,7 @@ void Render::render(Game& game) {
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glBindTexture(GL_TEXTURE_2D, texture_pic);
-    game.test.draw(game.steve_position, view, projection, Block_Shader);
+    game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader);
     /*char *ret = game.testchunk.readChunk();
     for(int i = 0; i < 256; i++)
     {
@@ -127,10 +127,10 @@ void Render::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     yoffset *= sensitivity;
     yaw += xoffset;
     pitch += yoffset;
-    if (pitch > 89.0f)
-        pitch = 89.0f;
-    if (pitch < -89.0f)
-        pitch = -89.0f;
+    if (pitch > 89.9f)
+        pitch = 89.9f;
+    if (pitch < -89.9f)
+        pitch = -89.9f;
     glm::vec3 front;
     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     front.y = sin(glm::radians(pitch));
@@ -140,19 +140,113 @@ void Render::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
 void Render::processInput(GLFWwindow *window, Game &game)
 {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
+        return;
+    }
     float cameraSpeed = 10.0 * deltaTime;
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-        game.steve_position += cameraSpeed * cameraFront;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-        game.steve_position -= cameraSpeed * cameraFront;
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        game.steve_position -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        game.steve_position += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-        fov -= cameraSpeed;
-    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-        fov += cameraSpeed;
+    if (game.game_mode == GOD_MODE) {
+        glm::vec3 cameraFront_XZ = cameraFront;
+        cameraFront_XZ.y = 0;
+        cameraFront_XZ = glm::normalize(cameraFront_XZ);
+        glm::vec3 cameraRight_XZ = glm::cross(cameraFront, cameraUp);
+        cameraRight_XZ.y = 0;
+        cameraRight_XZ = glm::normalize(cameraRight_XZ);
+        glm::vec3 cameraFront_Y = glm::vec3(0.0f, 1.0f, 0.0f);
+        
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+            game.steve_position += cameraSpeed * cameraFront_XZ;
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+            game.steve_position -= cameraSpeed * cameraFront_XZ;
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+            game.steve_position -= cameraSpeed * cameraRight_XZ;
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+            game.steve_position += cameraSpeed * cameraRight_XZ;
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+            game.steve_position += cameraSpeed * cameraFront_Y;
+        }
+        if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+            fov -= cameraSpeed*10;
+        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+            fov += cameraSpeed*10;
+    } else if (game.game_mode == NORMAL_MODE) {
+        glm::vec3 cameraFront_XZ = cameraFront;
+        glm::vec3 new_position;
+        cameraFront_XZ.y = 0;
+        cameraFront_XZ = glm::normalize(cameraFront_XZ);
+        glm::vec3 cameraRight_XZ = glm::cross(cameraFront, cameraUp);
+        cameraRight_XZ.y = 0;
+        cameraRight_XZ = glm::normalize(cameraRight_XZ);
+        glm::vec3 cameraFront_Y = glm::vec3(0.0f, 1.0f, 0.0f);
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+            new_position = game.steve_position + cameraSpeed * glm::vec3(cameraFront_XZ.x, 0.0f, 0.0f);
+            game.move(new_position);
+            new_position = game.steve_position + cameraSpeed * glm::vec3(0.0, 0.0f, cameraFront_XZ.z);
+            game.move(new_position);
+        }
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+            new_position = game.steve_position - cameraSpeed * glm::vec3(cameraFront_XZ.x, 0.0f, 0.0f);
+            game.move(new_position);
+            new_position = game.steve_position - cameraSpeed * glm::vec3(0.0, 0.0f, cameraFront_XZ.z);
+            game.move(new_position);
+        }
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+            new_position = game.steve_position - cameraSpeed * glm::vec3(cameraRight_XZ.x, 0.0f, 0.0f);
+            game.move(new_position);
+            new_position = game.steve_position - cameraSpeed * glm::vec3(0.0, 0.0f, cameraRight_XZ.z);
+            game.move(new_position);
+        }
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+            new_position = game.steve_position + cameraSpeed * glm::vec3(cameraRight_XZ.x, 0.0f, 0.0f);
+            game.move(new_position);
+            new_position = game.steve_position + cameraSpeed * glm::vec3(0.0, 0.0f, cameraRight_XZ.z);
+            game.move(new_position);
+        }
+        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+            new_position = game.steve_position + cameraSpeed/10 * glm::vec3(cameraFront_XZ.x, 0.0f, 0.0f);
+            game.move(new_position);
+            new_position = game.steve_position + cameraSpeed/10 * glm::vec3(0.0, 0.0f, cameraFront_XZ.z);
+            game.move(new_position);
+        }
+        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+            new_position = game.steve_position - cameraSpeed/10 * glm::vec3(cameraFront_XZ.x, 0.0f, 0.0f);
+            game.move(new_position);
+            new_position = game.steve_position - cameraSpeed/10 * glm::vec3(0.0, 0.0f, cameraFront_XZ.z);
+            game.move(new_position);
+        }
+        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+            new_position = game.steve_position - cameraSpeed/10 * glm::vec3(cameraRight_XZ.x, 0.0f, 0.0f);
+            game.move(new_position);
+            new_position = game.steve_position - cameraSpeed/10 * glm::vec3(0.0, 0.0f, cameraRight_XZ.z);
+            game.move(new_position);
+        }
+        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+            new_position = game.steve_position + cameraSpeed/10 * glm::vec3(cameraRight_XZ.x, 0.0f, 0.0f);
+            game.move(new_position);
+            new_position = game.steve_position + cameraSpeed/10 * glm::vec3(0.0, 0.0f, cameraRight_XZ.z);
+            game.move(new_position);
+        }
+        if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+            glm::vec3 new_position = game.steve_position;
+            new_position += cameraSpeed * cameraFront_Y;
+            game.move(new_position);
+        }
+        if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
+            glm::vec3 new_position = game.steve_position;
+            new_position -= cameraSpeed * cameraFront_Y;
+            game.move(new_position);
+        }
+        if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+            fov -= cameraSpeed*10;
+        }
+        if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        }
+        if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        }
+        if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+            fov += cameraSpeed*10;
+        }
+    }
 }

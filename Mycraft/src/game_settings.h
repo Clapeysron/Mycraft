@@ -54,6 +54,11 @@
 //visible region radius (TO DO: 16)
 #define RADIUS 3
 
+//steve radius
+#define STEVE_RADIUS 0.35
+#define STEVE_HEIGHT 1.7
+#define STEVE_EYE_HEIGHT 1.5
+
 //texture place
 #define ROCK_X 0.3f
 #define ROCK_Y 0.0f
