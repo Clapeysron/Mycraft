@@ -57,7 +57,7 @@
 //texture place
 #define ROCK_X 0.3f
 #define ROCK_Y 0.0f
-#define SOIL_X 0.1f
+#define SOIL_X 0.2f
 #define SOIL_Y 0.0f
 #define GRASSLAND_TOP_X 0.0f
 #define GRASSLAND_TOP_Y 0.0f

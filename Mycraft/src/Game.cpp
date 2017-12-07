@@ -7,3 +7,7 @@
 //
 
 #include "Game.hpp"
+
+Game::Game() {
+    steve_position = glm::vec3(8.0f, 125.0f,  8.0f);
+}

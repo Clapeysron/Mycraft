@@ -18,7 +18,7 @@ class Render
 {
 public:
     Render();
-    void initial();
+    void initial(Game& game);
     void render(Game& game);
     GLFWwindow* window;
     Shader Block_Shader;
@@ -29,7 +29,6 @@ private:
     glm::mat4 view;
     glm::mat4 projection;
     static float frustumPlanes[6][4];
-    static glm::vec3 cameraPos;
     static glm::vec3 cameraFront;
     static glm::vec3 cameraUp;
     static bool firstMouse;
@@ -41,7 +40,7 @@ private:
     void texture_init();
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
-    static void processInput(GLFWwindow *window);
+    static void processInput(GLFWwindow *window, Game& game);
 };
 
 #endif /* Render_h */
