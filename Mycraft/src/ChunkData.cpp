@@ -210,7 +210,7 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
 }
 
 void SubChunk::set_texture(float* tmp, char type, int dir) {
-    if (type == SOIL) {
+    if (type == GRASSLAND) {
         for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE)
         {
             if (dir == YPOS) {
@@ -220,14 +220,19 @@ void SubChunk::set_texture(float* tmp, char type, int dir) {
                 tmp[m+6] += SOIL_X;
                 tmp[m+7] += SOIL_Y;
             } else {
-                tmp[m+6] += SOIL_X;
-                tmp[m+7] += SOIL_Y;
+                tmp[m+6] += GRASSLAND_SIDE_X;
+                tmp[m+7] += GRASSLAND_SIDE_Y;
             }
         }
     } else if (type == ROCK) {
         for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
             tmp[m+6] += ROCK_X;
             tmp[m+7] += ROCK_Y;
+        }
+    } else if (type == SOIL) {
+        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
+            tmp[m+6] += SOIL_X;
+            tmp[m+7] += SOIL_Y;
         }
     }
 }
