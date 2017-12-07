@@ -408,11 +408,18 @@ void SubChunk::BlockClicked(char type, int y, int x, int z){
     } //如果点击方块非空，移动（部分方块不可移动，如水）
 }
 
+int prime1[OCTAVES*2] = {15731, 15791, 15761, 15749, 15727, 15731, 15791, 15761, 15749, 15797};
+int prime2[OCTAVES*2] = {789221, 789101, 789137, 789169, 789227,
+                        789221, 789101, 789137, 789169, 789251};
+int prime3[OCTAVES*2] = {1376312589, 1376312017, 1376312087, 1376312783, 1376312857,
+                        1376312589, 1376312017, 1376312087, 1376312783, 1376312689};
 
 float Noise(int x, int y){
+    static int i = 0;
     int n = x+y*57;
+    i = (i+1)%(OCTAVES);
     n = (n<<13)^n;
-    return (1.0-((n*(n*n*15731+789221)+1376312589)&0x7fffffff)/1073741824.0);
+    return (1.0-((n*(n*n*prime1[0]+prime2[0])+prime3[0])&0x7fffffff)/1073741824.0);
 }
 
 float SmoothedNoise(int x, int y)
@@ -425,7 +432,7 @@ float SmoothedNoise(int x, int y)
 
 float Interpolate(float a, float b, float x)
 {
-    float ft = x*M_PI;
+    float ft = x*3.1415926;
     float f = (1-cos(ft))*0.5;
     return a*(1-f)+b*f;
 }
@@ -434,8 +441,14 @@ float Interpolate(float a, float b, float x)
 float InterpolatedNoise(float x, float y)
 {
     int integerX = int(x);
+    if(x < 0){
+        integerX--;
+    }
     float fractionalX = x-integerX;
     int integerY = int(y);
+    if(y < 0){
+        integerY--;
+    }
     float fractionalY = y-integerY;
     float v1 = SmoothedNoise(integerX, integerY);
     float v2 = SmoothedNoise(integerX+1, integerY);
@@ -448,19 +461,15 @@ float InterpolatedNoise(float x, float y)
 
 
 //persistence越接近1，波动越明显；n代表需要叠加的倍频数
-float PerlinNoise(float x, float y, float persistence, int n)
+float PerlinNoise(float x, float y)
 {
     float total = 0;
-    x = 0.01*x;
-    y = 0.01*y;
-    if(persistence<0.0 || persistence>1.0)
-    {
-        return -1;
-    }
-    for(int i = 0; i < n; i++)
+    x = x*0.1;
+    y = y*0.1;
+    for(int i = 0; i < OCTAVES; i++)
     {
         float frequency = pow(2, i);
-        float amplitude = pow(persistence, i);
+        float amplitude = pow(PERSISTENCE, i);
         total = total + InterpolatedNoise(x*frequency, y*frequency)*amplitude;//frequence越大，起伏越小
     }
     return total;
@@ -493,7 +502,7 @@ bool Chunk::generateMap(bool isSea, int seaLevel)
     {
         for(int j = 0; j < 16; j++)
         {
-            height[i][j] = (int)(120+PerlinNoise(x+i, z+j, 0.1, 5)*128);
+            height[i][j] = (int)(120+PerlinNoise(x+i, z+j)*32);
             if(max < height[i][j])
                 max = height[i][j];
         }
@@ -506,7 +515,7 @@ bool Chunk::generateMap(bool isSea, int seaLevel)
     {
         for(int j = 0; j < 16; j++)
         {
-            int tmpHeight = (int)(115+PerlinNoise(x+i, z+j, 0.1, 5)*128);
+            int tmpHeight = (int)(115+PerlinNoise(x+i, z+j)*32);
             if(tmpHeight >= height[i][j]-SOIL_THICKNESS)
                 heightRock[i][j] = height[i][j]-SOIL_THICKNESS;
             else
