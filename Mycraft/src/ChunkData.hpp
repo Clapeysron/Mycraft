@@ -21,6 +21,9 @@
 #include "opengl_header.h"
 #include "game_settings.h"
 
+#define PERSISTENCE 0.1f  //(0.0f, 1.0f)
+#define OCTAVES 5
+
 class Render;
 
 using namespace std;
