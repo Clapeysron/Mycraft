@@ -134,6 +134,7 @@ public:
     SubChunk *getCurSubChunk();
     void getRenderingSubChunks(int y, int x, int z); //called by render
     void draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader);
+    char getBlockType(int y, int x, int z);
 private:
     Chunk *curChunk;
     SubChunk *curSubChunk;
