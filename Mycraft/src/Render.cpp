@@ -82,6 +82,7 @@ void Render::render(Game& game) {
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
     processInput(window, game);
+    game.gravity_move();
     projection = glm::perspective(glm::radians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
     view = glm::lookAt(game.steve_position, game.steve_position + cameraFront, cameraUp);
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
@@ -144,7 +145,7 @@ void Render::processInput(GLFWwindow *window, Game &game)
         glfwSetWindowShouldClose(window, true);
         return;
     }
-    float cameraSpeed = 10.0 * deltaTime;
+    float cameraSpeed = 6.0 * deltaTime;
     if (game.game_mode == GOD_MODE) {
         glm::vec3 cameraFront_XZ = cameraFront;
         cameraFront_XZ.y = 0;
@@ -227,9 +228,9 @@ void Render::processInput(GLFWwindow *window, Game &game)
             game.move(new_position);
         }
         if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-            glm::vec3 new_position = game.steve_position;
-            new_position += cameraSpeed * cameraFront_Y;
-            game.move(new_position);
+            if (game.vertical_v == 0) {
+                game.vertical_v = JUMP_V/16.0f ;
+            }
         }
         if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
             glm::vec3 new_position = game.steve_position;

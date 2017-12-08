@@ -25,7 +25,9 @@ public:
     Game_mode game_mode;
     glm::vec3 user_position;
     glm::vec3 steve_position;
+    float vertical_v;
     bool move(glm::vec3 new_postions);
+    bool gravity_move();
 private:
     bool if_in_block(int x, int y, int z, glm::vec3 position);
 };

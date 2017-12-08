@@ -54,6 +54,10 @@
 //visible region radius (TO DO: 16)
 #define RADIUS 3
 
+//gravity
+#define GRAVITY 9.8
+#define JUMP_V 3
+
 //steve radius
 #define STEVE_RADIUS 0.35
 #define STEVE_HEIGHT 1.7
