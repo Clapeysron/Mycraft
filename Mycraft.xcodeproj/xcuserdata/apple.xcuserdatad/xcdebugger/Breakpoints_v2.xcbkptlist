@@ -78,7 +78,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "235"
-            endingLineNumber = "235">
+            endingLineNumber = "235"
+            landmarkName = "SubChunk::set_texture(float* tmp, char type, int dir)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -316,7 +318,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "924"
-            endingLineNumber = "924">
+            endingLineNumber = "924"
+            landmarkName = "VisibleChunks::updateNeighbor(int dir)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -634,7 +638,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1052"
-            endingLineNumber = "1052">
+            endingLineNumber = "1052"
+            landmarkName = "VisibleChunks::floodFill(int y, int x, int z)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

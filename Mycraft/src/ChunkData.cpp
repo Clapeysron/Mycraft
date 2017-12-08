@@ -1110,14 +1110,19 @@ void VisibleChunks::calcFrustumPlane(glm::mat4 view, glm::mat4 projection){
 
 char VisibleChunks::getBlockType(int y, int x, int z){
     int yIndex = y/16;
-    int xIndex = (x-curChunk->x)/16+RADIUS;
-    int zIndex = (z-curChunk->z)/16+RADIUS;
+    
+    int xOffset = x-Chunks[0][0]->x;
+    int xIndex = xOffset/16;
+    
+    int zOffset = z-Chunks[0][0]->z;
+    int zIndex = (zOffset)/16;
+    
     if(yIndex < 0 || yIndex > 15 ||
        xIndex < 0 || xIndex > 2*RADIUS ||
        zIndex < 0 || zIndex > 2*RADIUS)
         return 0;
     else
-        return Chunks[xIndex][zIndex]->subChunks[yIndex]->BlockType[y%16][x%16][z%16];
+        return Chunks[xIndex][zIndex]->subChunks[yIndex]->BlockType[y%16][xOffset%16][zOffset%16];
 }
 
 
