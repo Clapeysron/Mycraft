@@ -14,6 +14,8 @@
 		18A2A49D1FC10E1000B4100E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2A49C1FC10E1000B4100E /* IOKit.framework */; };
 		18A2A49F1FC1130F00B4100E /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2A49E1FC1130F00B4100E /* CoreVideo.framework */; };
 		370EA5C51FBAC4CA0049B0EB /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 370EA5C41FBAC4C20049B0EB /* OpenGL.framework */; };
+		373C3C961FDA39C300BE4921 /* Sky.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 373C3C941FDA39C300BE4921 /* Sky.cpp */; };
+		373C3C991FDA428400BE4921 /* Stbi_load.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 373C3C971FDA428400BE4921 /* Stbi_load.cpp */; };
 		37DEA6DE1FBADA0C00E6BABC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37DEA6DD1FBADA0C00E6BABC /* main.cpp */; };
 		37DEA6E41FBAE00200E6BABC /* Render.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37DEA6E31FBAE00200E6BABC /* Render.cpp */; };
 		37DEA6E71FBAE06900E6BABC /* Game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37DEA6E51FBAE06900E6BABC /* Game.cpp */; };
@@ -678,6 +680,12 @@
 		370EA85F1FBAC77F0049B0EB /* rotate_normalized_axis.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rotate_normalized_axis.hpp; sourceTree = "<group>"; };
 		370EA8601FBAC77F0049B0EB /* projection.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = projection.inl; sourceTree = "<group>"; };
 		370EA8611FBAC77F0049B0EB /* type_aligned.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = type_aligned.hpp; sourceTree = "<group>"; };
+		373C3C921FDA37A200BE4921 /* Skybox.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Skybox.vs; sourceTree = "<group>"; };
+		373C3C931FDA37A200BE4921 /* Skybox.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Skybox.fs; sourceTree = "<group>"; };
+		373C3C941FDA39C300BE4921 /* Sky.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Sky.cpp; sourceTree = "<group>"; };
+		373C3C951FDA39C300BE4921 /* Sky.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Sky.hpp; sourceTree = "<group>"; };
+		373C3C971FDA428400BE4921 /* Stbi_load.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Stbi_load.cpp; sourceTree = "<group>"; };
+		373C3C981FDA428400BE4921 /* Stbi_load.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Stbi_load.hpp; sourceTree = "<group>"; };
 		37DEA6DD1FBADA0C00E6BABC /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = Mycraft/src/main.cpp; sourceTree = SOURCE_ROOT; };
 		37DEA6DF1FBADE3600E6BABC /* game_settings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = game_settings.h; sourceTree = "<group>"; };
 		37DEA6E31FBAE00200E6BABC /* Render.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Render.cpp; sourceTree = "<group>"; };
@@ -742,6 +750,8 @@
 			children = (
 				37DEA6F21FBAF4B900E6BABC /* Block.fs */,
 				37DEA6F11FBAF4B900E6BABC /* Block.vs */,
+				373C3C931FDA37A200BE4921 /* Skybox.fs */,
+				373C3C921FDA37A200BE4921 /* Skybox.vs */,
 			);
 			path = shader;
 			sourceTree = "<group>";
@@ -757,6 +767,10 @@
 				37DEA6F61FBB050200E6BABC /* ChunkData.hpp */,
 				37DEA6E31FBAE00200E6BABC /* Render.cpp */,
 				37DEA6E81FBAE08900E6BABC /* Render.hpp */,
+				373C3C941FDA39C300BE4921 /* Sky.cpp */,
+				373C3C951FDA39C300BE4921 /* Sky.hpp */,
+				373C3C971FDA428400BE4921 /* Stbi_load.cpp */,
+				373C3C981FDA428400BE4921 /* Stbi_load.hpp */,
 				37DEA6EC1FBAEC0F00E6BABC /* Block.cpp */,
 				37DEA6ED1FBAEC0F00E6BABC /* Block.hpp */,
 				37DEA6E51FBAE06900E6BABC /* Game.cpp */,
@@ -1701,6 +1715,8 @@
 				37DEA6E41FBAE00200E6BABC /* Render.cpp in Sources */,
 				37DEA6EE1FBAEC0F00E6BABC /* Block.cpp in Sources */,
 				18A2A4951FC04A2000B4100E /* glad.c in Sources */,
+				373C3C961FDA39C300BE4921 /* Sky.cpp in Sources */,
+				373C3C991FDA428400BE4921 /* Stbi_load.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

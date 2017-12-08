@@ -12,7 +12,7 @@
 #include "opengl_header.h"
 #include "game_settings.h"
 #include "Game.hpp"
-
+#include "Sky.hpp"
 
 class Render
 {
@@ -20,8 +20,10 @@ public:
     Render();
     void initial(Game& game);
     void render(Game& game);
+    Sky Sky;
     GLFWwindow* window;
     Shader Block_Shader;
+   
 private:
     unsigned int texture_pic;
     static float deltaTime;

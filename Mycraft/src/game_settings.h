@@ -52,7 +52,7 @@
 #define VECTOR_OFFSET 24576
 
 //visible region radius (TO DO: 16)
-#define RADIUS 3
+#define RADIUS 16
 
 //gravity
 #define GRAVITY 9.8
