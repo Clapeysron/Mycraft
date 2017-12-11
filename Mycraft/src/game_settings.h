@@ -73,6 +73,8 @@
 #define GRASSLAND_SIDE_X 0.1f
 #define GRASSLAND_SIDE_Y 0.0f
 
+#define SEA_LEVEL 120
+
 #define TRUNK 0x04
 
 #endif /* game_settings_h */

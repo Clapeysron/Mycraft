@@ -541,9 +541,13 @@ bool Chunk::generateMap(bool isSea, int seaLevel)
                 for(int k = 0; k < 16; k++)
                 {
                     int tmpHeight = i+m*16;
-                    if(tmpHeight > height[j][k])
+                    if(tmpHeight > height[j][k] && tmpHeight > SEA_LEVEL)
                     {
                         subChunks[m]->BlockType[i][j][k] = AIR;
+                    }
+                    else if(tmpHeight > height[j][k])
+                    {
+                        subChunks[m]->BlockType[i][j][k] = WATER;
                     }
                     else if(tmpHeight == height[j][k]) {
                         subChunks[m]->BlockType[i][j][k] = GRASSLAND;
