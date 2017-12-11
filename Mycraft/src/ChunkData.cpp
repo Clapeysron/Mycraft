@@ -77,27 +77,33 @@ void SubChunk::updateQuads(){
                 yNegType = (i == 0)? ((yNeg)? yNeg->BlockType[15][j][k]: BOUND) : BlockType[i-1][j][k];
                 yPosType = (i == 15)? ((yPos)? yPos->BlockType[0][j][k]: BOUND) : BlockType[i+1][j][k];
                 
-                if(yPosType & 0x80) //up
+                if((yPosType & 0x80) &&
+                   !(yPosType == (char)WATER && BlockType[i][j][k]  == (char)WATER)) //up
                 {
                     addVertices(YPOS, i, j, k);
                 } //如果相邻方块为透明或未填满，则该面为可见面
-                if(yNegType & 0x80) //down
+                if((yNegType & 0x80) &&
+                   !(yNegType == (char)WATER && BlockType[i][j][k]  == (char)WATER)) //down
                 {
                     addVertices(YNEG, i, j, k);
                 }
-                if(xPosType & 0x80) //right
+                if((xPosType & 0x80) &&
+                   !(xPosType == (char)WATER && BlockType[i][j][k]  == (char)WATER)) //right
                 {
                     addVertices(XPOS, i, j, k);
                 }
-                if(xNegType & 0x80) //left
+                if((xNegType & 0x80) &&
+                   !(xNegType == (char)WATER && BlockType[i][j][k]  == (char)WATER)) //left
                 {
                     addVertices(XNEG, i, j, k);
                 }
-                if(zPosType & 0x80) //front
+                if((zPosType & 0x80) &&
+                   !(zPosType == (char)WATER && BlockType[i][j][k]  == (char)WATER)) //front
                 {
                     addVertices(ZPOS, i, j, k);
                 }
-                if(zNegType & 0x80) //behind
+                if((zNegType & 0x80) &&
+                   !(zNegType == (char)WATER && BlockType[i][j][k]  == (char)WATER)) //behind
                 {
                     addVertices(ZNEG, i, j, k);
                 }
