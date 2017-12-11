@@ -146,7 +146,7 @@ void SubChunk::updateQuads(int side)
             }
         }
         if(dataChange)
-            bufferObject.updateBuffer(false, &Quads[0], Quads.size()); //更新VBO绑定数据
+            bufferObject.updateBuffer(false, &Quads[0], Quads.size()); //更新VBO绑定数据*/
     }
     else if(side == BEHIND)
     {
@@ -163,7 +163,7 @@ void SubChunk::updateQuads(int side)
             }
         }
         if(dataChange)
-            bufferObject.updateBuffer(false, &Quads[0], Quads.size()); //更新VBO绑定数据
+            bufferObject.updateBuffer(false, &Quads[0], Quads.size()); //更新VBO绑定数据*/
     }
     else if(side == FRONT)
     {
@@ -180,7 +180,7 @@ void SubChunk::updateQuads(int side)
             }
         }
         if(dataChange)
-            bufferObject.updateBuffer(false, &Quads[0], Quads.size()); //更新VBO绑定数据
+            bufferObject.updateBuffer(false, &Quads[0], Quads.size()); //更新VBO绑定数据*/
     }
 }
 
@@ -189,8 +189,6 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
 {
     if(dir < XNEG || dir > YPOS)
         return;
-    if(dir == YNEG)
-        int i = 1;
     else{
         if(Quads.size()+QUAD_SIZE >= Quads.capacity())
         {
