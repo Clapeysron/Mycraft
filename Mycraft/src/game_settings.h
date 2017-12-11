@@ -52,7 +52,7 @@
 #define VECTOR_OFFSET 24576
 
 //visible region radius (TO DO: 16)
-#define RADIUS 16
+#define RADIUS 7
 
 //gravity
 #define GRAVITY 9.8
@@ -60,8 +60,8 @@
 
 //steve radius
 #define STEVE_RADIUS 0.35
-#define STEVE_HEIGHT 1.7
-#define STEVE_EYE_HEIGHT 1.5
+#define STEVE_HEIGHT 1.8
+#define STEVE_EYE_HEIGHT 1.6
 
 //texture place
 #define ROCK_X 0.3f

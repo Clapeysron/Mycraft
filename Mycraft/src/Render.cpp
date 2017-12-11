@@ -66,9 +66,9 @@ void Render::texture_init() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     int width, height, nrChannels;
-    unsigned char *data = stbi_load_out("picture/texture_big.bmp", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load_out("picture/texture_big.png", &width, &height, &nrChannels, STBI_rgb_alpha_out);
     if (data) {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     } else {
         std::cout << "****** Failed to load texture ******" << std::endl;
@@ -80,8 +80,13 @@ void Render::render(Game& game) {
     float currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
+    printf("==========================\n");
+    printf("fps: %.2f\n",1.0f/deltaTime);
+    printf("view x:%.2f y:%.2f z:%.2f", cameraFront.x, cameraFront.y, cameraFront.z);
     processInput(window, game);
-    game.gravity_move();
+    if (game.game_mode == NORMAL_MODE) {
+        game.gravity_move();
+    }
     projection = glm::perspective(glm::radians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
     view = glm::lookAt(game.steve_position, game.steve_position + cameraFront, cameraUp);
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
@@ -189,13 +194,17 @@ void Render::processInput(GLFWwindow *window, Game &game)
         game.move(new_position);
     }
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
-        if (game.vertical_v == 0) {
-            game.vertical_v = JUMP_V/19.0f ;
+        if (game.game_mode == NORMAL_MODE) {
+            if (game.vertical_v == 0) {
+                game.vertical_v = JUMP_V/19.0f ;
+            }
+        } else {
+            new_position = game.steve_position + cameraSpeed * cameraFront_Y;
+            game.move(new_position);
         }
     }
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS) {
-        glm::vec3 new_position = game.steve_position;
-        new_position -= cameraSpeed * cameraFront_Y;
+        new_position = game.steve_position - cameraSpeed * cameraFront_Y;
         game.move(new_position);
     }
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
@@ -206,6 +215,12 @@ void Render::processInput(GLFWwindow *window, Game &game)
     }
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
+    if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
+        game.game_mode = GOD_MODE;
+    }
+    if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS) {
+        game.game_mode = NORMAL_MODE;
     }
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
         fov += cameraSpeed*10;
