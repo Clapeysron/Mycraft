@@ -72,8 +72,10 @@
 #define GRASSLAND_TOP_Y 0.0f
 #define GRASSLAND_SIDE_X 0.1f
 #define GRASSLAND_SIDE_Y 0.0f
+#define WATER_X 0.9f
+#define WATER_Y 0.1f
 
-#define SEA_LEVEL 120
+#define SEA_LEVEL 115
 
 #define TRUNK 0x04
 

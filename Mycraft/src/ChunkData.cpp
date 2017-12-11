@@ -207,33 +207,7 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
     }
 }
 
-void SubChunk::set_texture(float* tmp, char type, int dir) {
-    if (type == GRASSLAND) {
-        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE)
-        {
-            if (dir == YPOS) {
-                tmp[m+6] += GRASSLAND_TOP_X;
-                tmp[m+7] += GRASSLAND_TOP_Y;
-            } else if (dir == YNEG) {
-                tmp[m+6] += SOIL_X;
-                tmp[m+7] += SOIL_Y;
-            } else {
-                tmp[m+6] += GRASSLAND_SIDE_X;
-                tmp[m+7] += GRASSLAND_SIDE_Y;
-            }
-        }
-    } else if (type == ROCK) {
-        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
-            tmp[m+6] += ROCK_X;
-            tmp[m+7] += ROCK_Y;
-        }
-    } else if (type == SOIL) {
-        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
-            tmp[m+6] += SOIL_X;
-            tmp[m+7] += SOIL_Y;
-        }
-    }
-}
+
 
 //广度优先搜索寻找渲染区块
 void SubChunk::adjBlocksEnqueue(){
@@ -1113,6 +1087,39 @@ void VisibleChunks::calcFrustumPlane(glm::mat4 view, glm::mat4 projection){
             frustumPlanes[i][j] = matrix[3][j]+glm::pow(-1, i)*matrix[i/2][j];
         }
     }//left, right, bottom, top, near, far
+}
+
+void SubChunk::set_texture(float* tmp, char type, int dir) {
+    if (type == GRASSLAND) {
+        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE)
+        {
+            if (dir == YPOS) {
+                tmp[m+6] += GRASSLAND_TOP_X;
+                tmp[m+7] += GRASSLAND_TOP_Y;
+            } else if (dir == YNEG) {
+                tmp[m+6] += SOIL_X;
+                tmp[m+7] += SOIL_Y;
+            } else {
+                tmp[m+6] += GRASSLAND_SIDE_X;
+                tmp[m+7] += GRASSLAND_SIDE_Y;
+            }
+        }
+    } else if (type == ROCK) {
+        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
+            tmp[m+6] += ROCK_X;
+            tmp[m+7] += ROCK_Y;
+        }
+    } else if (type == SOIL) {
+        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
+            tmp[m+6] += SOIL_X;
+            tmp[m+7] += SOIL_Y;
+        }
+    } else if (type == (char)WATER) {
+        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
+            tmp[m+6] += WATER_X;
+            tmp[m+7] += WATER_Y;
+        }
+    }
 }
 
 char VisibleChunks::getBlockType(int y, int x, int z){
