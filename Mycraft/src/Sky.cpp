@@ -65,12 +65,12 @@ void Sky::Sky_init() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
     
     std::vector<std::string> faces {
-        "picture/skybox/right.jpg",
-        "picture/skybox/left.jpg",
-        "picture/skybox/top.jpg",
-        "picture/skybox/bottom.jpg",
-        "picture/skybox/back.jpg",
-        "picture/skybox/front.jpg"
+        "picture/skybox/right.png",
+        "picture/skybox/left.png",
+        "picture/skybox/top.png",
+        "picture/skybox/bottom.png",
+        "picture/skybox/back.png",
+        "picture/skybox/front.png"
     };
     glGenTextures(1, &Skybox_pic);
     glBindTexture(GL_TEXTURE_CUBE_MAP, Skybox_pic);

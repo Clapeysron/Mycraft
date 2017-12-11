@@ -680,6 +680,8 @@
 		370EA85F1FBAC77F0049B0EB /* rotate_normalized_axis.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rotate_normalized_axis.hpp; sourceTree = "<group>"; };
 		370EA8601FBAC77F0049B0EB /* projection.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = projection.inl; sourceTree = "<group>"; };
 		370EA8611FBAC77F0049B0EB /* type_aligned.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = type_aligned.hpp; sourceTree = "<group>"; };
+		3717FF081FDD65A3008DC3F7 /* Sunlight.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Sunlight.vs; sourceTree = "<group>"; };
+		3717FF091FDD65A4008DC3F7 /* Sunlight.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Sunlight.fs; sourceTree = "<group>"; };
 		373C3C921FDA37A200BE4921 /* Skybox.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Skybox.vs; sourceTree = "<group>"; };
 		373C3C931FDA37A200BE4921 /* Skybox.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Skybox.fs; sourceTree = "<group>"; };
 		373C3C941FDA39C300BE4921 /* Sky.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Sky.cpp; sourceTree = "<group>"; };
@@ -752,6 +754,8 @@
 				37DEA6F11FBAF4B900E6BABC /* Block.vs */,
 				373C3C931FDA37A200BE4921 /* Skybox.fs */,
 				373C3C921FDA37A200BE4921 /* Skybox.vs */,
+				3717FF091FDD65A4008DC3F7 /* Sunlight.fs */,
+				3717FF081FDD65A3008DC3F7 /* Sunlight.vs */,
 			);
 			path = shader;
 			sourceTree = "<group>";

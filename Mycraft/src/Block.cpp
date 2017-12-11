@@ -76,7 +76,8 @@ void Block::updateBuffer(bool isNew, float *vertex, unsigned long size) {
     if(isNew) {
         glBufferData(GL_ARRAY_BUFFER, size*sizeof(float), vertex, GL_STATIC_DRAW);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, VERTEX_SIZE * sizeof(float), (void*)0);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_SIZE * sizeof(float), (void*)(6*sizeof(float)));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, VERTEX_SIZE * sizeof(float), (void*)(3*sizeof(float)));
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, VERTEX_SIZE * sizeof(float), (void*)(6*sizeof(float)));
     }
     else {
         //glBufferData(GL_ARRAY_BUFFER, size*sizeof(float), vertices, GL_STATIC_DRAW);
@@ -88,6 +89,7 @@ void Block::updateBuffer(bool isNew, float *vertex, unsigned long size) {
     }
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
     //glBindVertexArray(VAO);
 }
 

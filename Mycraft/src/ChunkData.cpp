@@ -1085,6 +1085,9 @@ void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projecti
     Block_Shader.setMat4("view", view);
     Block_Shader.setMat4("projection", projection);
     Block_Shader.setMat4("model", model);
+    Block_Shader.setVec3("sunlight.direction", glm::vec3(-0.4f, -1.0f, -0.6f));
+    Block_Shader.setVec3("sunlight.ambient", glm::vec3(0.4f, 0.4f, 0.4f));
+    Block_Shader.setVec3("sunlight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
     cout<<renderQueue.size()<<endl;
     for(int i = 0; i < renderQueue.size(); i++)
     {

@@ -10,6 +10,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
+
 unsigned char *stbi_load_out(char const *filename, int *x, int *y, int *comp, int req_comp) {
     return stbi_load(filename, x, y, comp, req_comp);
 }
