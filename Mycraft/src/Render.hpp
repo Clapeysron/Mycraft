@@ -14,6 +14,9 @@
 #include "Game.hpp"
 #include "Sky.hpp"
 
+#define SHADOW_WIDTH 1024
+#define SHADOW_HEIGHT 1024
+
 class Render
 {
 public:
@@ -26,6 +29,8 @@ public:
    
 private:
     unsigned int texture_pic;
+    unsigned int depthMap_fbo;
+    unsigned int depthMap_pic;
     static float deltaTime;
     float lastFrame;
     glm::mat4 view;
@@ -40,6 +45,7 @@ private:
     static float lastX;
     static float lastY;
     void texture_init();
+    void depthMap_init();
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
     static void processInput(GLFWwindow *window, Game& game);

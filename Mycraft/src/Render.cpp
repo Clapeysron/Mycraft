@@ -60,6 +60,24 @@ void Render::initial(Game &game) {
     Sky.Sky_init();
     Sky.Sky_Shader = Shader("shader/Skybox.vs", "shader/Skybox.fs");
     texture_init();
+    depthMap_init();
+}
+
+void Render::depthMap_init() {
+    glGenFramebuffers(1, &depthMap_fbo);
+    glGenTextures(1, &depthMap_pic);
+    glBindTexture(GL_TEXTURE_2D, depthMap_pic);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+                 SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMap_fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap_pic, 0);
+    glDrawBuffer(GL_NONE);
+    glReadBuffer(GL_NONE);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void Render::texture_init() {
@@ -95,6 +113,7 @@ void Render::render(Game& game) {
     view = glm::lookAt(game.steve_position, game.steve_position + cameraFront, cameraUp);
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
     game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic);
     Sky.draw(game.steve_position, view, projection);
     glfwSwapBuffers(window);
