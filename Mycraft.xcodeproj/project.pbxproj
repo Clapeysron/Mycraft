@@ -42,6 +42,10 @@
 		18A2A49A1FC10E0800B4100E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		18A2A49C1FC10E1000B4100E /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		18A2A49E1FC1130F00B4100E /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		370A40D91FDFE6AB00D7F9DF /* Depth.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Depth.vs; sourceTree = "<group>"; };
+		370A40DA1FDFE6AB00D7F9DF /* Depth.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Depth.fs; sourceTree = "<group>"; };
+		370A40DB1FE0278700D7F9DF /* Depth_debug.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Depth_debug.vs; sourceTree = "<group>"; };
+		370A40DC1FE0278700D7F9DF /* Depth_debug.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Depth_debug.fs; sourceTree = "<group>"; };
 		370EA5B61FBAC41B0049B0EB /* Mycraft */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Mycraft; sourceTree = BUILT_PRODUCTS_DIR; };
 		370EA5C41FBAC4C20049B0EB /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		370EA5CA1FBAC6F20049B0EB /* opengl_header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = opengl_header.h; sourceTree = "<group>"; };
@@ -752,6 +756,10 @@
 			children = (
 				37DEA6F21FBAF4B900E6BABC /* Block.fs */,
 				37DEA6F11FBAF4B900E6BABC /* Block.vs */,
+				370A40DC1FE0278700D7F9DF /* Depth_debug.fs */,
+				370A40DB1FE0278700D7F9DF /* Depth_debug.vs */,
+				370A40DA1FDFE6AB00D7F9DF /* Depth.fs */,
+				370A40D91FDFE6AB00D7F9DF /* Depth.vs */,
 				373C3C931FDA37A200BE4921 /* Skybox.fs */,
 				373C3C921FDA37A200BE4921 /* Skybox.vs */,
 				3717FF091FDD65A4008DC3F7 /* Sunlight.fs */,

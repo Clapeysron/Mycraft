@@ -16,6 +16,8 @@ float Render::fov   =  45.0f;
 float Render::lastX =  800.0f / 2.0;
 float Render::lastY =  600.0 / 2.0;
 float Render::deltaTime = 0.0f;
+int Render::screen_width = SCREEN_WIDTH*2;
+int Render::screen_height = SCREEN_HEIGHT*2;
 glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
@@ -29,7 +31,7 @@ Render::Render() {
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
-    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Mycraft", NULL, NULL);
+    window = glfwCreateWindow(screen_width/2, screen_height/2, "Mycraft", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -60,7 +62,9 @@ void Render::initial(Game &game) {
     Sky.Sky_init();
     Sky.Sky_Shader = Shader("shader/Skybox.vs", "shader/Skybox.fs");
     texture_init();
+    Depth_Shader = Shader("shader/Depth.vs", "shader/Depth.fs");
     depthMap_init();
+    Depth_debug_Shader = Shader("shader/Depth_debug.vs", "shader/Depth_debug.fs");
 }
 
 void Render::depthMap_init() {
@@ -98,6 +102,36 @@ void Render::texture_init() {
     stbi_image_free_out(data);
 }
 
+// FOR DEBUG !
+GLuint quadVAO = 0;
+GLuint quadVBO;
+void RenderQuad()
+{
+    if (quadVAO == 0)
+    {
+        GLfloat quadVertices[] = {
+            // Positions        // Texture Coords
+            -1.0f,  1.0f, 0.0f,  0.0f, 1.0f,
+            -1.0f, -1.0f, 0.0f,  0.0f, 0.0f,
+            1.0f,  1.0f, 0.0f,  1.0f, 1.0f,
+            1.0f, -1.0f, 0.0f,  1.0f, 0.0f,
+        };
+        // Setup plane VAO
+        glGenVertexArrays(1, &quadVAO);
+        glGenBuffers(1, &quadVBO);
+        glBindVertexArray(quadVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
+        glEnableVertexAttribArray(1);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    }
+    glBindVertexArray(quadVAO);
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    glBindVertexArray(0);
+}
+
 void Render::render(Game& game) {
     float currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;
@@ -109,20 +143,49 @@ void Render::render(Game& game) {
     if (game.game_mode == NORMAL_MODE) {
         game.gravity_move();
     }
+
+    // depth scene
+    glm::mat4 lightProjection, lightView;
+    glm::mat4 lightSpaceMatrix;
+    glm::vec3 lightPos(8.0f, 127.0f, 8.0f);
+    GLfloat near_plane = 1.0f, far_plane = 20.0f;
+    lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+    lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    lightSpaceMatrix = lightProjection * lightView;
+    Depth_Shader.use();
+    Depth_Shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+    glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+    glBindFramebuffer(GL_FRAMEBUFFER, depthMap_fbo);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    game.visibleChunks.drawDepth(Depth_Shader, texture_pic);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    // Chunks render
+    glViewport(0, 0, screen_width, screen_height);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     projection = glm::perspective(glm::radians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
     view = glm::lookAt(game.steve_position, game.steve_position + cameraFront, cameraUp);
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, lightSpaceMatrix, lightPos);
     
-    game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic);
+    // depth shadow draw DEBUG
+    Depth_debug_Shader.use();
+    Depth_debug_Shader.setFloat("near_plane", near_plane);
+    Depth_debug_Shader.setFloat("far_plane", far_plane);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, depthMap_pic);
+    //RenderQuad();
+    
+    // Draw sky box
     Sky.draw(game.steve_position, view, projection);
     glfwSwapBuffers(window);
     glfwPollEvents();
 }
 
-void Render::framebuffer_size_callback(GLFWwindow* window, int width, int height)
-{
+void Render::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
+    screen_width = width;
+    screen_height = height;
 }
 
 void Render::mouse_callback(GLFWwindow* window, double xpos, double ypos)
@@ -249,3 +312,5 @@ void Render::processInput(GLFWwindow *window, Game &game)
         fov += cameraSpeed*10;
     }
 }
+
+

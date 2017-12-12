@@ -26,8 +26,10 @@ public:
     Sky Sky;
     GLFWwindow* window;
     Shader Block_Shader;
-   
+    Shader Depth_Shader;
+    Shader Depth_debug_Shader;
 private:
+    static int screen_width, screen_height;
     unsigned int texture_pic;
     unsigned int depthMap_fbo;
     unsigned int depthMap_pic;

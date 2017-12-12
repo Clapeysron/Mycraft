@@ -90,7 +90,7 @@ void Block::updateBuffer(bool isNew, float *vertex, unsigned long size) {
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glEnableVertexAttribArray(2);
-    //glBindVertexArray(VAO);
+    glBindVertexArray(VAO);
 }
 
 Block::~Block() {

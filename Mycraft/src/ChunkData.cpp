@@ -1051,7 +1051,7 @@ void VisibleChunks::clearPathHistory(){
 }
 
 //渲染物体
-void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic){
+void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, glm::mat4 lightSpaceMatrix, glm::vec3 lightPos){
     calcFrustumPlane(view, projection);
     cout<<"y:"<<(int)cameraPos.y<<" x:"<<(int)cameraPos.x<<" z:"<<(int)cameraPos.z<<endl;
     /*if(flag == 0){
@@ -1062,17 +1062,38 @@ void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projecti
     getRenderingSubChunks((int)cameraPos.y, (int)cameraPos.x, (int)cameraPos.z);//float为负数时候怎么rounding？？？？
     SubChunk *tmp;
     Block_Shader.use();
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_pic);
-    glm::mat4 model(1);
-    //model = glm::translate(model, position);
     Block_Shader.setMat4("view", view);
     Block_Shader.setMat4("projection", projection);
-    Block_Shader.setMat4("model", model);
-    Block_Shader.setVec3("sunlight.direction", glm::vec3(-0.4f, -1.0f, -0.6f));
-    Block_Shader.setVec3("sunlight.ambient", glm::vec3(0.4f, 0.4f, 0.4f));
-    Block_Shader.setVec3("sunlight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
+    Block_Shader.setVec3("sunlight.lightPos", lightPos);
+    Block_Shader.setVec3("sunlight.ambient", glm::vec3(0.6f, 0.6f, 0.6f));
+    Block_Shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_pic);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, depthMap_pic);
     cout<<renderQueue.size()<<endl;
+    for(int i = 0; i < renderQueue.size(); i++)
+    {
+        tmp = renderQueue.front();
+        glBindVertexArray(tmp->bufferObject.getVAO());
+        glDrawArrays(GL_TRIANGLES, 0, (int)(tmp->Quads.size()/VERTEX_SIZE));
+        renderQueue.pop();
+        renderQueue.push(tmp);
+    }
+}
+
+void VisibleChunks::drawDepth(Shader& Depth_Shader, unsigned int texture_pic) {
+
+    /*if(flag == 0){
+     //getRenderingSubChunks((int)cameraPos.y, (int)cameraPos.x, (int)cameraPos.z);//float为负数时候怎么rounding？？？？
+     flag = 1;
+     }*/
+    //model = glm::translate(model, position);
+    SubChunk *tmp;
+    glm::mat4 model(1);
+    Depth_Shader.setMat4("model", model);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture_pic);
     for(int i = 0; i < renderQueue.size(); i++)
     {
         tmp = renderQueue.front();
