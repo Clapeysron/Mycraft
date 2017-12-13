@@ -17,6 +17,7 @@
 #include <queue>
 #include <vector>
 #include <stack>
+#include <map>
 #include "Block.hpp"
 #include "opengl_header.h"
 #include "game_settings.h"
@@ -39,13 +40,26 @@ static int unclickable[] = {WATER};
 static float frustumPlanes[6][4];
 
 
+class TransQuad{
+public:
+    TransQuad(int x, int y, int z, int dir) {
+        this->x = x;
+        this->y = y;
+        this->z = z;
+        this->dir = dir;
+    }
+    int x;
+    int y;
+    int z;
+    int dir;
+};
 
 class SubChunk{
     friend class Chunk;
     friend class VisibleChunks;
 public:
     SubChunk(int y, int x, int z){
-        memset(BlockType, 0, sizeof(BlockType));
+        //memset(BlockType, 0, sizeof(BlockType));
         isEmpty = true;
         count = 0;
         pathHistory = 0;
@@ -55,6 +69,7 @@ public:
         this->x = x;
         this->z = z;
     }
+    SubChunk* recycle(int y, int x, int z);
     void setPathHistory(int direction); //clear path history
     int getPathHistory(); //????????
     void updateNeighbor(SubChunk* dir[6]); //for walking update
@@ -104,6 +119,7 @@ class Chunk {
 public:
     Chunk(int x, int z);
     ~Chunk();
+    Chunk*recycle(int x, int z);
     bool generateMap(bool isSea = false, int seaLevel = 0); //called by initChunks
     bool readFile(string filePath); //TO-DO, called by initChunks or updateChunks
     bool writeFile(string filePath); //TO-DO, called by updateChunks
@@ -135,11 +151,13 @@ public:
     void getRenderingSubChunks(int y, int x, int z); //called by render
     void draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic);
     char getBlockType(int y, int x, int z);
+    void addTransQuads(int dir, int x, int y, int z);
 private:
     Chunk *curChunk;
     SubChunk *curSubChunk;
     Chunk *Chunks[2*RADIUS+1][2*RADIUS+1];
     queue<SubChunk*> renderQueue;
+    map<float, TransQuad> transQuads;
     
     void initQuads(); //called by constructor
     void initNeighbor(); //called by initQuads
