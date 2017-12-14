@@ -1065,7 +1065,7 @@ void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projecti
     Block_Shader.setMat4("view", view);
     Block_Shader.setMat4("projection", projection);
     Block_Shader.setVec3("sunlight.lightPos", lightPos);
-    Block_Shader.setVec3("sunlight.ambient", glm::vec3(0.6f, 0.6f, 0.6f));
+    Block_Shader.setVec3("sunlight.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
     Block_Shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture_pic);

@@ -59,6 +59,9 @@ void Render::initial(Game &game) {
     view = glm::lookAt(game.steve_position, game.steve_position + cameraFront, cameraUp);
     projection = glm::perspective(glm::radians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
     Block_Shader = Shader("shader/Block.vs", "shader/Block.fs");
+    Block_Shader.use();
+    Block_Shader.setInt("texture_pic", 0);
+    Block_Shader.setInt("shadowMap", 1);
     Sky.Sky_init();
     Sky.Sky_Shader = Shader("shader/Skybox.vs", "shader/Skybox.fs");
     texture_init();
@@ -147,10 +150,10 @@ void Render::render(Game& game) {
     // depth scene
     glm::mat4 lightProjection, lightView;
     glm::mat4 lightSpaceMatrix;
-    glm::vec3 lightPos(8.0f, 127.0f, 8.0f);
-    GLfloat near_plane = 1.0f, far_plane = 7.0f;
-    lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
-    lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::vec3 lightPos(8.0f, 150.0f, 8.0f);
+    GLfloat near_plane = 1.0f, far_plane = 90.0f;
+    lightProjection = glm::ortho(-30.0f, 30.0f, -30.0f, 30.0f, near_plane, far_plane);
+    lightView = glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     lightSpaceMatrix = lightProjection * lightView;
     Depth_Shader.use();
     Depth_Shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
