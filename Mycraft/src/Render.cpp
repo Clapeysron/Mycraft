@@ -148,7 +148,7 @@ void Render::render(Game& game) {
     glm::mat4 lightProjection, lightView;
     glm::mat4 lightSpaceMatrix;
     glm::vec3 lightPos(8.0f, 127.0f, 8.0f);
-    GLfloat near_plane = 1.0f, far_plane = 20.0f;
+    GLfloat near_plane = 1.0f, far_plane = 7.0f;
     lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
     lightView = glm::lookAt(lightPos, glm::vec3(0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     lightSpaceMatrix = lightProjection * lightView;
