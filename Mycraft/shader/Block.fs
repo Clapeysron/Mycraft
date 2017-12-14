@@ -41,7 +41,7 @@ void main()
     vec3 ambient = sunlight.ambient * color;
     
     vec3 lightDir = normalize(sunlight.lightPos - fs_in.FragPos);
-    float diff = max(dot(lightDir, norm), 0.0);
+    float diff = max(dot(norm, lightDir), 0.0);
     vec3 diffuse = ambient * diff;
     
     float shadow = ShadowCalculation(fs_in.FragPosLightSpace);
