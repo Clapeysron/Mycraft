@@ -8,6 +8,8 @@
 
 #include "ChunkData.hpp"
 
+
+
 inline void SubChunk::setPathHistory(int direction){
     pathHistory |= direction;
 }
@@ -73,6 +75,9 @@ void SubChunk::updateQuads(){
     
     Quads.clear();
     Quads.shrink_to_fit();
+    Water.clear();
+    Water.shrink_to_fit();
+    
     //Quads.reserve(VECTOR_OFFSET); //清空vector
     
     if(isEmpty)
@@ -94,18 +99,24 @@ void SubChunk::updateQuads(){
                 yNegType = (i == 0)? ((yNeg)? yNeg->BlockType[15][j][k]: BOUND) : BlockType[i-1][j][k];
                 yPosType = (i == 15)? ((yPos)? yPos->BlockType[0][j][k]: BOUND) : BlockType[i+1][j][k];
                 if(BlockType[i][j][k]  == (char)WATER) {
-                    if(!(yPosType == (char)WATER))
-                        addVertices(YPOS, i, j, k);//不能直接添加，不然会相互覆盖
-                    if(!(yNegType == (char)WATER))
-                        addVertices(YNEG, i, j, k);
+                    if(yPosType == (char)AIR)
+                        VisibleChunks::addTransQuads(YPOS, i+y, j+x, k+z);
+                        //addVertices(YPOS, i, j, k);
+                    /*if(!(yNegType == (char)WATER))
+                        VisibleChunks::addTransQuads(YNEG, i+y, j+x, k+z);
+                        //addVertices(YNEG, i, j, k);
                     if(!(xPosType == (char)WATER))
-                        addVertices(XPOS, i, j, k);
+                        VisibleChunks::addTransQuads(XPOS, i+y, j+x, k+z);
+                        //addVertices(XPOS, i, j, k);
                     if(!(xNegType == (char)WATER))
-                        addVertices(XNEG, i, j, k);
+                        VisibleChunks::addTransQuads(XNEG, i+y, j+x, k+z);
+                        //addVertices(XNEG, i, j, k);
                     if(!(zPosType == (char)WATER))
-                        addVertices(ZPOS, i, j, k);
+                        VisibleChunks::addTransQuads(ZPOS, i+y, j+x, k+z);
+                        //addVertices(ZPOS, i, j, k);
                     if(!(zNegType == (char)WATER))
-                        addVertices(ZNEG, i, j, k);
+                        VisibleChunks::addTransQuads(ZNEG, i+y, j+x, k+z);
+                        //addVertices(ZNEG, i, j, k);*/
                 }
                 else {
                     if(yPosType & 0x80) //up
@@ -239,8 +250,20 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
     }
 }
 
-inline void VisibleChunks::addTransQuads(int dir, int x, int y, int z) {
-    //transQuads.insert(1, new TransQuad(x, y, z, dir));
+
+inline void VisibleChunks::addTransQuads(int dir, int y, int x, int z) {
+    //transQuads.insert(transQuads.end(), new TransQuad(x, y, z, dir));
+    float tmp[QUAD_SIZE];
+    memcpy(tmp, vertex[dir], QUAD_SIZE*sizeof(float));
+    for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE)
+    {
+        tmp[m] += x;
+        tmp[m+1] += y;
+        tmp[m+2] += z;
+        tmp[m+6] += WATER_X;
+        tmp[m+7] += WATER_Y;
+    }
+    transQuads.insert(transQuads.end(), tmp, tmp+QUAD_SIZE);
 }
 
 
@@ -332,62 +355,72 @@ inline void SubChunk::setVisibility(int dir){
 //移除方块
 char SubChunk::removeBlock(int y, int x, int z){
     char type = BlockType[y][x][z];
+    if(type == (char)AIR)
+        return type;
     BlockType[y][x][z] = AIR;
+    updateQuads();
     if((type&0x80) == 0)
     {
         count--;
-        updateQuads();
         if(x == 0 && xNeg != NULL)
         {
-            xNeg->addVertices(XPOS, y, 15, z);
+            //xNeg->addVertices(XPOS, y, 15, z);
             adjVisibility |= LEFT;
-            xNeg->bufferObject.updateBuffer(false, &(xNeg->Quads[0]), xNeg->Quads.size()); //更新VBO绑定数据
+            xNeg->updateQuads();
+            //xNeg->bufferObject.updateBuffer(false, &(xNeg->Quads[0]), xNeg->Quads.size()); //更新VBO绑定数据
         }
         if(x == 15 && xPos != NULL)
         {
-            xPos->addVertices(XNEG, y, 0, z);
+            //xPos->addVertices(XNEG, y, 0, z);
             adjVisibility |= RIGHT;
-            xPos->bufferObject.updateBuffer(false, &(xPos->Quads[0]), xPos->Quads.size()); //更新VBO绑定数据
+            xPos->updateQuads();
+            //xPos->bufferObject.updateBuffer(false, &(xPos->Quads[0]), xPos->Quads.size()); //更新VBO绑定数据
         }
         if(z == 0 && zNeg != NULL)
         {
-            zNeg->addVertices(ZPOS, y, x, 15);
+            //zNeg->addVertices(ZPOS, y, x, 15);
             adjVisibility |= BEHIND;
-            zNeg->bufferObject.updateBuffer(false, &(zNeg->Quads[0]), zNeg->Quads.size()); //更新VBO绑定数据
+            zNeg->updateQuads();
+            //zNeg->bufferObject.updateBuffer(false, &(zNeg->Quads[0]), zNeg->Quads.size()); //更新VBO绑定数据
         }
         if(z == 15 && zPos != NULL)
         {
-            zPos->addVertices(ZNEG, y, x, 0);
+            //zPos->addVertices(ZNEG, y, x, 0);
             adjVisibility |= FRONT;
-            zPos->bufferObject.updateBuffer(false, &(zPos->Quads[0]), zPos->Quads.size()); //更新VBO绑定数据
+            zPos->updateQuads();
+            //zPos->bufferObject.updateBuffer(false, &(zPos->Quads[0]), zPos->Quads.size()); //更新VBO绑定数据
         }
         if(y == 0 && yNeg != NULL)
         {
-            yNeg->addVertices(YPOS, 15, x, z);
+            //yNeg->addVertices(YPOS, 15, x, z);
             adjVisibility |= DOWN;
-            yNeg->bufferObject.updateBuffer(false, &(yNeg->Quads[0]), yNeg->Quads.size()); //更新VBO绑定数据
+            yNeg->updateQuads();
+            //yNeg->bufferObject.updateBuffer(true, &(yNeg->Quads[0]), yNeg->Quads.size()); //更新VBO绑定数据
         }
         if(y == 15 && yPos != NULL)
         {
-            yPos->addVertices(YNEG, 0, x, z);
+            //yPos->addVertices(YNEG, 0, x, z);
             adjVisibility |= UP;
-            yPos->bufferObject.updateBuffer(false, &(yPos->Quads[0]), yPos->Quads.size()); //更新VBO绑定数据
+            yPos->updateQuads();
+            //yPos->bufferObject.updateBuffer(false, &(yPos->Quads[0]), yPos->Quads.size()); //更新VBO绑定数据
         }
-    }//如果方块非透明，更新子区块的可见面。如果处于边界，在相邻子区块中添加一个可见面，且设置该面的邻接可见性为true
+    }//更新子区块的可见面。如果方块非透明且处于边界，在相邻子区块中添加一个可见面，且设置该面的邻接可见性为true
     return type;
 }
 
 //放置方块(放置或移除方块后，需要更新被改变的子区块的VAO数据)
-void SubChunk::placeBlock(char type, int y, int x, int z){
-    if(type == (char)AIR)
+bool SubChunk::placeBlock(char type, int y, int x, int z){
+    if(type == (char)AIR || BlockType[y][x][z] != (char)AIR)
     {
-        return;
+        return false;
     } //如果人物手中什么都没有，不放置方块
     BlockType[y][x][z] = type;
+    if(isEmpty == true)
+        isEmpty = false;
+    updateQuads();
     if((type&0x80) == 0)
     {
         count++;
-        updateQuads();
         if(x == 0 || x == 15 || z == 0 || z == 15 || y == 0 || y == 15)
         {
             updateVisibility();
@@ -404,7 +437,8 @@ void SubChunk::placeBlock(char type, int y, int x, int z){
             yNeg->updateQuads();
         if(y == 15 && yPos != NULL)
             yPos->updateQuads();
-    } //如果放置的是非透明方块，更新子区块的可见面与临接可见性。如果方块处于边界，那么相邻的子区块也要更新可见面
+    } //更新子区块的可见面.如果放置的是非透明方块，更新子区块临接可见性。如果方块处于边界，那么相邻的子区块也要更新可见面
+    return true;
 }
 
 //子区块的某个方块被点击时，判断是放置还是移动
@@ -559,9 +593,9 @@ bool Chunk::generateMap(bool isSea, int seaLevel)
                 subChunks[m]->isEmpty = false;
                 for(int i = 0; i <16; i++){
                     if(m*16+i < seaLevel)
-                        memset(subChunks[m]->BlockType, WATER, 16*16*sizeof(char));
+                        memset(subChunks[m]->BlockType+16*16*i, WATER, 16*16*sizeof(char));
                     else
-                        memset(subChunks[m]->BlockType, AIR, 16*16*sizeof(char));
+                        memset(subChunks[m]->BlockType+16*16*i, AIR, 16*16*sizeof(char));
                 }
             }
             continue;
@@ -818,12 +852,14 @@ bool VisibleChunks::updataChunks(float y, float x, float z){
     } //向后走时，所有区块向前移动一格
     curChunk = Chunks[RADIUS][RADIUS];
     curSubChunk = curChunk->subChunks[SubChunkIndex]; //更新当前区块和子区块
+    //transQuads.clear();
     if(dir)
         updateQuads(dir); //根据移动方向，更新边界区块的可见面
     return true;
 }
 
 void VisibleChunks::updateQuads(int dir){
+    transQuads.clear();
     updateNeighbor(dir);
     if(dir == LEFT)
     {
@@ -836,7 +872,6 @@ void VisibleChunks::updateQuads(int dir){
                 Chunks[0][i]->subChunks[j]->updateVisibility();
             }
         } //只更新左边界（可见面和邻接可见性）和左边第二列（添加最左面)的可见面
-        int k = 0;
     }
     else if(dir == RIGHT)
     {
@@ -1049,21 +1084,17 @@ bool VisibleChunks::floodFill(int y, int x, int z){
             return this;
         }
     };
-    stack<Coordinate *> s;
+    queue<Coordinate *> s;
     Coordinate *tmp;
     Coordinate coordinates[16][16][16];
     const int offsety[6] = {1, -1, 0, 0, 0, 0};
     const int offsetx[6] = {0, 0, 1, -1, 0, 0};
     const int offsetz[6] = {0, 0, 0, 0, 1, -1};
     int tmpx, tmpy, tmpz;
-    
-    
     x = x%16;
     if(x < 0)
         x += 16;
-    
     y = y%16;//r如果y<0, 需要抛出异常
-    
     z = z%16;
     if(z < 0)
         z += 16;
@@ -1072,7 +1103,7 @@ bool VisibleChunks::floodFill(int y, int x, int z){
     
     while(!s.empty())
     {
-        tmp = s.top();
+        tmp = s.front();
         if(tmp->x == 0 || tmp->x == 15 || tmp->y == 0 || tmp->y == 15 ||
            tmp->z == 0 || tmp->z == 15)
         {
@@ -1115,24 +1146,33 @@ void VisibleChunks::clearPathHistory(){
 }
 
 //渲染物体
-void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic){
+void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection){
     calcFrustumPlane(view, projection);
     cout<<"y:"<<(int)cameraPos.y<<" x:"<<(int)cameraPos.x<<" z:"<<(int)cameraPos.z<<endl;
     updataChunks((int)cameraPos.y, (int)cameraPos.x, (int)cameraPos.z);
-    getRenderingSubChunks((int)cameraPos.y, (int)cameraPos.x, (int)cameraPos.z);//float为负数时候怎么rounding？？？？
-    SubChunk *tmp;
     Block_Shader.use();
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, texture_pic);
-    glm::mat4 model(1);
     //model = glm::translate(model, position);
     Block_Shader.setMat4("view", view);
     Block_Shader.setMat4("projection", projection);
-    Block_Shader.setMat4("model", model);
     Block_Shader.setVec3("sunlight.direction", glm::vec3(-0.4f, -1.0f, -0.6f));
     Block_Shader.setVec3("sunlight.ambient", glm::vec3(0.4f, 0.4f, 0.4f));
     Block_Shader.setVec3("sunlight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
-    cout<<renderQueue.size()<<endl;
+    drawNormQuads(cameraPos, Block_Shader);
+    //drawTransQuads(cameraPos, Block_Shader);
+}
+
+void VisibleChunks::drawDepth(Shader& Depth_Shader, unsigned int texture_pic) {
+
+    /*if(flag == 0){
+     //getRenderingSubChunks((int)cameraPos.y, (int)cameraPos.x, (int)cameraPos.z);//float为负数时候怎么rounding？？？？
+     flag = 1;
+     }*/
+    //model = glm::translate(model, position);
+    SubChunk *tmp;
+    glm::mat4 model(1);
+    Depth_Shader.setMat4("model", model);
     for(int i = 0; i < renderQueue.size(); i++)
     {
         tmp = renderQueue.front();
@@ -1188,6 +1228,49 @@ void SubChunk::set_texture(float* tmp, char type, int dir) {
     }
 }
 
+void VisibleChunks::drawNormQuads(glm::vec3 cameraPos, Shader& Block_Shader){
+    SubChunk *tmp;
+    glm::mat4 model(1);
+    Block_Shader.setMat4("model", model);
+    getRenderingSubChunks((int)cameraPos.y, (int)cameraPos.x, (int)cameraPos.z);//float为负数时候怎么rounding？？？？
+    for(int i = 0; i < renderQueue.size(); i++)
+    {
+        tmp = renderQueue.front();
+        glBindVertexArray(tmp->bufferObject.getVAO());
+        glDrawArrays(GL_TRIANGLES, 0, (int)(tmp->Quads.size()/VERTEX_SIZE));
+        renderQueue.pop();
+        renderQueue.push(tmp);
+    }
+}
+
+void VisibleChunks::drawTransQuads(glm::vec3 cameraPos, Shader& Block_Shader){
+    Block *tmp = new Block();
+    glm::mat4 model(1);
+    Block_Shader.setMat4("model", model);
+    cout<<transQuads.size()<<endl;
+    tmp->updateBuffer(true, &transQuads[0], transQuads.size());
+    glBindVertexArray(tmp->getVAO());
+    glDrawArrays(GL_TRIANGLES, 0, (int)(transQuads.size()/VERTEX_SIZE));
+    /*
+     map<float, TransQuad*> sorted;
+     for(int i = 0; i < transQuads.size(); i++){
+        float distance = glm::length(cameraPos-transQuads[i]->pos);
+        sorted[distance] = transQuads[i];
+    }
+    for(map<float,TransQuad*>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
+    {
+        tmp->updateBuffer(true, it->second->vertices, QUAD_SIZE);
+        glBindVertexArray(tmp->getVAO());
+        glDrawArrays(GL_TRIANGLES, 0, QUAD_SIZE/VERTEX_SIZE);
+    }*/
+    /*for(int i = 0; i < transQuads.size(); i+=QUAD_SIZE) {
+        tmp->updateBuffer(true, &transQuads[i], QUAD_SIZE);
+        glBindVertexArray(tmp->getVAO());
+        glDrawArrays(GL_TRIANGLES, 0, QUAD_SIZE/VERTEX_SIZE);
+    }*/
+    delete tmp;
+}
+
 char VisibleChunks::getBlockType(int y, int x, int z){
     int yIndex = y/16;
     
@@ -1203,6 +1286,87 @@ char VisibleChunks::getBlockType(int y, int x, int z){
         return 0;
     else
         return Chunks[xIndex][zIndex]->subChunks[yIndex]->BlockType[y%16][xOffset%16][zOffset%16];
+}
+
+bool VisibleChunks::placeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront, char type) {
+    glm::vec3 clickPos = cameraPos;
+    if(type == (char)AIR){
+        return false;
+    }
+    
+    for(int i = 0; i < STEVE_FETCH_RADIUS; i++){
+        clickPos += cameraFront;
+        int x = (clickPos.x >= 0)? (int)clickPos.x : (int)clickPos.x-1;
+        int y = (clickPos.y >= 0)? (int)clickPos.y : (int)clickPos.y-1;
+        int z = (clickPos.z >= 0)? (int)clickPos.z : (int)clickPos.z-1;
+        
+        if(getBlockType(y, x, z) == (char)AIR)
+            continue; //必须有相邻块
+        
+        float shortest = 100.0f;
+        int side = 0;
+        int coefficient[6][3] = {{0, 1, 0}, {0, 1, 0}, {0, 0, 1}, {0, 0, 1}, {1, 0, 0}, {1, 0, 0}};
+        float addition[6][3] = {{0, 0, 0}, {0, 1, 0}, {0, 0, 0}, {0, 0, 1}, {0, 0, 0}, {1, 0, 0}};
+        int offset[6][3] = {{0, -1, 0}, {0, 1, 0}, {0, 0, -1}, {0, 0, 1}, {-1, 0, 0}, {1, 0, 0}};
+        for(int j = 0; j < 6; j++){
+            float distance = coefficient[j][1]*glm::abs((addition[j][1]+x-cameraPos.x)/cameraFront.x) +
+            coefficient[j][2]*glm::abs((addition[j][2]+z-cameraPos.z)/cameraFront.z) +
+            coefficient[j][0]*glm::abs((addition[j][0]+y-cameraPos.y)/cameraFront.y);
+            float xOffset = cameraPos.x+distance*cameraFront.x-x;
+            float yOffset = cameraPos.y+distance*cameraFront.y-y;
+            float zOffset = cameraPos.z+distance*cameraFront.z-z;
+            if(distance < shortest && 0 <= xOffset && xOffset <= 1 &&
+               0 <= yOffset && yOffset <= 1 &&
+               0 <= zOffset && zOffset <= 1){
+                shortest = distance;
+                side = j;
+            }
+        }
+        x += offset[side][1];
+        z += offset[side][2];
+        y += offset[side][0];
+        
+        
+        if((cameraPos.x+STEVE_RADIUS >= x && cameraPos.x-STEVE_RADIUS <= x+1) &&
+           (cameraPos.y+STEVE_HEIGHT-STEVE_EYE_HEIGHT >= y && cameraPos.y-STEVE_EYE_HEIGHT <= y+1) &&
+           (cameraPos.z+STEVE_RADIUS >= z && cameraPos.z-STEVE_RADIUS <= z+1))
+            continue; //不能和人物重合
+        
+        
+        int yIndex = y/16;
+        
+        int xOffset = x-Chunks[0][0]->x;
+        int xIndex = xOffset/16;
+        
+        int zOffset = z-Chunks[0][0]->z;
+        int zIndex = (zOffset)/16;
+
+        if(Chunks[xIndex][zIndex]->subChunks[yIndex]->placeBlock(type, y%16, xOffset%16, zOffset%16))
+            return true;
+    }
+    return false;
+}
+
+char VisibleChunks::removeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront) {
+    glm::vec3 clickPos = cameraPos;
+    for(int i = 0; i < STEVE_FETCH_RADIUS; i++){
+        clickPos += cameraFront;
+        int x = (clickPos.x >= 0)? (int)clickPos.x : (int)clickPos.x-1;
+        int y = (clickPos.y >= 0)? (int)clickPos.y : (int)clickPos.y-1;
+        int z = (clickPos.z >= 0)? (int)clickPos.z : (int)clickPos.z-1;
+        
+        int yIndex = y/16;
+        
+        int xOffset = x-Chunks[0][0]->x;
+        int xIndex = xOffset/16;
+        
+        int zOffset = z-Chunks[0][0]->z;
+        int zIndex = (zOffset)/16;
+        char type = Chunks[xIndex][zIndex]->subChunks[yIndex]->removeBlock(y%16, xOffset%16, zOffset%16);
+        if(type != (char)AIR)
+            return type;
+    }
+    return (char)AIR;
 }
 
 

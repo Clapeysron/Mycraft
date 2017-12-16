@@ -14,6 +14,9 @@
 #include "Game.hpp"
 #include "Sky.hpp"
 
+#define SHADOW_WIDTH 9600
+#define SHADOW_HEIGHT 9600
+
 class Render
 {
 public:
@@ -23,9 +26,15 @@ public:
     Sky Sky;
     GLFWwindow* window;
     Shader Block_Shader;
-   
+    Shader Depth_Shader;
+    Shader Depth_debug_Shader;
+    Shader Steve_Shader;
+    Model steve_model;
 private:
+    static int screen_width, screen_height;
     unsigned int texture_pic;
+    unsigned int depthMap_fbo;
+    unsigned int depthMap_pic;
     static float deltaTime;
     float lastFrame;
     glm::mat4 view;
@@ -39,9 +48,13 @@ private:
     static float fov;
     static float lastX;
     static float lastY;
+    static bool tryRemove;
+    static bool tryPlace;
     void texture_init();
+    void depthMap_init();
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+    static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
     static void processInput(GLFWwindow *window, Game& game);
 };
 

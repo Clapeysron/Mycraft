@@ -51,7 +51,7 @@
 //vector reverse size
 #define VECTOR_OFFSET 24576
 
-//visible region radius (TO DO: 16)
+//visible region radius
 #define RADIUS 7
 
 //gravity
@@ -62,6 +62,7 @@
 #define STEVE_RADIUS 0.35
 #define STEVE_HEIGHT 1.8
 #define STEVE_EYE_HEIGHT 1.6
+#define STEVE_FETCH_RADIUS 4
 
 //texture place
 #define ROCK_X 0.3f
