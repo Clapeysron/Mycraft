@@ -989,18 +989,13 @@ bool VisibleChunks::floodFill(int y, int x, int z){
     const int offsetx[6] = {0, 0, 1, -1, 0, 0};
     const int offsetz[6] = {0, 0, 0, 0, 1, -1};
     int tmpx, tmpy, tmpz;
-    
-    
     x = x%16;
     if(x < 0)
         x += 16;
-    
     y = y%16;//r如果y<0, 需要抛出异常
-    
     z = z%16;
     if(z < 0)
         z += 16;
-    
     int visited[16][16][16] = {0};
     visited[y][x][z] = 1;
     s.push(Coordinate(y, x, z));
@@ -1051,7 +1046,7 @@ void VisibleChunks::clearPathHistory(){
 }
 
 //渲染物体
-void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, glm::mat4 lightSpaceMatrix, glm::vec3 lightPos){
+void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection){
     calcFrustumPlane(view, projection);
     cout<<"y:"<<(int)cameraPos.y<<" x:"<<(int)cameraPos.x<<" z:"<<(int)cameraPos.z<<endl;
     /*if(flag == 0){
@@ -1064,13 +1059,13 @@ void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projecti
     Block_Shader.use();
     Block_Shader.setMat4("view", view);
     Block_Shader.setMat4("projection", projection);
-    Block_Shader.setVec3("sunlight.lightPos", lightPos);
+    Block_Shader.setVec3("sunlight.lightDirection", lightDirection);
     Block_Shader.setVec3("sunlight.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
     Block_Shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_pic);
+    glBindTexture(GL_TEXTURE_2D, texture_pic);
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, depthMap_pic);
+    glBindTexture(GL_TEXTURE_2D, depthMap_pic);
     cout<<renderQueue.size()<<endl;
     for(int i = 0; i < renderQueue.size(); i++)
     {
@@ -1092,8 +1087,6 @@ void VisibleChunks::drawDepth(Shader& Depth_Shader, unsigned int texture_pic) {
     SubChunk *tmp;
     glm::mat4 model(1);
     Depth_Shader.setMat4("model", model);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture_pic);
     for(int i = 0; i < renderQueue.size(); i++)
     {
         tmp = renderQueue.front();

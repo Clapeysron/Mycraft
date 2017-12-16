@@ -11,7 +11,7 @@ in VS_OUT {
 } fs_in;
 
 struct Sunlight {
-    vec3 lightPos;
+    vec3 lightDirection;
     vec3 ambient;
 };
 
@@ -28,7 +28,24 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     // get depth of current fragment from light's perspective
     float currentDepth = projCoords.z;
     // check whether current frag pos is in shadow
-    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+    vec3 normal = normalize(fs_in.Normal);
+    vec3 lightDir = normalize(-sunlight.lightDirection);
+    float bias = max(0.0005 * (1.0 - dot(normal, lightDir)), 0.0005);
+
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(shadowMap, projCoords.xy + vec2(x, y) * texelSize).r;
+            shadow += currentDepth - bias > pcfDepth  ? 1.0 : 0.0;
+        }
+    }
+    shadow /= 9.0;
+    if(projCoords.z > 1.0)
+        shadow = 0.0;
+    //float shadow = (currentDepth - 0.0005) > closestDepth  ? 1.0 : 0.0;
     return shadow;
 }
 
@@ -37,17 +54,14 @@ void main()
     vec3 color = texture(texture_pic, fs_in.TexCoord).rgb;
     float alpha = texture(texture_pic, fs_in.TexCoord).a;
     vec3 norm = normalize(fs_in.Normal);
-    
-    vec3 ambient = sunlight.ambient * color;
-    
-    vec3 lightDir = normalize(sunlight.lightPos - fs_in.FragPos);
-    float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = ambient * diff;
+    vec3 lightDir = normalize(-sunlight.lightDirection);
+    float diff = max(dot(lightDir, norm), 0.0);
+    vec3 diffuse = sunlight.ambient * diff;
     
     float shadow = ShadowCalculation(fs_in.FragPosLightSpace);
     vec3 result;
     if (alpha == 1.0f) {
-        result = (ambient + (1.0f - shadow) * (diffuse)) * color;
+        result = (sunlight.ambient + (1.0f -shadow) * diffuse) * color;
     } else {
         result = (1.0f - shadow) * color;
     }

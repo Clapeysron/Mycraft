@@ -68,6 +68,7 @@ void Render::initial(Game &game) {
     Depth_Shader = Shader("shader/Depth.vs", "shader/Depth.fs");
     depthMap_init();
     Depth_debug_Shader = Shader("shader/Depth_debug.vs", "shader/Depth_debug.fs");
+    Depth_debug_Shader.setInt("depthMap", 0);
 }
 
 void Render::depthMap_init() {
@@ -78,8 +79,10 @@ void Render::depthMap_init() {
                  SHADOW_WIDTH, SHADOW_HEIGHT, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    float borderColor[] = { 1.0, 1.0, 1.0, 1.0 };
+    glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
     glBindFramebuffer(GL_FRAMEBUFFER, depthMap_fbo);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthMap_pic, 0);
     glDrawBuffer(GL_NONE);
@@ -148,19 +151,23 @@ void Render::render(Game& game) {
     }
 
     // depth scene
-    glm::mat4 lightProjection, lightView;
-    glm::mat4 lightSpaceMatrix;
-    glm::vec3 lightPos(8.0f, 150.0f, 8.0f);
-    GLfloat near_plane = 1.0f, far_plane = 90.0f;
-    lightProjection = glm::ortho(-30.0f, 30.0f, -30.0f, 30.0f, near_plane, far_plane);
-    lightView = glm::lookAt(lightPos, lightPos + glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 lightProjection, lightView, lightSpaceMatrix;
+    glm::vec3 lightPos = game.steve_position;
+    lightPos.y = 256;
+    lightPos.x += 200;
+    glm::vec3 lightDirection(-1.5f, -1.0f, 0.5f);
+    GLfloat near_plane = 0.0f, far_plane = 256.0f;
+    lightProjection = glm::ortho(-120.0f, 120.0f, -120.0f, 120.0f, near_plane, far_plane);
+    lightView = glm::lookAt(lightPos, lightPos + lightDirection, glm::vec3(-1.0f, 1.5f, 0.0f));
     lightSpaceMatrix = lightProjection * lightView;
     Depth_Shader.use();
     Depth_Shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
     glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
     glBindFramebuffer(GL_FRAMEBUFFER, depthMap_fbo);
     glClear(GL_DEPTH_BUFFER_BIT);
+    glCullFace(GL_FRONT);
     game.visibleChunks.drawDepth(Depth_Shader, texture_pic);
+    glCullFace(GL_BACK);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // Chunks render
@@ -169,17 +176,18 @@ void Render::render(Game& game) {
     projection = glm::perspective(glm::radians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
     view = glm::lookAt(game.steve_position, game.steve_position + cameraFront, cameraUp);
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-    game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, lightSpaceMatrix, lightPos);
-    
+    game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, lightSpaceMatrix, lightDirection);
     // depth shadow draw DEBUG
     Depth_debug_Shader.use();
     Depth_debug_Shader.setFloat("near_plane", near_plane);
     Depth_debug_Shader.setFloat("far_plane", far_plane);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, depthMap_pic);
-    //RenderQuad();
+    glViewport(0, 0, 1024, 1024);
+    RenderQuad();
     
     // Draw sky box
+    glViewport(0, 0, screen_width, screen_height);
     Sky.draw(game.steve_position, view, projection);
     glfwSwapBuffers(window);
     glfwPollEvents();

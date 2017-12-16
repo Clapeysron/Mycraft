@@ -19,7 +19,7 @@ void main()
 {
     vs_out.Normal = aNormal;
     vs_out.FragPos = aPos;
-    vs_out.FragPosLightSpace = lightSpaceMatrix * vec4(vs_out.FragPos, 1.0f);
     vs_out.TexCoord = aTexCoord;
+    vs_out.FragPosLightSpace = lightSpaceMatrix * vec4(aPos, 1.0f);
     gl_Position = projection * view * vec4(aPos, 1.0f);
 }

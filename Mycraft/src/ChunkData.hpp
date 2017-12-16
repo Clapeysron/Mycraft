@@ -133,7 +133,7 @@ public:
     Chunk *getCurChunk();
     SubChunk *getCurSubChunk();
     void getRenderingSubChunks(int y, int x, int z); //called by render
-    void draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, glm::mat4 lightSpaceMatrix, glm::vec3 lightPos);
+    void draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection);
     void drawDepth(Shader& Depth_Shader, unsigned int texture_pic);
     char getBlockType(int y, int x, int z);
 private:

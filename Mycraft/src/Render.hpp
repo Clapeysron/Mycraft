@@ -14,8 +14,8 @@
 #include "Game.hpp"
 #include "Sky.hpp"
 
-#define SHADOW_WIDTH 1024
-#define SHADOW_HEIGHT 1024
+#define SHADOW_WIDTH 8192
+#define SHADOW_HEIGHT 8192
 
 class Render
 {
