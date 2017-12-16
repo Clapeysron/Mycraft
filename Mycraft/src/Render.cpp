@@ -9,6 +9,7 @@
 #include "Render.hpp"
 #include "Stbi_load.hpp"
 
+
 bool Render::firstMouse = true;
 float Render::yaw   =  -90.0f;
 float Render::pitch =  0.0f;
@@ -52,6 +53,7 @@ Render::Render() {
     glEnable(GL_MULTISAMPLE);
     //glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+    
 }
 
 void Render::initial(Game &game) {
@@ -62,6 +64,7 @@ void Render::initial(Game &game) {
     Block_Shader.use();
     Block_Shader.setInt("texture_pic", 0);
     Block_Shader.setInt("shadowMap", 1);
+    Steve_Shader = Shader("shader/Steve.vs", "shader/Steve.fs");
     Sky.Sky_init();
     Sky.Sky_Shader = Shader("shader/Skybox.vs", "shader/Skybox.fs");
     texture_init();
@@ -69,6 +72,8 @@ void Render::initial(Game &game) {
     depthMap_init();
     Depth_debug_Shader = Shader("shader/Depth_debug.vs", "shader/Depth_debug.fs");
     Depth_debug_Shader.setInt("depthMap", 0);
+    steve_model = Model("model/steve.obj");
+    
 }
 
 void Render::depthMap_init() {
@@ -167,6 +172,7 @@ void Render::render(Game& game) {
     glClear(GL_DEPTH_BUFFER_BIT);
     glCullFace(GL_FRONT);
     game.visibleChunks.drawDepth(Depth_Shader, texture_pic);
+    steve_model.Draw(Depth_Shader);
     glCullFace(GL_BACK);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -177,6 +183,18 @@ void Render::render(Game& game) {
     view = glm::lookAt(game.steve_position, game.steve_position + cameraFront, cameraUp);
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, lightSpaceMatrix, lightDirection);
+    
+    // steve render
+    Steve_Shader.use();
+    Steve_Shader.setMat4("projection", projection);
+    Steve_Shader.setMat4("view", view);
+    glm::mat4 model(1);
+    model = glm::translate(model, game.steve_position);
+    model = glm::translate(model, cameraFront);
+    model = glm::scale(model, glm::vec3(0.17f, 0.17f, 0.17f));
+    Steve_Shader.setMat4("model", model);
+    steve_model.Draw(Steve_Shader);
+    
     // depth shadow draw DEBUG
     Depth_debug_Shader.use();
     Depth_debug_Shader.setFloat("near_plane", near_plane);

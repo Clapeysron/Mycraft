@@ -14,8 +14,8 @@
 #include "Game.hpp"
 #include "Sky.hpp"
 
-#define SHADOW_WIDTH 8192
-#define SHADOW_HEIGHT 8192
+#define SHADOW_WIDTH 9600
+#define SHADOW_HEIGHT 9600
 
 class Render
 {
@@ -28,6 +28,8 @@ public:
     Shader Block_Shader;
     Shader Depth_Shader;
     Shader Depth_debug_Shader;
+    Shader Steve_Shader;
+    Model steve_model;
 private:
     static int screen_width, screen_height;
     unsigned int texture_pic;

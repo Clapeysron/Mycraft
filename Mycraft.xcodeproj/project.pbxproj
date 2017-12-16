@@ -16,6 +16,7 @@
 		370EA5C51FBAC4CA0049B0EB /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 370EA5C41FBAC4C20049B0EB /* OpenGL.framework */; };
 		373C3C961FDA39C300BE4921 /* Sky.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 373C3C941FDA39C300BE4921 /* Sky.cpp */; };
 		373C3C991FDA428400BE4921 /* Stbi_load.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 373C3C971FDA428400BE4921 /* Stbi_load.cpp */; };
+		3772F80B1FE4FC5900846768 /* libassimp.4.1.0.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3772F80A1FE4FC5900846768 /* libassimp.4.1.0.dylib */; };
 		37DEA6DE1FBADA0C00E6BABC /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37DEA6DD1FBADA0C00E6BABC /* main.cpp */; };
 		37DEA6E41FBAE00200E6BABC /* Render.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37DEA6E31FBAE00200E6BABC /* Render.cpp */; };
 		37DEA6E71FBAE06900E6BABC /* Game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 37DEA6E51FBAE06900E6BABC /* Game.cpp */; };
@@ -692,6 +693,11 @@
 		373C3C951FDA39C300BE4921 /* Sky.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Sky.hpp; sourceTree = "<group>"; };
 		373C3C971FDA428400BE4921 /* Stbi_load.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Stbi_load.cpp; sourceTree = "<group>"; };
 		373C3C981FDA428400BE4921 /* Stbi_load.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Stbi_load.hpp; sourceTree = "<group>"; };
+		3772F8081FE4F7A700846768 /* model.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = model.h; sourceTree = "<group>"; };
+		3772F8091FE4F81400846768 /* mesh.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mesh.h; sourceTree = "<group>"; };
+		3772F80A1FE4FC5900846768 /* libassimp.4.1.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libassimp.4.1.0.dylib; path = ../../../../usr/local/Cellar/assimp/4.1.0/lib/libassimp.4.1.0.dylib; sourceTree = "<group>"; };
+		3772F8191FE5029C00846768 /* Steve.fs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Steve.fs; sourceTree = "<group>"; };
+		3772F81A1FE5029C00846768 /* Steve.vs */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Steve.vs; sourceTree = "<group>"; };
 		37DEA6DD1FBADA0C00E6BABC /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = Mycraft/src/main.cpp; sourceTree = SOURCE_ROOT; };
 		37DEA6DF1FBADE3600E6BABC /* game_settings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = game_settings.h; sourceTree = "<group>"; };
 		37DEA6E31FBAE00200E6BABC /* Render.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Render.cpp; sourceTree = "<group>"; };
@@ -712,6 +718,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3772F80B1FE4FC5900846768 /* libassimp.4.1.0.dylib in Frameworks */,
 				1824F3121FD8F66E00F59C9B /* libGLEW.2.1.0.dylib in Frameworks */,
 				1824F3111FD8F65400F59C9B /* libglfw3.a in Frameworks */,
 				18A2A49F1FC1130F00B4100E /* CoreVideo.framework in Frameworks */,
@@ -760,6 +767,8 @@
 				370A40DB1FE0278700D7F9DF /* Depth_debug.vs */,
 				370A40DA1FDFE6AB00D7F9DF /* Depth.fs */,
 				370A40D91FDFE6AB00D7F9DF /* Depth.vs */,
+				3772F8191FE5029C00846768 /* Steve.fs */,
+				3772F81A1FE5029C00846768 /* Steve.vs */,
 				373C3C931FDA37A200BE4921 /* Skybox.fs */,
 				373C3C921FDA37A200BE4921 /* Skybox.vs */,
 				3717FF091FDD65A4008DC3F7 /* Sunlight.fs */,
@@ -794,6 +803,7 @@
 		370EA5C31FBAC4C10049B0EB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3772F80A1FE4FC5900846768 /* libassimp.4.1.0.dylib */,
 				1824F3101FD8F65400F59C9B /* libglfw3.a */,
 				1824F30E1FD8F62A00F59C9B /* libGLEW.2.1.0.dylib */,
 				18A2A49E1FC1130F00B4100E /* CoreVideo.framework */,
@@ -808,6 +818,8 @@
 			isa = PBXGroup;
 			children = (
 				37DEA6F41FBAF68900E6BABC /* shader.h */,
+				3772F8081FE4F7A700846768 /* model.h */,
+				3772F8091FE4F81400846768 /* mesh.h */,
 				370EA5CC1FBAC77F0049B0EB /* stb */,
 				370EA7551FBAC77F0049B0EB /* glm */,
 			);
@@ -1855,7 +1867,11 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/assimp/4.1.0/lib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				OTHER_CFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1865,7 +1881,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					/usr/local/Cellar/assimp/4.1.0/lib,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
