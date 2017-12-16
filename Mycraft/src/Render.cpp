@@ -180,35 +180,52 @@ void Render::render(Game& game) {
     glViewport(0, 0, screen_width, screen_height);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     projection = glm::perspective(glm::radians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
-    view = glm::lookAt(game.steve_position, game.steve_position + cameraFront, cameraUp);
+    if (game.game_perspective == FIRST_PERSON) {
+        view = glm::lookAt(game.steve_position, game.steve_position + cameraFront, cameraUp);
+    } else {
+        view = glm::lookAt(game.steve_position - glm::vec3(5.0f)*cameraFront, game.steve_position + cameraFront, cameraUp);
+    }
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, lightSpaceMatrix, lightDirection);
     
     // steve render
-    Steve_Shader.use();
-    Steve_Shader.setMat4("projection", projection);
-    Steve_Shader.setMat4("view", view);
-    glm::mat4 model(1);
-    model = glm::translate(model, game.steve_position);
-    model = glm::translate(model, cameraFront);
-    model = glm::scale(model, glm::vec3(0.17f, 0.17f, 0.17f));
-    Steve_Shader.setMat4("model", model);
-    steve_model.Draw(Steve_Shader);
+    if (game.game_perspective == THIRD_PERSON) {
+        Steve_Shader.use();
+        Steve_Shader.setMat4("projection", projection);
+        Steve_Shader.setMat4("view", view);
+        Steve_Shader.setVec3("sunlight.lightDirection", lightDirection);
+        Steve_Shader.setVec3("sunlight.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
+        glm::mat4 model(1);
+        model = glm::translate(model, game.steve_position);
+        model = glm::translate(model, glm::vec3(0, -STEVE_HEIGHT+0.1, 0));
+        model = glm::rotate(model, steve_turn_angle(cameraFront), glm::vec3(0, 1, 0));
+        model = glm::scale(model, glm::vec3(0.3f * STEVE_HEIGHT));
+        Steve_Shader.setMat4("model", model);
+        steve_model.Draw(Steve_Shader);
+    }
     
     // depth shadow draw DEBUG
-    Depth_debug_Shader.use();
-    Depth_debug_Shader.setFloat("near_plane", near_plane);
-    Depth_debug_Shader.setFloat("far_plane", far_plane);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, depthMap_pic);
-    glViewport(0, 0, 1024, 1024);
-    RenderQuad();
-    
+//    Depth_debug_Shader.use();
+//    Depth_debug_Shader.setFloat("near_plane", near_plane);
+//    Depth_debug_Shader.setFloat("far_plane", far_plane);
+//    glActiveTexture(GL_TEXTURE0);
+//    glBindTexture(GL_TEXTURE_2D, depthMap_pic);
+//    glViewport(0, 0, 1024, 1024);
+//    RenderQuad();
+
     // Draw sky box
     glViewport(0, 0, screen_width, screen_height);
     Sky.draw(game.steve_position, view, projection);
     glfwSwapBuffers(window);
     glfwPollEvents();
+}
+
+float Render::steve_turn_angle(glm::vec3 cameraFront) {
+    if (cameraFront.z < 0) {
+        return atan(cameraFront.x/cameraFront.z) + M_PI;
+    } else {
+        return atan(cameraFront.x/cameraFront.z);
+    }
 }
 
 void Render::framebuffer_size_callback(GLFWwindow* window, int width, int height) {
@@ -339,6 +356,12 @@ void Render::processInput(GLFWwindow *window, Game &game)
     }
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
         fov += cameraSpeed*10;
+    }
+    if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) {
+        game.game_perspective = FIRST_PERSON;
+    }
+    if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) {
+        game.game_perspective = THIRD_PERSON;
     }
 }
 

@@ -10,6 +10,7 @@
 
 Game::Game() {
     game_mode = NORMAL_MODE;
+    game_perspective = FIRST_PERSON;
     vertical_v = 0;
     steve_position = glm::vec3(8.0f, 125.0f,  8.0f);
 }

@@ -61,8 +61,10 @@ void main()
     float shadow = ShadowCalculation(fs_in.FragPosLightSpace);
     vec3 result;
     if (alpha == 1.0f) {
+        //result = (sunlight.ambient + diffuse) * color;
         result = (sunlight.ambient + (1.0f -shadow) * diffuse) * color;
     } else {
+        //result = color;
         result = (1.0f - shadow) * color;
     }
     FragColor = vec4(result, alpha);
