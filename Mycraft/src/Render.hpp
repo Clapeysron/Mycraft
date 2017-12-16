@@ -49,11 +49,14 @@ private:
     static float fov;
     static float lastX;
     static float lastY;
+    static bool tryRemove;
+    static bool tryPlace;
     void texture_init();
     void depthMap_init();
     float steve_turn_angle(glm::vec3 cameraFront);
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+    static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
     static void processInput(GLFWwindow *window, Game& game);
 };
 

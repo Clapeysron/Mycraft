@@ -24,7 +24,7 @@ enum Game_perspective {
 class Game {
 public:
     Game();
-    VisibleChunks visibleChunks = VisibleChunks(8, 125,  8);
+    VisibleChunks visibleChunks = VisibleChunks(8, 125, 8);
     Chunk chunk = Chunk(0, 0);
     Block block;
     Game_mode game_mode;

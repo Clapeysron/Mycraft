@@ -17,6 +17,7 @@
 #include <queue>
 #include <vector>
 #include <stack>
+#include <map>
 #include "Block.hpp"
 #include "opengl_header.h"
 #include "game_settings.h"
@@ -39,13 +40,34 @@ static int unclickable[] = {WATER};
 static float frustumPlanes[6][4];
 
 
+class TransQuad{
+public:
+    TransQuad(int y, int x, int z, int dir) {
+        //this->pos = glm::vec3(x, y, z);//中心??
+        //this->dir = dir;
+        memcpy(vertices, vertex[dir], QUAD_SIZE*sizeof(float));
+        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE)
+        {
+            vertices[m] += x;
+            vertices[m+1] += y;
+            vertices[m+2] += z;
+            vertices[m+6] += WATER_X;
+            vertices[m+7] += WATER_Y;
+        }
+        //set_texture(tmp, SubChunk::BlockType[y][x][z], dir);
+    }
+    //glm::vec3 pos;
+    //int dir;
+    float vertices[QUAD_SIZE];
+};
+static vector<float> transQuads;
 
 class SubChunk{
     friend class Chunk;
     friend class VisibleChunks;
 public:
     SubChunk(int y, int x, int z){
-        memset(BlockType, 0, sizeof(BlockType));
+        //memset(BlockType, 0, sizeof(BlockType));
         isEmpty = true;
         count = 0;
         pathHistory = 0;
@@ -55,6 +77,7 @@ public:
         this->x = x;
         this->z = z;
     }
+    SubChunk* recycle(int y, int x, int z);
     void setPathHistory(int direction); //clear path history
     int getPathHistory(); //????????
     void updateNeighbor(SubChunk* dir[6]); //for walking update
@@ -66,11 +89,11 @@ public:
     void addVertices(int dir, int y, int x, int z); //called by updateQuads
     
     //只有移动或者放置非透明块时有影响
-    char removeBlock(int y, int x, int z); //TO-DO
+    char removeBlock(int y, int x, int z);
     //设置为空气
     //如果在边界，邻接可见性置为true
     //直接update本块，邻接块只添加原来被遮挡的面
-    void placeBlock(char type, int y, int x, int z); //TO-DO
+    bool placeBlock(char type, int y, int x, int z);
     //设置type
     //如果在边界，重新判断邻接可见性
     //直接update本块和所有邻接块
@@ -94,6 +117,8 @@ private:
     //Quads need rendering
     vector<float> Quads;
     Block bufferObject;
+    vector<float> Water;
+    Block WBO;
     bool inFrustum(int x, int y, int z);
     void set_texture(float* tmp, char type, int dir);
 };
@@ -104,6 +129,7 @@ class Chunk {
 public:
     Chunk(int x, int z);
     ~Chunk();
+    Chunk*recycle(int x, int z);
     bool generateMap(bool isSea = false, int seaLevel = 0); //called by initChunks
     bool readFile(string filePath); //TO-DO, called by initChunks or updateChunks
     bool writeFile(string filePath); //TO-DO, called by updateChunks
@@ -136,6 +162,9 @@ public:
     void draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection);
     void drawDepth(Shader& Depth_Shader, unsigned int texture_pic);
     char getBlockType(int y, int x, int z);
+    bool placeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront, char type);
+    char removeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront);
+    static void addTransQuads(int dir, int x, int y, int z);
 private:
     Chunk *curChunk;
     SubChunk *curSubChunk;
@@ -149,5 +178,7 @@ private:
     void clearPathHistory(); //called by getRenderingSubChunks
     bool floodFill(int y, int x, int z); //called by getRenderingSubChunks，TO-DO：face-wall culling
     void calcFrustumPlane(glm::mat4 view, glm::mat4 projection);
+    void drawTransQuads(glm::vec3 cameraPos, Shader& Block_Shader);
+    void drawNormQuads(glm::vec3 cameraPos, Shader& Block_Shader);
 };
 #endif /* ChunkData_hpp */

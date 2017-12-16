@@ -17,6 +17,8 @@ float Render::fov   =  45.0f;
 float Render::lastX =  800.0f / 2.0;
 float Render::lastY =  600.0 / 2.0;
 float Render::deltaTime = 0.0f;
+bool Render::tryRemove = false;
+bool Render::tryPlace = false;
 int Render::screen_width = SCREEN_WIDTH*2;
 int Render::screen_height = SCREEN_HEIGHT*2;
 glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -41,6 +43,7 @@ Render::Render() {
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -57,7 +60,6 @@ Render::Render() {
 }
 
 void Render::initial(Game &game) {
-    
     view = glm::lookAt(game.steve_position, game.steve_position + cameraFront, cameraUp);
     projection = glm::perspective(glm::radians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
     Block_Shader = Shader("shader/Block.vs", "shader/Block.fs");
@@ -154,6 +156,15 @@ void Render::render(Game& game) {
     if (game.game_mode == NORMAL_MODE) {
         game.gravity_move();
     }
+    if(tryRemove){
+        char type = game.visibleChunks.removeBlock(game.steve_position, cameraFront);
+        tryRemove = false;
+    }
+    if(tryPlace){
+        bool ret = game.visibleChunks.placeBlock(game.steve_position, cameraFront, SOIL);
+        tryPlace = false;
+    }
+    projection = glm::perspective(glm::radians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 
     // depth scene
     glm::mat4 lightProjection, lightView, lightSpaceMatrix;
@@ -260,6 +271,24 @@ void Render::mouse_callback(GLFWwindow* window, double xpos, double ypos)
     front.y = sin(glm::radians(pitch));
     front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
     cameraFront = glm::normalize(front);
+}
+
+void Render::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+    if (action == GLFW_RELEASE){
+        switch(button) {
+            case GLFW_MOUSE_BUTTON_LEFT:
+                tryRemove = true;
+                break;
+            case GLFW_MOUSE_BUTTON_RIGHT:
+                tryPlace = true;
+                break;
+            default:
+                return;
+        }
+    }
+        
+    return;
 }
 
 void Render::processInput(GLFWwindow *window, Game &game)
