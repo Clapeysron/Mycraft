@@ -13,6 +13,7 @@
 		18A2A49B1FC10E0800B4100E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2A49A1FC10E0800B4100E /* Cocoa.framework */; };
 		18A2A49D1FC10E1000B4100E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2A49C1FC10E1000B4100E /* IOKit.framework */; };
 		18A2A49F1FC1130F00B4100E /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2A49E1FC1130F00B4100E /* CoreVideo.framework */; };
+		3706B8801FE68AC8006CCA6B /* Gui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3706B87E1FE68AC8006CCA6B /* Gui.cpp */; };
 		370EA5C51FBAC4CA0049B0EB /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 370EA5C41FBAC4C20049B0EB /* OpenGL.framework */; };
 		373C3C961FDA39C300BE4921 /* Sky.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 373C3C941FDA39C300BE4921 /* Sky.cpp */; };
 		373C3C991FDA428400BE4921 /* Stbi_load.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 373C3C971FDA428400BE4921 /* Stbi_load.cpp */; };
@@ -43,6 +44,10 @@
 		18A2A49A1FC10E0800B4100E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		18A2A49C1FC10E1000B4100E /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		18A2A49E1FC1130F00B4100E /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		3706B87E1FE68AC8006CCA6B /* Gui.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Gui.cpp; sourceTree = "<group>"; };
+		3706B87F1FE68AC8006CCA6B /* Gui.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Gui.hpp; sourceTree = "<group>"; };
+		3706B8811FE69609006CCA6B /* Gui.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Gui.fs; sourceTree = "<group>"; };
+		3706B8821FE69609006CCA6B /* Gui.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Gui.vs; sourceTree = "<group>"; };
 		370A40D91FDFE6AB00D7F9DF /* Depth.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Depth.vs; sourceTree = "<group>"; };
 		370A40DA1FDFE6AB00D7F9DF /* Depth.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Depth.fs; sourceTree = "<group>"; };
 		370A40DB1FE0278700D7F9DF /* Depth_debug.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Depth_debug.vs; sourceTree = "<group>"; };
@@ -767,6 +772,8 @@
 				370A40DB1FE0278700D7F9DF /* Depth_debug.vs */,
 				370A40DA1FDFE6AB00D7F9DF /* Depth.fs */,
 				370A40D91FDFE6AB00D7F9DF /* Depth.vs */,
+				3706B8811FE69609006CCA6B /* Gui.fs */,
+				3706B8821FE69609006CCA6B /* Gui.vs */,
 				3772F8191FE5029C00846768 /* Steve.fs */,
 				3772F81A1FE5029C00846768 /* Steve.vs */,
 				373C3C931FDA37A200BE4921 /* Skybox.fs */,
@@ -790,6 +797,8 @@
 				37DEA6E81FBAE08900E6BABC /* Render.hpp */,
 				373C3C941FDA39C300BE4921 /* Sky.cpp */,
 				373C3C951FDA39C300BE4921 /* Sky.hpp */,
+				3706B87E1FE68AC8006CCA6B /* Gui.cpp */,
+				3706B87F1FE68AC8006CCA6B /* Gui.hpp */,
 				373C3C971FDA428400BE4921 /* Stbi_load.cpp */,
 				373C3C981FDA428400BE4921 /* Stbi_load.hpp */,
 				37DEA6EC1FBAEC0F00E6BABC /* Block.cpp */,
@@ -1736,6 +1745,7 @@
 				37DEA6E71FBAE06900E6BABC /* Game.cpp in Sources */,
 				37DEA6F71FBB050200E6BABC /* ChunkData.cpp in Sources */,
 				37DEA6DE1FBADA0C00E6BABC /* main.cpp in Sources */,
+				3706B8801FE68AC8006CCA6B /* Gui.cpp in Sources */,
 				37DEA6E41FBAE00200E6BABC /* Render.cpp in Sources */,
 				37DEA6EE1FBAEC0F00E6BABC /* Block.cpp in Sources */,
 				18A2A4951FC04A2000B4100E /* glad.c in Sources */,

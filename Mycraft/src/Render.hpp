@@ -13,6 +13,7 @@
 #include "game_settings.h"
 #include "Game.hpp"
 #include "Sky.hpp"
+#include "Gui.hpp"
 #include <math.h>
 
 #define SHADOW_WIDTH 9600
@@ -25,6 +26,7 @@ public:
     void initial(Game& game);
     void render(Game& game);
     Sky Sky;
+    Gui Gui;
     GLFWwindow* window;
     Shader Block_Shader;
     Shader Depth_Shader;

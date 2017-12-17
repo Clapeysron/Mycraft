@@ -69,6 +69,8 @@ void Render::initial(Game &game) {
     Steve_Shader = Shader("shader/Steve.vs", "shader/Steve.fs");
     Sky.Sky_init();
     Sky.Sky_Shader = Shader("shader/Skybox.vs", "shader/Skybox.fs");
+    Gui.gui_init();
+    Gui.Gui_Shader = Shader("shader/Gui.vs", "shader/Gui.fs");
     texture_init();
     Depth_Shader = Shader("shader/Depth.vs", "shader/Depth.fs");
     depthMap_init();
@@ -196,7 +198,8 @@ void Render::render(Game& game) {
         view = glm::lookAt(game.steve_position - glm::vec3(5.0f)*cameraFront, game.steve_position + cameraFront, cameraUp);
     }
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-    game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, lightSpaceMatrix, lightDirection);
+    glm::vec3 chosen_block_pos = game.visibleChunks.accessibleBlock(game.steve_position, cameraFront);
+    game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, lightSpaceMatrix, lightDirection, chosen_block_pos);
     
     // steve render
     if (game.game_perspective == THIRD_PERSON) {
@@ -226,8 +229,12 @@ void Render::render(Game& game) {
     // Draw sky box
     glViewport(0, 0, screen_width, screen_height);
     Sky.draw(game.steve_position, view, projection);
+    
+    // Draw gui
+    Gui.draw(screen_width, screen_height);
+    
     glfwSwapBuffers(window);
-    glfwPollEvents();
+    glfwPollEvents();    
 }
 
 float Render::steve_turn_angle(glm::vec3 cameraFront) {

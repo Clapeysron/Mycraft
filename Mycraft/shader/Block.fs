@@ -16,6 +16,7 @@ struct Sunlight {
 };
 
 uniform Sunlight sunlight;
+uniform vec3 chosen_block_pos;
 
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
@@ -49,6 +50,13 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     return shadow;
 }
 
+float isChosen(vec3 FragPos) {
+    if ( FragPos.x < chosen_block_pos.x || FragPos.x > chosen_block_pos.x + 1 ||
+         FragPos.y < chosen_block_pos.y || FragPos.y > chosen_block_pos.y + 1 ||
+         FragPos.z < chosen_block_pos.z || FragPos.z > chosen_block_pos.z + 1 ) return 1.0f;
+    return 1.4f;
+}
+
 void main()
 {
     vec3 color = texture(texture_pic, fs_in.TexCoord).rgb;
@@ -57,15 +65,16 @@ void main()
     vec3 lightDir = normalize(-sunlight.lightDirection);
     float diff = max(dot(lightDir, norm), 0.0);
     vec3 diffuse = sunlight.ambient * diff * 3;
+    float isChosen = isChosen(fs_in.FragPos);
     
     float shadow = ShadowCalculation(fs_in.FragPosLightSpace);
     vec3 result;
     if (alpha == 1.0f) {
         //result = (sunlight.ambient + diffuse) * color;
-        result = (sunlight.ambient + (1.0f - shadow) * diffuse) * color;
+        result = (sunlight.ambient + (1.0f - shadow) * diffuse) * isChosen * color;
     } else {
         //result = color;
-        result = (1.0f - shadow) * color;
+        result = (1.0f - shadow) * isChosen * color;
     }
     FragColor = vec4(result, alpha);
 }
