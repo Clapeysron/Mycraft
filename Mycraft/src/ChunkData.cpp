@@ -1369,6 +1369,20 @@ char VisibleChunks::removeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront) {
     return (char)AIR;
 }
 
+glm::vec3 VisibleChunks::accessibleBlock(glm::vec3 cameraPos, glm::vec3 cameraFront){
+    glm::vec3 clickPos = cameraPos;
+    for(int i = 0; i < STEVE_FETCH_RADIUS; i++){
+        clickPos += cameraFront;
+        int x = (clickPos.x >= 0)? (int)clickPos.x : (int)clickPos.x-1;
+        int y = (clickPos.y >= 0)? (int)clickPos.y : (int)clickPos.y-1;
+        int z = (clickPos.z >= 0)? (int)clickPos.z : (int)clickPos.z-1;
+        
+        char type = getBlockType(y, x, z);
+        if(type != (char)AIR)
+            return glm::vec3(x, y, z);
+    }
+    return cameraPos;
+}
 
 
 

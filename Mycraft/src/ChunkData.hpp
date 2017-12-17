@@ -164,6 +164,7 @@ public:
     char getBlockType(int y, int x, int z);
     bool placeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront, char type);
     char removeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront);
+    glm::vec3 accessibleBlock(glm::vec3 cameraPos, glm::vec3 cameraFront);
     static void addTransQuads(int dir, int x, int y, int z);
 private:
     Chunk *curChunk;

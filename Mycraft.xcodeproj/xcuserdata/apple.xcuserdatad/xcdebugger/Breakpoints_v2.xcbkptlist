@@ -143,7 +143,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1328"
             endingLineNumber = "1328"
-            landmarkName = "VisibleChunks::getBlockType(int y, int x, int z)"
+            landmarkName = "VisibleChunks::placeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront, char type)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -271,7 +271,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1314"
             endingLineNumber = "1314"
-            landmarkName = "VisibleChunks::getBlockType(int y, int x, int z)"
+            landmarkName = "VisibleChunks::placeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront, char type)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
