@@ -1871,7 +1871,7 @@
 					"$(inherited)",
 					/usr/local/Cellar/assimp/4.1.0/lib,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				OTHER_CFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -1885,7 +1885,7 @@
 					"$(inherited)",
 					/usr/local/Cellar/assimp/4.1.0/lib,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

@@ -56,13 +56,15 @@ void main()
     vec3 norm = normalize(fs_in.Normal);
     vec3 lightDir = normalize(-sunlight.lightDirection);
     float diff = max(dot(lightDir, norm), 0.0);
-    vec3 diffuse = sunlight.ambient * diff;
+    vec3 diffuse = sunlight.ambient * diff * 3;
     
     float shadow = ShadowCalculation(fs_in.FragPosLightSpace);
     vec3 result;
     if (alpha == 1.0f) {
-        result = (sunlight.ambient + (1.0f -shadow) * diffuse) * color;
+        //result = (sunlight.ambient + diffuse) * color;
+        result = (sunlight.ambient + (1.0f - shadow) * diffuse) * color;
     } else {
+        //result = color;
         result = (1.0f - shadow) * color;
     }
     FragColor = vec4(result, alpha);

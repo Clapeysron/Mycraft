@@ -13,6 +13,7 @@
 #include "game_settings.h"
 #include "Game.hpp"
 #include "Sky.hpp"
+#include <math.h>
 
 #define SHADOW_WIDTH 9600
 #define SHADOW_HEIGHT 9600
@@ -52,6 +53,7 @@ private:
     static bool tryPlace;
     void texture_init();
     void depthMap_init();
+    float steve_turn_angle(glm::vec3 cameraFront);
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
     static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);

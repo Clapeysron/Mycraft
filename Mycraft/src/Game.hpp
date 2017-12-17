@@ -16,6 +16,11 @@ enum Game_mode {
     GOD_MODE
 };
 
+enum Game_perspective {
+    FIRST_PERSON,
+    THIRD_PERSON
+};
+
 class Game {
 public:
     Game();
@@ -23,6 +28,7 @@ public:
     Chunk chunk = Chunk(0, 0);
     Block block;
     Game_mode game_mode;
+    Game_perspective game_perspective;
     glm::vec3 user_position;
     glm::vec3 steve_position;
     float vertical_v;

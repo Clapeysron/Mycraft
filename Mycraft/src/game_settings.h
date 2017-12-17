@@ -28,6 +28,8 @@
 #define GRASSLAND 0x03
 #define TRUNK 0x04
 
+#define DIAMAND_ORE 0x10
+
 //for hisrotyPath & adjVisibility
 #define UP 0x20
 #define DOWN 0x10
@@ -75,6 +77,8 @@
 #define GRASSLAND_SIDE_Y 0.0f
 #define WATER_X 0.9f
 #define WATER_Y 0.1f
+#define DIAMAND_ORE_X 0.1f
+#define DIAMAND_ORE_Y 0.2f
 
 #define SEA_LEVEL 115
 
