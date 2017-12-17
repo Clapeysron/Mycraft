@@ -169,10 +169,10 @@ void Render::render(Game& game) {
     
     // depth scene
     glm::mat4 lightProjection, lightView, lightSpaceMatrix;
-    glm::vec3 lightPos = game.steve_position;
+    glm::vec3 lightDirection(-1.5f, -1.0f, 0.5f);
+    /*glm::vec3 lightPos = game.steve_position;
     lightPos.y = 256;
     lightPos.x += 200;
-    glm::vec3 lightDirection(-1.5f, -1.0f, 0.5f);
     GLfloat near_plane = 0.0f, far_plane = 256.0f;
     lightProjection = glm::ortho(-120.0f, 120.0f, -120.0f, 120.0f, near_plane, far_plane);
     lightView = glm::lookAt(lightPos, lightPos + lightDirection, glm::vec3(-1.0f, 1.5f, 0.0f));
@@ -186,7 +186,7 @@ void Render::render(Game& game) {
     game.visibleChunks.drawDepth(Depth_Shader, texture_pic);
     steve_model.Draw(Depth_Shader);
     glCullFace(GL_BACK);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);*/
 
     // Chunks render
     glViewport(0, 0, screen_width, screen_height);

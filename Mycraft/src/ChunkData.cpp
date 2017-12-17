@@ -1295,15 +1295,24 @@ char VisibleChunks::getBlockType(int y, int x, int z){
 
 bool VisibleChunks::placeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront, char type) {
     glm::vec3 clickPos = cameraPos;
+    int prex = INT_MAX, prey = INT_MAX, prez = INT_MAX;
     if(type == (char)AIR){
         return false;
     }
     
-    for(int i = 0; i < STEVE_FETCH_RADIUS; i++){
-        clickPos += cameraFront;
+    for(float i = 0.0f; i < STEVE_FETCH_RADIUS; i += 0.01f){
+        clickPos += 0.01f*cameraFront;
         int x = (clickPos.x >= 0)? (int)clickPos.x : (int)clickPos.x-1;
         int y = (clickPos.y >= 0)? (int)clickPos.y : (int)clickPos.y-1;
         int z = (clickPos.z >= 0)? (int)clickPos.z : (int)clickPos.z-1;
+        if(x == prex && y == prey && z == prez) {
+            continue;
+        }
+        else {
+            prex = x;
+            prey = y;
+            prez = z;
+        }
         
         if(getBlockType(y, x, z) == (char)AIR)
             continue; //必须有相邻块
@@ -1354,11 +1363,22 @@ bool VisibleChunks::placeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront, char 
 
 char VisibleChunks::removeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront) {
     glm::vec3 clickPos = cameraPos;
-    for(int i = 0; i < STEVE_FETCH_RADIUS; i++){
-        clickPos += cameraFront;
+    int prex = INT_MAX, prey = INT_MAX, prez = INT_MAX;
+    for(float i = 0.0f; i < STEVE_FETCH_RADIUS; i += 0.01f){
+        clickPos += 0.01f*cameraFront;
         int x = (clickPos.x >= 0)? (int)clickPos.x : (int)clickPos.x-1;
         int y = (clickPos.y >= 0)? (int)clickPos.y : (int)clickPos.y-1;
         int z = (clickPos.z >= 0)? (int)clickPos.z : (int)clickPos.z-1;
+        
+        if(x == prex && y == prey && z == prez) {
+            continue;
+        }
+        else {
+            prex = x;
+            prey = y;
+            prez = z;
+        }
+
         
         int yIndex = y/16;
         
@@ -1376,11 +1396,22 @@ char VisibleChunks::removeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront) {
 
 glm::vec3 VisibleChunks::accessibleBlock(glm::vec3 cameraPos, glm::vec3 cameraFront){
     glm::vec3 clickPos = cameraPos;
-    for(int i = 0; i < STEVE_FETCH_RADIUS; i++){
-        clickPos += cameraFront;
+    int prex = INT_MAX, prey = INT_MAX, prez = INT_MAX;
+    for(float i = 0.0f; i < STEVE_FETCH_RADIUS; i += 0.01f){
+        clickPos += 0.01f*cameraFront;
         int x = (clickPos.x >= 0)? (int)clickPos.x : (int)clickPos.x-1;
         int y = (clickPos.y >= 0)? (int)clickPos.y : (int)clickPos.y-1;
         int z = (clickPos.z >= 0)? (int)clickPos.z : (int)clickPos.z-1;
+        
+        if(x == prex && y == prey && z == prez) {
+            continue;
+        }
+        else {
+            prex = x;
+            prey = y;
+            prez = z;
+        }
+
         
         char type = getBlockType(y, x, z);
         if(type != (char)AIR)
