@@ -161,11 +161,10 @@ void Render::render(Game& game) {
         tryRemove = false;
     }
     if(tryPlace){
-        bool ret = game.visibleChunks.placeBlock(game.steve_position, cameraFront, SOIL);
+        bool ret = game.visibleChunks.placeBlock(game.steve_position, cameraFront, DIAMAND_ORE);
         tryPlace = false;
     }
-    projection = glm::perspective(glm::radians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
-
+    
     // depth scene
     glm::mat4 lightProjection, lightView, lightSpaceMatrix;
     glm::vec3 lightPos = game.steve_position;
@@ -287,7 +286,6 @@ void Render::mouse_button_callback(GLFWwindow* window, int button, int action, i
                 return;
         }
     }
-        
     return;
 }
 

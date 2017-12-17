@@ -1151,14 +1151,15 @@ void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projecti
     cout<<"y:"<<(int)cameraPos.y<<" x:"<<(int)cameraPos.x<<" z:"<<(int)cameraPos.z<<endl;
     updataChunks((int)cameraPos.y, (int)cameraPos.x, (int)cameraPos.z);
     Block_Shader.use();
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, texture_pic);
-    //model = glm::translate(model, position);
     Block_Shader.setMat4("view", view);
     Block_Shader.setMat4("projection", projection);
-    Block_Shader.setVec3("sunlight.direction", glm::vec3(-0.4f, -1.0f, -0.6f));
-    Block_Shader.setVec3("sunlight.ambient", glm::vec3(0.4f, 0.4f, 0.4f));
-    Block_Shader.setVec3("sunlight.diffuse", glm::vec3(1.0f, 1.0f, 1.0f));
+    Block_Shader.setVec3("sunlight.lightDirection", lightDirection);
+    Block_Shader.setVec3("sunlight.ambient", glm::vec3(0.3f, 0.3f, 0.3f));
+    Block_Shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture_pic);
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, depthMap_pic);
     drawNormQuads(cameraPos, Block_Shader);
     //drawTransQuads(cameraPos, Block_Shader);
 }
@@ -1225,13 +1226,16 @@ void SubChunk::set_texture(float* tmp, char type, int dir) {
             tmp[m+6] += WATER_X;
             tmp[m+7] += WATER_Y;
         }
+    } else if (type == DIAMAND_ORE) {
+        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
+            tmp[m+6] += DIAMAND_ORE_X;
+            tmp[m+7] += DIAMAND_ORE_Y;
+        }
     }
 }
 
 void VisibleChunks::drawNormQuads(glm::vec3 cameraPos, Shader& Block_Shader){
     SubChunk *tmp;
-    glm::mat4 model(1);
-    Block_Shader.setMat4("model", model);
     getRenderingSubChunks((int)cameraPos.y, (int)cameraPos.x, (int)cameraPos.z);//float为负数时候怎么rounding？？？？
     for(int i = 0; i < renderQueue.size(); i++)
     {
@@ -1368,7 +1372,3 @@ char VisibleChunks::removeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront) {
     }
     return (char)AIR;
 }
-
-
-
-
