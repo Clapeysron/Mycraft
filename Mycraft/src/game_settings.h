@@ -58,13 +58,13 @@
 
 //gravity
 #define GRAVITY 9.8
-#define JUMP_V 3
+#define JUMP_V 3.2
 
 //steve radius
 #define STEVE_RADIUS 0.35
 #define STEVE_HEIGHT 1.8
 #define STEVE_EYE_HEIGHT 1.6
-#define STEVE_FETCH_RADIUS 4
+#define STEVE_FETCH_RADIUS 8
 
 //texture place
 #define ROCK_X 0.3f
