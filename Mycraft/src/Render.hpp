@@ -16,8 +16,8 @@
 #include "Gui.hpp"
 #include <math.h>
 
-#define SHADOW_WIDTH 9600
-#define SHADOW_HEIGHT 9600
+#define SHADOW_WIDTH 12800
+#define SHADOW_HEIGHT 12800
 
 class Render
 {
