@@ -18,6 +18,10 @@ inline int SubChunk::getPathHistory(){
     return pathHistory;
 }
 
+Block *SubChunk::getBufferObject(){
+    return &bufferObject;
+}
+
 inline SubChunk* SubChunk::recycle(int y, int x, int z){
     isEmpty = true;
     Quads.clear();
@@ -1012,6 +1016,9 @@ inline SubChunk *VisibleChunks::getCurSubChunk(){
     return curSubChunk;
 }
 
+queue<SubChunk*> VisibleChunks::getRenderQueue(){
+    return renderQueue;
+}
 
 
 void VisibleChunks::getRenderingSubChunks(int y, int x, int z){
@@ -1181,7 +1188,7 @@ void VisibleChunks::drawDepth(Shader& Depth_Shader, unsigned int texture_pic) {
         glBindVertexArray(tmp->bufferObject.getVAO());
         glDrawArrays(GL_TRIANGLES, 0, (int)(tmp->Quads.size()/VERTEX_SIZE));
         renderQueue.pop();
-        renderQueue.push(tmp);
+        //renderQueue.push(tmp);
     }
 }
 
@@ -1300,8 +1307,8 @@ bool VisibleChunks::placeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront, char 
         return false;
     }
     
-    for(float i = 0.0f; i < STEVE_FETCH_RADIUS; i += 0.01f){
-        clickPos += 0.01f*cameraFront;
+    for(float i = 0.0f; i < STEVE_FETCH_RADIUS; i += 0.05f){
+        clickPos += 0.05f*cameraFront;
         int x = (clickPos.x >= 0)? (int)clickPos.x : (int)clickPos.x-1;
         int y = (clickPos.y >= 0)? (int)clickPos.y : (int)clickPos.y-1;
         int z = (clickPos.z >= 0)? (int)clickPos.z : (int)clickPos.z-1;
@@ -1364,8 +1371,8 @@ bool VisibleChunks::placeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront, char 
 char VisibleChunks::removeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront) {
     glm::vec3 clickPos = cameraPos;
     int prex = INT_MAX, prey = INT_MAX, prez = INT_MAX;
-    for(float i = 0.0f; i < STEVE_FETCH_RADIUS; i += 0.01f){
-        clickPos += 0.01f*cameraFront;
+    for(float i = 0.0f; i < STEVE_FETCH_RADIUS; i += 0.05f){
+        clickPos += 0.05f*cameraFront;
         int x = (clickPos.x >= 0)? (int)clickPos.x : (int)clickPos.x-1;
         int y = (clickPos.y >= 0)? (int)clickPos.y : (int)clickPos.y-1;
         int z = (clickPos.z >= 0)? (int)clickPos.z : (int)clickPos.z-1;
@@ -1397,8 +1404,8 @@ char VisibleChunks::removeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront) {
 glm::vec3 VisibleChunks::accessibleBlock(glm::vec3 cameraPos, glm::vec3 cameraFront){
     glm::vec3 clickPos = cameraPos;
     int prex = INT_MAX, prey = INT_MAX, prez = INT_MAX;
-    for(float i = 0.0f; i < STEVE_FETCH_RADIUS; i += 0.01f){
-        clickPos += 0.01f*cameraFront;
+    for(float i = 0.0f; i < STEVE_FETCH_RADIUS; i += 0.05f){
+        clickPos += 0.05f*cameraFront;
         int x = (clickPos.x >= 0)? (int)clickPos.x : (int)clickPos.x-1;
         int y = (clickPos.y >= 0)? (int)clickPos.y : (int)clickPos.y-1;
         int z = (clickPos.z >= 0)? (int)clickPos.z : (int)clickPos.z-1;

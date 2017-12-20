@@ -362,7 +362,7 @@ void Render::processInput(GLFWwindow *window, Game &game)
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
         if (game.game_mode == NORMAL_MODE) {
             if (game.vertical_v == 0) {
-                game.vertical_v = JUMP_V/19.0f ;
+                game.vertical_v = JUMP_V/18.0f ;
             }
         } else {
             new_position = game.steve_position + cameraSpeed * cameraFront_Y;

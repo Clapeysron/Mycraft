@@ -80,6 +80,7 @@ public:
     SubChunk* recycle(int y, int x, int z);
     void setPathHistory(int direction); //clear path history
     int getPathHistory(); //????????
+    Block *getBufferObject();
     void updateNeighbor(SubChunk* dir[6]); //for walking update
     void updateVisibility(); //for walking update
     void setVisibility(int dir); //for remove&place update
@@ -158,6 +159,7 @@ public:
     bool updataChunks(float x, float y, float z); //update map
     Chunk *getCurChunk();
     SubChunk *getCurSubChunk();
+    queue<SubChunk*> getRenderQueue();
     void getRenderingSubChunks(int y, int x, int z); //called by render
     void draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection, glm::vec3 chosen_block_pos);
     void drawDepth(Shader& Depth_Shader, unsigned int texture_pic);
