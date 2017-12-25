@@ -81,22 +81,28 @@
 #define STEVE_EYE_HEIGHT 1.6
 #define STEVE_FETCH_RADIUS 8
 
+//texture offset
+#define TEXTURE_MIN 0.0001f
+#define TEXTURE_MAX 0.0999f
+
 //texture place
 #define ROCK_X 0.3f
 #define ROCK_Y 0.0f
 #define SOIL_X 0.2f
 #define SOIL_Y 0.0f
-#define GRASSLAND_TOP_X 0.0f
+#define GRASSLAND_TOP_X 0.9f
 #define GRASSLAND_TOP_Y 0.0f
-#define GRASSLAND_SIDE_X 0.1f
+#define GRASSLAND_SIDE_X 0.8f
 #define GRASSLAND_SIDE_Y 0.0f
 #define WATER_X 0.9f
 #define WATER_Y 0.1f
 #define DIAMAND_ORE_X 0.1f
 #define DIAMAND_ORE_Y 0.2f
+#define FLOWER_X 0.0f
+#define FLOWER_Y 0.4f
 
 #define SEA_LEVEL 115
 
-#define WATER_OFFSET 0.9
+#define WATER_OFFSET 0.8
 
 #endif /* game_settings_h */

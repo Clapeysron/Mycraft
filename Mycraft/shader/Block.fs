@@ -31,7 +31,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     // check whether current frag pos is in shadow
     vec3 normal = normalize(fs_in.Normal);
     vec3 lightDir = normalize(-sunlight.lightDirection);
-    float bias = max(0.0008 * (1.0 - dot(normal, lightDir)), 0.0008);
+    float bias = max(0.00055 * (1.0 - dot(normal, lightDir)), 0.000055);
 
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
@@ -54,7 +54,7 @@ float isChosen(vec3 FragPos) {
     if ( FragPos.x < chosen_block_pos.x || FragPos.x > chosen_block_pos.x + 1 ||
          FragPos.y < chosen_block_pos.y || FragPos.y > chosen_block_pos.y + 1 ||
          FragPos.z < chosen_block_pos.z || FragPos.z > chosen_block_pos.z + 1 ) return 1.0f;
-    return 1.4f;
+    return 1.3f;
 }
 
 void main()
@@ -66,14 +66,20 @@ void main()
     float diff = max(dot(lightDir, norm), 0.0);
     vec3 diffuse = sunlight.ambient * diff * 3;
     float isChosen = isChosen(fs_in.FragPos);
-    
+    // With Shadow mapping
     float shadow = ShadowCalculation(fs_in.FragPosLightSpace);
     vec3 result;
     if (alpha == 1.0f) {
-        //result = (sunlight.ambient + diffuse) * color;
+        // Without Shadow mapping
+        //result = (sunlight.ambient + diffuse) * isChosen * color;
+        // With Shadow mapping
         result = (sunlight.ambient + (1.0f - shadow) * diffuse) * isChosen * color;
+    } else if (alpha == 0.0f) {
+        discard;
     } else {
-        //result = color;
+        // Without Shadow mapping
+        //result = isChosen * color;
+        // With Shadow mapping
         result = (1.0f - shadow) * isChosen * color;
     }
     FragColor = vec4(result, alpha);

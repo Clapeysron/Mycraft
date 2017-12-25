@@ -1281,6 +1281,8 @@ void VisibleChunks::drawDepth(Shader& Depth_Shader, unsigned int texture_pic) {
     SubChunk *tmp;
     glm::mat4 model(1);
     Depth_Shader.setMat4("model", model);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture_pic);
     for(int i = 0; i < renderQueue.size(); i++)
     {
         tmp = renderQueue.front();
@@ -1337,6 +1339,11 @@ void SubChunk::set_texture(float* tmp, char type, int dir) {
         for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
             tmp[m+6] += DIAMAND_ORE_X;
             tmp[m+7] += DIAMAND_ORE_Y;
+        }
+    } else if (type == (char)GRASS) {
+        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
+            tmp[m+6] += FLOWER_X;
+            tmp[m+7] += FLOWER_Y;
         }
     }
 }
