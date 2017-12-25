@@ -97,6 +97,6 @@
 
 #define SEA_LEVEL 115
 
-#define TRUNK 0x04
+#define WATER_OFFSET 0.9
 
 #endif /* game_settings_h */

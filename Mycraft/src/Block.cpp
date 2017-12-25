@@ -69,6 +69,15 @@ float vertex[FACE_TYPE_NUM][QUAD_SIZE] = {
     1.0f, 1.0f, 0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f
 };
 
+float waterVertices[QUAD_SIZE] = {
+    0.0f, WATER_OFFSET, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.1f,
+    0.0f, WATER_OFFSET, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+    1.0f, WATER_OFFSET, 1.0f, 0.0f, 1.0f, 0.0f, 0.1f, 0.0f,
+    1.0f, WATER_OFFSET, 0.0f, 0.0f, 1.0f, 0.0f, 0.1f, 0.1f,
+    0.0f, WATER_OFFSET, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.1f,
+    1.0f, WATER_OFFSET, 1.0f, 0.0f, 1.0f, 0.0f, 0.1f, 0.0f
+};
+
 std::vector<float> Quads;
 
 Block::Block() {

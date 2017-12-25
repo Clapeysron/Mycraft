@@ -32,8 +32,9 @@ using namespace std;
 class SubChunk;
 static queue<SubChunk*> scanQueue;
 
-extern float vertex[6][48];
+extern float vertex[FACE_TYPE_NUM][QUAD_SIZE];
 extern float vertices[6][48];
+extern float waterVertices[QUAD_SIZE];
 
 static int unclickable[] = {WATER};
 
@@ -132,7 +133,9 @@ public:
     Chunk(int x, int z);
     ~Chunk();
     Chunk*recycle(int x, int z);
-    bool generateMap(bool isSea = false, int seaLevel = 0); //called by initChunks
+    bool generateMap(); //called by initChunks
+    void generateHerb();
+    void generateTree();
     bool readFile(string filePath); //TO-DO, called by initChunks or updateChunks
     bool writeFile(string filePath); //TO-DO, called by updateChunks
     char* readChunk(); //called by render(test ver)

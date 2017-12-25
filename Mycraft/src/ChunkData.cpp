@@ -562,7 +562,7 @@ Chunk* Chunk::recycle(int x, int z){
 }
 
 //利用二维柏林噪声生成地图
-bool Chunk::generateMap(bool isSea, int seaLevel)
+bool Chunk::generateMap()
 {
     int max = 0;
     for(int i = 0; i < 16; i++)
@@ -599,14 +599,14 @@ bool Chunk::generateMap(bool isSea, int seaLevel)
     for(int m = 0; m < 16; m++)
     {
         if(m*16 > maxHeight){
-            if(m*16 >= seaLevel) {
+            if(m*16 >= SEA_LEVEL) {
                 subChunks[m]->isEmpty = true;
                 memset(subChunks[m]->BlockType, AIR, 16*16*16*sizeof(char));
             }
             else{
                 subChunks[m]->isEmpty = false;
                 for(int i = 0; i <16; i++){
-                    if(m*16+i < seaLevel)
+                    if(m*16+i < SEA_LEVEL)
                         memset(subChunks[m]->BlockType+16*16*i, WATER, 16*16*sizeof(char));
                     else
                         memset(subChunks[m]->BlockType+16*16*i, AIR, 16*16*sizeof(char));
@@ -633,6 +633,7 @@ bool Chunk::generateMap(bool isSea, int seaLevel)
                     }
                     else if(tmpHeight == height[j][k]) {
                         subChunks[m]->BlockType[i][j][k] = GRASSLAND;
+                        subChunks[m]->count++;
                     }
                     else if(tmpHeight < SEA_LEVEL) {
                         subChunks[m]->BlockType[i][j][k] = WATER;
@@ -643,9 +644,33 @@ bool Chunk::generateMap(bool isSea, int seaLevel)
                 }
             }
         }
+        generateHerb();
+        generateTree();
     }
     //writeFile(to_string(xPos)+"_"+to_string(zPos));
     return true;
+}
+
+void Chunk::generateHerb() {
+    for(int i = 0; i < 16; i++) {
+        int x = i+this->x;
+        int randx = glm::abs((x*(x*x*prime1[0]+prime2[0])+prime3[0])&0x7fffffff);
+        for(int j = 0; j < 16; j++) {
+            int z = j+this->z;
+            int y = height[i][j];
+            int randz = glm::abs((z*(z*z*prime1[0]+prime2[0])+prime3[0])&0x7fffffff);
+            int randy = glm::abs((y*(y*y*prime1[0]+prime2[0])+prime3[0])&0x7fffffff);
+            if(glm::abs(randx*randy*randz)%32 > 30) {
+                if(y > SEA_LEVEL) {
+                    subChunks[(y+1)/16]->BlockType[(y+1)%16][i][j] = GRASS;
+                }
+            }
+        }
+    }
+}
+
+void Chunk::generateTree() {
+    //采取挖空重构的方式
 }
 
 //仅用于测试，该模块能正确运行后去掉
@@ -718,7 +743,7 @@ void Chunk::updateNeighbor(Chunk* xNeg, Chunk* xPos, Chunk* zNeg, Chunk* zPos){
 
 void Chunk::addVertices(int dir, int y, int x, int z) {
     float tmp[QUAD_SIZE];
-    memcpy(tmp, vertex[dir], QUAD_SIZE*sizeof(float));
+    memcpy(tmp, waterVertices, QUAD_SIZE*sizeof(float));
     for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE)
     {
         tmp[m] += x;
