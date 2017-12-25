@@ -62,6 +62,8 @@ public:
 };
 static vector<float> transQuads;
 
+class Chunk;
+
 class SubChunk{
     friend class Chunk;
     friend class VisibleChunks;
@@ -81,7 +83,7 @@ public:
     void setPathHistory(int direction); //clear path history
     int getPathHistory(); //????????
     Block *getBufferObject();
-    void updateNeighbor(SubChunk* dir[6]); //for walking update
+    void updateNeighbor(Chunk* parent, SubChunk* dir[6]); //for walking update
     void updateVisibility(); //for walking update
     void setVisibility(int dir); //for remove&place update
     void updateQuads(); //for walking update
@@ -109,6 +111,7 @@ private:
     int pathHistory;
     int adjVisibility;
     //neighbor subchunks
+    Chunk* parent;
     SubChunk *xNeg;
     SubChunk *xPos;
     SubChunk *zNeg;
@@ -118,8 +121,6 @@ private:
     //Quads need rendering
     vector<float> Quads;
     Block bufferObject;
-    vector<float> Water;
-    Block WBO;
     bool inFrustum(int x, int y, int z);
     void set_texture(float* tmp, char type, int dir);
 };
@@ -135,6 +136,12 @@ public:
     bool readFile(string filePath); //TO-DO, called by initChunks or updateChunks
     bool writeFile(string filePath); //TO-DO, called by updateChunks
     char* readChunk(); //called by render(test ver)
+    void addVertices(int dir, int y, int x, int z);
+    void addTransBlock(char type, int y, int x, int z);
+    void addWater(int y, int x, int z);
+    void updateWater();
+    void updateTransQuads();
+    
 private:
     SubChunk *subChunks[16];
     int height[16][16];
@@ -147,6 +154,10 @@ private:
     Chunk *zNeg;
     Chunk *zPos;
     //called by updateChunks
+    vector<float> Water;
+    Block bufferObject;
+    vector<float> transQuads;
+    Block transBufObj;
     void updateNeighbor(Chunk *xNegChunk, Chunk *xPosChunk, Chunk *zNegChunk, Chunk *zPosChunk);
     void setCoordinate(int x, int z);
 };

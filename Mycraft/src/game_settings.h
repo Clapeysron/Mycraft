@@ -17,11 +17,24 @@
 #define VERTEX_SIZE 8
 
 //transparent material or model (MSB = 1)
-#define AIR 0x80
-#define WATER 0x81
-#define LEAF 0x82
+//non-trans cube 0x1000xxxx
+#define LEAF 0x80
+#define GLASS 0x81
 
-//non-transparent material (MSB = 0)
+//non-trans crossing faces 0x11xx xxxx
+#define GRASS 0xc0
+#define FLOWER 0xc1
+#define TORCH 0xc2
+
+//trans cube 0x1111xxxx
+#define AIR 0xf0
+#define WATER 0xf1
+#define GLASS_RED 0xf2
+#define GLASS_GREEN 0xf3
+#define GLASS_BLUE 0xf4
+
+
+//non-trans and non-filled material (MSB = 0)
 #define BOUND 0x00
 #define ROCK 0x01
 #define SOIL 0x02
@@ -49,7 +62,8 @@
 #define ZPOS 0x03
 #define YNEG 0x04
 #define YPOS 0x05
-
+#define XCENTER 0x01
+#define ZCENTER 0x02
 //vector reverse size
 #define VECTOR_OFFSET 24576
 
