@@ -97,14 +97,20 @@ void SubChunk::updateQuads(){
                 if(BlockType[i][j][k] == (char)AIR)
                     continue;
                 
-                xNegType = (j == 0)? ((xNeg)? xNeg->BlockType[i][15][k]: BOUND) : BlockType[i][j-1][k];
-                xPosType = (j == 15)? ((xPos)? xPos->BlockType[i][0][k]: BOUND) : BlockType[i][j+1][k];
-                zNegType = (k == 0)? ((zNeg)? zNeg->BlockType[i][j][15]: BOUND) : BlockType[i][j][k-1];
-                zPosType = (k == 15)? ((zPos)? zPos->BlockType[i][j][0]: BOUND) : BlockType[i][j][k+1];
-                yNegType = (i == 0)? ((yNeg)? yNeg->BlockType[15][j][k]: BOUND) : BlockType[i-1][j][k];
-                yPosType = (i == 15)? ((yPos)? yPos->BlockType[0][j][k]: BOUND) : BlockType[i+1][j][k];
-                
-                if((BlockType[i][j][k]&0xc0) == 0) {
+                if((BlockType[i][j][k]&0xc0) != 0xc0) {
+                    xNegType = (j == 0)? ((xNeg)?
+                                          xNeg->BlockType[i][15][k]: BOUND) : BlockType[i][j-1][k];
+                    xPosType = (j == 15)? ((xPos)?
+                                           xPos->BlockType[i][0][k]: BOUND) : BlockType[i][j+1][k];
+                    zNegType = (k == 0)? ((zNeg)?
+                                          zNeg->BlockType[i][j][15]: BOUND) : BlockType[i][j][k-1];
+                    zPosType = (k == 15)? ((zPos)?
+                                           zPos->BlockType[i][j][0]: BOUND) : BlockType[i][j][k+1];
+                    yNegType = (i == 0)? ((yNeg)?
+                                          yNeg->BlockType[15][j][k]: BOUND) : BlockType[i-1][j][k];
+                    yPosType = (i == 15)? ((yPos)?
+                                           yPos->BlockType[0][j][k]: BOUND) : BlockType[i+1][j][k];
+
                     if(yPosType & 0x80) //up
                     {
                         addVertices(YPOS, i, j, k);
@@ -129,6 +135,10 @@ void SubChunk::updateQuads(){
                     {
                         addVertices(ZNEG, i, j, k);
                     }
+                }
+                else if((BlockType[i][j][k]&0xf0) != 0xf0) {
+                    addVertices(XCENTER, i, j, k);
+                    addVertices(ZCENTER, i, j, k);
                 }
             }
         }
@@ -216,7 +226,7 @@ void SubChunk::updateQuads(){
 //向vector中添加一个面的数据(QUAD_SIZE个float)
 void SubChunk::addVertices(int dir, int y, int x, int z)
 {
-    if(dir < XNEG || dir > YPOS)
+    if(dir < XNEG || dir > ZCENTER)
         return;
     else{
         /*if(Quads.size()+QUAD_SIZE >= Quads.capacity())

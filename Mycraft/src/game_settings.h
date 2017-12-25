@@ -15,6 +15,7 @@
 #define QUAD_SIZE 48
 #define QUAD_FACE_SIZE 8
 #define VERTEX_SIZE 8
+#define FACE_TYPE_NUM 8
 
 //transparent material or model (MSB = 1)
 //non-trans cube 0x1000xxxx
@@ -62,8 +63,8 @@
 #define ZPOS 0x03
 #define YNEG 0x04
 #define YPOS 0x05
-#define XCENTER 0x01
-#define ZCENTER 0x02
+#define XCENTER 0x06
+#define ZCENTER 0x07
 //vector reverse size
 #define VECTOR_OFFSET 24576
 
