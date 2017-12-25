@@ -359,8 +359,8 @@ inline void SubChunk::setVisibility(int dir){
 //移除方块
 char SubChunk::removeBlock(int y, int x, int z){
     char type = BlockType[y][x][z];
-    if(type == (char)AIR)
-        return type;
+    if(type == (char)AIR || type == BASE_ROCK)
+        return (char)AIR;
     BlockType[y][x][z] = AIR;
     updateQuads();
     if((type&0x80) == 0)
@@ -586,6 +586,12 @@ bool Chunk::generateMap(bool isSea, int seaLevel)
         }
     } //the height of rock layer
     
+    for(int j = 0; j < 16; j++) {
+     for(int k = 0; k < 16; k++) {
+     subChunks[0]->BlockType[0][j][k] = BASE_ROCK;
+     }
+     } //generte base rock
+    
     for(int m = 0; m < 16; m++)
     {
         if(m*16 > maxHeight){
@@ -605,33 +611,30 @@ bool Chunk::generateMap(bool isSea, int seaLevel)
             continue;
         }
         subChunks[m]->isEmpty = false;
-        for(int i = 0; i < 16; i++)
+        int i = (m != 0)?0:1;
+        for( ; i < 16; i++)
         {
             for(int j = 0; j < 16; j++)
             {
                 for(int k = 0; k < 16; k++)
                 {
                     int tmpHeight = i+m*16;
-                    if(tmpHeight > height[j][k] && tmpHeight >= SEA_LEVEL)
-                    {
-                        subChunks[m]->BlockType[i][j][k] = AIR;
+                    if(tmpHeight <= heightRock[j][k]) {
+                        subChunks[m]->BlockType[i][j][k] = ROCK;
+                        subChunks[m]->count++;
                     }
-                    else if(tmpHeight > height[j][k])
-                    {
-                        subChunks[m]->BlockType[i][j][k] = WATER;
+                    else if(tmpHeight < height[j][k]) {
+                        subChunks[m]->BlockType[i][j][k] = SOIL;
+                        subChunks[m]->count++; //只统计非透明砖块
                     }
                     else if(tmpHeight == height[j][k]) {
                         subChunks[m]->BlockType[i][j][k] = GRASSLAND;
                     }
-                    else if(tmpHeight > heightRock[j][k])
-                    {
-                        subChunks[m]->BlockType[i][j][k] = SOIL;
-                        subChunks[m]->count++; //只统计非透明砖块
+                    else if(tmpHeight < SEA_LEVEL) {
+                        subChunks[m]->BlockType[i][j][k] = WATER;
                     }
-                    else
-                    {
-                        subChunks[m]->BlockType[i][j][k] = ROCK;
-                        subChunks[m]->count++;
+                    else {
+                        subChunks[m]->BlockType[i][j][k] = AIR;
                     }
                 }
             }
@@ -1169,7 +1172,7 @@ void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projecti
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, depthMap_pic);
     drawNormQuads(cameraPos, Block_Shader);
-    //drawTransQuads(cameraPos, Block_Shader);
+    drawTransQuads(cameraPos, Block_Shader);
 }
 
 void VisibleChunks::drawDepth(Shader& Depth_Shader, unsigned int texture_pic) {

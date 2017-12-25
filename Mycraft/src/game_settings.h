@@ -27,7 +27,7 @@
 #define SOIL 0x02
 #define GRASSLAND 0x03
 #define TRUNK 0x04
-
+#define BASE_ROCK 0x05
 #define DIAMAND_ORE 0x10
 
 //for hisrotyPath & adjVisibility
