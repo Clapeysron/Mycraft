@@ -34,7 +34,6 @@
 #define GLASS_GREEN 0xf3
 #define GLASS_BLUE 0xf4
 
-
 //non-trans and non-filled material (MSB = 0)
 #define BOUND 0x00
 #define ROCK 0x01
@@ -84,15 +83,17 @@
 //texture offset
 #define TEXTURE_MIN 0.0001f
 #define TEXTURE_MAX 0.0999f
+#define GRASS_MIN 0.0f
+#define GRASS_MAX 1.0f
 
 //texture place
 #define ROCK_X 0.3f
 #define ROCK_Y 0.0f
 #define SOIL_X 0.2f
 #define SOIL_Y 0.0f
-#define GRASSLAND_TOP_X 0.9f
+#define GRASSLAND_TOP_X 0.0f
 #define GRASSLAND_TOP_Y 0.0f
-#define GRASSLAND_SIDE_X 0.8f
+#define GRASSLAND_SIDE_X 0.1f
 #define GRASSLAND_SIDE_Y 0.0f
 #define WATER_X 0.9f
 #define WATER_Y 0.1f
@@ -102,9 +103,20 @@
 #define FLOWER_Y 0.4f
 #define BASE_ROCK_X 0.4f
 #define BASE_ROCK_Y 0.0f
+#define LEAF_X 0.4f
+#define LEAF_Y 0.3f
+#define TRUNK_TOP_X 0.0f
+#define TRUNK_TOP_Y 0.1f
+#define TRUNK_SIDE_X 0.1f
+#define TRUNK_SIDE_Y 0.1f
 
+// SEA_LEVEL
 #define SEA_LEVEL 115
 
-#define WATER_OFFSET 0.8
+// Water offset with the aside block
+#define WATER_OFFSET 0.85
+
+// Tree Density
+#define TREE_DENSITY 32
 
 #endif /* game_settings_h */

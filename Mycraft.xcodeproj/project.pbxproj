@@ -13,6 +13,7 @@
 		18A2A49B1FC10E0800B4100E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2A49A1FC10E0800B4100E /* Cocoa.framework */; };
 		18A2A49D1FC10E1000B4100E /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2A49C1FC10E1000B4100E /* IOKit.framework */; };
 		18A2A49F1FC1130F00B4100E /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 18A2A49E1FC1130F00B4100E /* CoreVideo.framework */; };
+		3704DE981FF26689000576A2 /* Sun_Moon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3704DE961FF26689000576A2 /* Sun_Moon.cpp */; };
 		3706B8801FE68AC8006CCA6B /* Gui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3706B87E1FE68AC8006CCA6B /* Gui.cpp */; };
 		370EA5C51FBAC4CA0049B0EB /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 370EA5C41FBAC4C20049B0EB /* OpenGL.framework */; };
 		373C3C961FDA39C300BE4921 /* Sky.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 373C3C941FDA39C300BE4921 /* Sky.cpp */; };
@@ -44,6 +45,8 @@
 		18A2A49A1FC10E0800B4100E /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		18A2A49C1FC10E1000B4100E /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		18A2A49E1FC1130F00B4100E /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		3704DE961FF26689000576A2 /* Sun_Moon.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Sun_Moon.cpp; sourceTree = "<group>"; };
+		3704DE971FF26689000576A2 /* Sun_Moon.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Sun_Moon.hpp; sourceTree = "<group>"; };
 		3706B87E1FE68AC8006CCA6B /* Gui.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Gui.cpp; sourceTree = "<group>"; };
 		3706B87F1FE68AC8006CCA6B /* Gui.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Gui.hpp; sourceTree = "<group>"; };
 		3706B8811FE69609006CCA6B /* Gui.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Gui.fs; sourceTree = "<group>"; };
@@ -690,8 +693,8 @@
 		370EA85F1FBAC77F0049B0EB /* rotate_normalized_axis.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = rotate_normalized_axis.hpp; sourceTree = "<group>"; };
 		370EA8601FBAC77F0049B0EB /* projection.inl */ = {isa = PBXFileReference; lastKnownFileType = text; path = projection.inl; sourceTree = "<group>"; };
 		370EA8611FBAC77F0049B0EB /* type_aligned.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = type_aligned.hpp; sourceTree = "<group>"; };
-		3717FF081FDD65A3008DC3F7 /* Sunlight.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Sunlight.vs; sourceTree = "<group>"; };
-		3717FF091FDD65A4008DC3F7 /* Sunlight.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Sunlight.fs; sourceTree = "<group>"; };
+		3717FF081FDD65A3008DC3F7 /* Sun_Moon.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Sun_Moon.vs; sourceTree = "<group>"; };
+		3717FF091FDD65A4008DC3F7 /* Sun_Moon.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Sun_Moon.fs; sourceTree = "<group>"; };
 		373C3C921FDA37A200BE4921 /* Skybox.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Skybox.vs; sourceTree = "<group>"; };
 		373C3C931FDA37A200BE4921 /* Skybox.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Skybox.fs; sourceTree = "<group>"; };
 		373C3C941FDA39C300BE4921 /* Sky.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Sky.cpp; sourceTree = "<group>"; };
@@ -778,8 +781,8 @@
 				3772F81A1FE5029C00846768 /* Steve.vs */,
 				373C3C931FDA37A200BE4921 /* Skybox.fs */,
 				373C3C921FDA37A200BE4921 /* Skybox.vs */,
-				3717FF091FDD65A4008DC3F7 /* Sunlight.fs */,
-				3717FF081FDD65A3008DC3F7 /* Sunlight.vs */,
+				3717FF091FDD65A4008DC3F7 /* Sun_Moon.fs */,
+				3717FF081FDD65A3008DC3F7 /* Sun_Moon.vs */,
 			);
 			path = shader;
 			sourceTree = "<group>";
@@ -795,6 +798,8 @@
 				37DEA6F61FBB050200E6BABC /* ChunkData.hpp */,
 				37DEA6E31FBAE00200E6BABC /* Render.cpp */,
 				37DEA6E81FBAE08900E6BABC /* Render.hpp */,
+				3704DE961FF26689000576A2 /* Sun_Moon.cpp */,
+				3704DE971FF26689000576A2 /* Sun_Moon.hpp */,
 				373C3C941FDA39C300BE4921 /* Sky.cpp */,
 				373C3C951FDA39C300BE4921 /* Sky.hpp */,
 				3706B87E1FE68AC8006CCA6B /* Gui.cpp */,
@@ -1745,6 +1750,7 @@
 				37DEA6E71FBAE06900E6BABC /* Game.cpp in Sources */,
 				37DEA6F71FBB050200E6BABC /* ChunkData.cpp in Sources */,
 				37DEA6DE1FBADA0C00E6BABC /* main.cpp in Sources */,
+				3704DE981FF26689000576A2 /* Sun_Moon.cpp in Sources */,
 				3706B8801FE68AC8006CCA6B /* Gui.cpp in Sources */,
 				37DEA6E41FBAE00200E6BABC /* Render.cpp in Sources */,
 				37DEA6EE1FBAEC0F00E6BABC /* Block.cpp in Sources */,

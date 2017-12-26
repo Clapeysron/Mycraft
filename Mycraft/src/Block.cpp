@@ -53,20 +53,20 @@ float vertex[FACE_TYPE_NUM][QUAD_SIZE] = {
     1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, TEXTURE_MAX, TEXTURE_MIN,
     
     // x_center
-    0.1f, 0.0f, 0.9f, -1.0f, 0.0f, -1.0f, TEXTURE_MIN, TEXTURE_MAX,
-    0.1f, 1.0f, 0.9f, -1.0f, 0.0f, -1.0f, TEXTURE_MAX, TEXTURE_MAX,
-    0.9f, 1.0f, 0.1f, -1.0f, 0.0f, -1.0f, TEXTURE_MAX, TEXTURE_MIN,
-    0.9f, 0.0f, 0.1f, -1.0f, 0.0f, -1.0f, TEXTURE_MIN, TEXTURE_MIN,
-    0.1f, 0.0f, 0.9f, -1.0f, 0.0f, -1.0f, TEXTURE_MIN, TEXTURE_MAX,
-    0.9f, 1.0f, 0.1f, -1.0f, 0.0f, -1.0f, TEXTURE_MAX, TEXTURE_MIN,
+    GRASS_MIN, 0.0f, GRASS_MAX, -1.0f, 0.0f, -1.0f, TEXTURE_MIN, TEXTURE_MAX,
+    GRASS_MIN, 1.0f, GRASS_MAX, -1.0f, 0.0f, -1.0f, TEXTURE_MIN, TEXTURE_MIN,
+    GRASS_MAX, 1.0f, GRASS_MIN, -1.0f, 0.0f, -1.0f, TEXTURE_MAX, TEXTURE_MIN,
+    GRASS_MAX, 0.0f, GRASS_MIN, -1.0f, 0.0f, -1.0f, TEXTURE_MAX, TEXTURE_MAX,
+    GRASS_MIN, 0.0f, GRASS_MAX, -1.0f, 0.0f, -1.0f, TEXTURE_MIN, TEXTURE_MAX,
+    GRASS_MAX, 1.0f, GRASS_MIN, -1.0f, 0.0f, -1.0f, TEXTURE_MAX, TEXTURE_MIN,
     
     //z_center
-    0.1f, 0.0f, 0.1f, 1.0f, 0.0f, -1.0f, TEXTURE_MAX, TEXTURE_MAX,
-    0.1f, 1.0f, 0.1f, 1.0f, 0.0f, -1.0f, TEXTURE_MAX, TEXTURE_MIN,
-    0.9f, 1.0f, 0.9f, 1.0f, 0.0f, -1.0f, TEXTURE_MIN, TEXTURE_MIN,
-    0.9f, 0.0f, 0.9f, 1.0f, 0.0f, -1.0f, TEXTURE_MIN, TEXTURE_MAX,
-    0.1f, 0.0f, 0.1f, 1.0f, 0.0f, -1.0f, TEXTURE_MAX, TEXTURE_MAX,
-    0.9f, 1.0f, 0.9f, 1.0f, 0.0f, -1.0f, TEXTURE_MIN, TEXTURE_MIN
+    GRASS_MIN, 0.0f, GRASS_MIN, 1.0f, 0.0f, -1.0f, TEXTURE_MAX, TEXTURE_MAX,
+    GRASS_MIN, 1.0f, GRASS_MIN, 1.0f, 0.0f, -1.0f, TEXTURE_MAX, TEXTURE_MIN,
+    GRASS_MAX, 1.0f, GRASS_MAX, 1.0f, 0.0f, -1.0f, TEXTURE_MIN, TEXTURE_MIN,
+    GRASS_MAX, 0.0f, GRASS_MAX, 1.0f, 0.0f, -1.0f, TEXTURE_MIN, TEXTURE_MAX,
+    GRASS_MIN, 0.0f, GRASS_MIN, 1.0f, 0.0f, -1.0f, TEXTURE_MAX, TEXTURE_MAX,
+    GRASS_MAX, 1.0f, GRASS_MAX, 1.0f, 0.0f, -1.0f, TEXTURE_MIN, TEXTURE_MIN
 };
 
 float waterVertices[QUAD_SIZE] = {

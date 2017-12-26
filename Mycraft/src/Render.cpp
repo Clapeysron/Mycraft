@@ -8,7 +8,8 @@
 
 #include "Render.hpp"
 #include "Stbi_load.hpp"
-
+//#define TIMETEST
+#define DEPTHTEST
 
 bool Render::firstMouse = true;
 float Render::yaw   =  -90.0f;
@@ -25,7 +26,7 @@ glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
 Render::Render() {
-    dayTime = 14.0f;
+    dayTime = 9.0f;
     srand((unsigned)time(NULL));
     //randomSunDirection = fmod(rand(), 2*M_PI);
     randomSunDirection = M_PI/6;
@@ -73,6 +74,8 @@ void Render::initial(Game &game) {
     Steve_Shader = Shader("shader/Steve.vs", "shader/Steve.fs");
     Sky.Sky_init();
     Sky.Sky_Shader = Shader("shader/Skybox.vs", "shader/Skybox.fs");
+    Sun_Moon.Sun_Moon_init();
+    Sun_Moon.Sun_Moon_Shader = Shader("shader/Sun_Moon.vs", "shader/Sun_Moon.fs");
     Gui.gui_init();
     Gui.Gui_Shader = Shader("shader/Gui.vs", "shader/Gui.fs");
     texture_init();
@@ -152,6 +155,13 @@ void RenderQuad()
 }
 
 void Render::render(Game& game) {
+#ifdef TIMETEST
+    float timeMark;
+    timeMark = glfwGetTime();
+    float totalTimeMark;
+    totalTimeMark = glfwGetTime();
+#endif
+    
     float currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
@@ -160,10 +170,23 @@ void Render::render(Game& game) {
     printf("==========================\n");
     printf("fps: %.2f\n",1.0f/deltaTime);
     printf("view x:%.2f y:%.2f z:%.2f", cameraFront.x, cameraFront.y, cameraFront.z);
+    
     processInput(window, game);
+    
+#ifdef TIMETEST
+    printf("Process Input draw: %f\n", timeMark - glfwGetTime());
+    timeMark = glfwGetTime();
+#endif
+    
     if (game.game_mode == NORMAL_MODE) {
-        game.gravity_move();
+        game.gravity_move(deltaTime);
     }
+    
+#ifdef TIMETEST
+    printf("Gravity move: %f\n", timeMark - glfwGetTime());
+    timeMark = glfwGetTime();
+#endif
+    
     if(tryRemove){
         char type = game.visibleChunks.removeBlock(game.steve_position, cameraFront);
         tryRemove = false;
@@ -173,9 +196,13 @@ void Render::render(Game& game) {
         tryPlace = false;
     }
     
+#ifdef TIMETEST
+    printf("Remove / Place block: %f\n", timeMark - glfwGetTime());
+    timeMark = glfwGetTime();
+#endif
+    
     float shadowRadius = (RADIUS*2+1)*8;
     float dayTheta = (dayTime-8)*M_PI/12;
-    
     // depth scene
     glm::mat4 lightProjection, lightView, lightSpaceMatrix;
     glm::vec3 lightDirection(sin(randomSunDirection)*cos(dayTheta), -sin(dayTheta), cos(randomSunDirection)*cos(dayTheta));
@@ -206,7 +233,12 @@ void Render::render(Game& game) {
     }
     glCullFace(GL_BACK);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
+    
+#ifdef TIMETEST
+    printf("Depth scene draw: %f\n", timeMark - glfwGetTime());
+    timeMark = glfwGetTime();
+#endif
+    
     // Chunks render
     glViewport(0, 0, screen_width, screen_height);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -233,25 +265,64 @@ void Render::render(Game& game) {
         Steve_Shader.setMat4("model", depth_steve_model);
         steve_model.Draw(Steve_Shader);
     }
+#ifdef TIMETEST
+    printf("Chunk scene draw: %f\n", timeMark - glfwGetTime());
+    timeMark = glfwGetTime();
+#endif
     
+#ifdef DEPTHTEST
     // depth shadow draw DEBUG
-//    Depth_debug_Shader.use();
-//    Depth_debug_Shader.setFloat("near_plane", near_plane);
-//    Depth_debug_Shader.setFloat("far_plane", far_plane);
-//    glActiveTexture(GL_TEXTURE0);
-//    glBindTexture(GL_TEXTURE_2D, depthMap_pic);
-//    glViewport(0, 0, 1024, 1024);
-//    RenderQuad();
-
+    Depth_debug_Shader.use();
+    Depth_debug_Shader.setFloat("near_plane", near_plane);
+    Depth_debug_Shader.setFloat("far_plane", far_plane);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, depthMap_pic);
+    glViewport(0, 0, 1024, 1024);
+    RenderQuad();
+    #ifdef TIMETEST
+        printf("Depth Debug draw: %f\n", timeMark - glfwGetTime());
+        timeMark = glfwGetTime();
+    #endif
+#endif
+    
     // Draw sky box
     glViewport(0, 0, screen_width, screen_height);
     Sky.draw(game.steve_position, view, projection);
     
+#ifdef TIMETEST
+    printf("Skybox scene draw: %f\n", timeMark - glfwGetTime());
+    timeMark = glfwGetTime();
+#endif
+    
+    // Draw Sun or Moon
+    Sun_Moon.draw(dayTime, game.steve_position, view, projection);
+    
+#ifdef TIMETEST
+    printf("Sun scene draw: %f\n", timeMark - glfwGetTime());
+    timeMark = glfwGetTime();
+#endif
+    
     // Draw gui
     Gui.draw(screen_width, screen_height);
     
+#ifdef TIMETEST
+    printf("Gui scene draw: %f\n", timeMark - glfwGetTime());
+    timeMark = glfwGetTime();
+#endif
+    
     glfwSwapBuffers(window);
-    glfwPollEvents();    
+    
+#ifdef TIMETEST
+    printf("Swap Buffer time: %f\n", timeMark - glfwGetTime());
+    timeMark = glfwGetTime();
+#endif
+    
+    glfwPollEvents();
+
+#ifdef TIMETEST
+    printf("Depth Debug draw: %f\n", timeMark - glfwGetTime());
+    printf("Total time: %f\n", totalTimeMark - glfwGetTime());
+#endif
 }
 
 float Render::steve_turn_angle(glm::vec3 cameraFront) {
@@ -379,7 +450,7 @@ void Render::processInput(GLFWwindow *window, Game &game)
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
         if (game.game_mode == NORMAL_MODE) {
             if (game.vertical_v == 0) {
-                game.vertical_v = JUMP_V/18.0f ;
+                game.vertical_v = JUMP_V * 3;
             }
         } else {
             new_position = game.steve_position + cameraSpeed * cameraFront_Y;

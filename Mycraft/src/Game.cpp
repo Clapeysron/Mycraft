@@ -27,7 +27,7 @@ bool Game::move(glm::vec3 new_position) {
             for (int dz=0; dz<2; dz++) {
                 for (int dy=0; dy<3; dy++) {
                     char type = visibleChunks.getBlockType(base_y+dy, base_x+dx, base_z+dz);
-                    if (type >> 7 == 0) {
+                    if (type >> 4 != -1) {
                         if ( if_in_block(base_y+dy, base_x+dx, base_z+dz, new_position) == true ) return false;
                     }
                 }
@@ -48,10 +48,10 @@ bool Game::if_in_block(int y, int x, int z, glm::vec3 position) {
     return true;
 }
 
-bool Game::gravity_move() {
-    vertical_v -= GRAVITY/1000;
+bool Game::gravity_move(float deltaTime) {
+    vertical_v -= GRAVITY/16;
     glm::vec3 new_position;
-    new_position = steve_position + glm::vec3(0.0f, vertical_v, 0.0f);
+    new_position = steve_position + deltaTime * glm::vec3(0.0f, vertical_v, 0.0f);
     if ( !move(new_position) ) {
         vertical_v = 0;
         return false;

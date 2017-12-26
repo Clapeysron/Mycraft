@@ -14,6 +14,7 @@
 #include "Game.hpp"
 #include "Sky.hpp"
 #include "Gui.hpp"
+#include "Sun_Moon.hpp"
 #include <math.h>
 
 #define SHADOW_WIDTH 16384
@@ -26,6 +27,7 @@ public:
     void initial(Game& game);
     void render(Game& game);
     Sky Sky;
+    Sun_Moon Sun_Moon;
     Gui Gui;
     GLFWwindow* window;
     Shader Block_Shader;

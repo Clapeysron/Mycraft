@@ -665,7 +665,7 @@ void Chunk::generateHerb() {
                     subChunks[(y+1)/16]->BlockType[(y+1)%16][i][j] = GRASS;
                 }
             }
-            if(hasTree == false && glm::abs(randx*randy*randz)%512 > 507 &&
+            if(hasTree == false && glm::abs(randx*randy*randz)%512 > (512-TREE_DENSITY) &&
                i > 5 && i < 10 && j > 5 && j < 10) {
                 if(y > SEA_LEVEL) {
                     hasTree = generateTree(y, i, j);
@@ -733,7 +733,7 @@ bool Chunk::generateTree(int y, int x, int z) {
         }
     }
     //生成树干
-    for(int k = 1; k < 8; k++) {
+    for(int k = 1; k < 5; k++) {
         subChunks[(y+k)/16]->BlockType[(y+k)%16][x][z] = TRUNK;
     }
     return true;
@@ -1404,6 +1404,21 @@ void SubChunk::set_texture(float* tmp, char type, int dir) {
             tmp[m+6] += BASE_ROCK_X;
             tmp[m+7] += BASE_ROCK_Y;
         }
+    } else if (type == (char)LEAF) {
+        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
+            tmp[m+6] += LEAF_X;
+            tmp[m+7] += LEAF_Y;
+        }
+    } else if (type == (char)TRUNK) {
+        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
+            if (dir == YPOS || dir == YNEG) {
+                tmp[m+6] += TRUNK_TOP_X;
+                tmp[m+7] += TRUNK_TOP_Y;
+            } else {
+                tmp[m+6] += TRUNK_SIDE_X;
+                tmp[m+7] += TRUNK_SIDE_Y;
+            }
+        }
     }
 }
 
@@ -1556,7 +1571,6 @@ char VisibleChunks::removeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront) {
             prey = y;
             prez = z;
         }
-
         
         int yIndex = y/16;
         
