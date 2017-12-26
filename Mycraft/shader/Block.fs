@@ -16,6 +16,7 @@ struct Sunlight {
 };
 
 uniform Sunlight sunlight;
+uniform vec3 cameraPos;
 uniform vec3 chosen_block_pos;
 
 float ShadowCalculation(vec4 fragPosLightSpace)
@@ -63,6 +64,8 @@ void main()
     float alpha = texture(texture_pic, fs_in.TexCoord).a;
     vec3 norm = normalize(fs_in.Normal);
     vec3 lightDir = normalize(-sunlight.lightDirection);
+    float ifFront = dot(cameraPos - fs_in.FragPos, norm) > 0 ? 1 : -1;
+    lightDir = ifFront * lightDir;
     float diff = max(dot(lightDir, norm), 0.0);
     vec3 diffuse = sunlight.ambient * diff * 3;
     float isChosen = isChosen(fs_in.FragPos);
