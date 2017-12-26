@@ -645,13 +645,13 @@ bool Chunk::generateMap()
             }
         }
         generateHerb();
-        generateTree();
     }
     //writeFile(to_string(xPos)+"_"+to_string(zPos));
     return true;
 }
 
 void Chunk::generateHerb() {
+    bool hasTree = false;
     for(int i = 0; i < 16; i++) {
         int x = i+this->x;
         int randx = glm::abs((x*(x*x*prime1[0]+prime2[0])+prime3[0])&0x7fffffff);
@@ -660,28 +660,85 @@ void Chunk::generateHerb() {
             int y = height[i][j];
             int randz = glm::abs((z*(z*z*prime1[0]+prime2[0])+prime3[0])&0x7fffffff);
             int randy = glm::abs((y*(y*y*prime1[0]+prime2[0])+prime3[0])&0x7fffffff);
-            if(glm::abs(randx*randy*randz)%32 > 30) {
+            if(glm::abs(randx*randy*randz)%64 == 1) {
                 if(y > SEA_LEVEL) {
                     subChunks[(y+1)/16]->BlockType[(y+1)%16][i][j] = GRASS;
+                }
+            }
+            if(hasTree == false && glm::abs(randx*randy*randz)%512 > 507 &&
+               i > 5 && i < 10 && j > 5 && j < 10) {
+                if(y > SEA_LEVEL) {
+                    hasTree = generateTree(y, i, j);
                 }
             }
         }
     }
 }
 
-void Chunk::generateTree() {
-    //采取挖空重构的方式
+int tree[4][7][7] = {0, 0, 0, 1, 0, 0, 0,
+                      0, 1, 1, 1, 1, 1, 0,
+                      0, 1, 1, 1, 1, 1, 0,
+                      1, 1, 1, 1, 1, 1, 1,
+                      0, 1, 1, 1, 1, 1, 0,
+                      0, 1, 1, 1, 1, 1, 0,
+                      0, 0, 0, 1, 0, 0, 0,
+    
+                      0, 0, 1, 1, 1, 0, 0,
+                      0, 1, 1, 1, 1, 1, 0,
+                      1, 1, 1, 1, 1, 1, 1,
+                      1, 1, 1, 1, 1, 1, 1,
+                      1, 1, 1, 1, 1, 1, 1,
+                      0, 1, 1, 1, 1, 1, 0,
+                      0, 0, 1, 1, 1, 0, 0,
+    
+                      0, 0, 0, 1, 0, 0, 0,
+                      0, 1, 1, 1, 1, 1, 0,
+                      0, 1, 1, 1, 1, 1, 0,
+                      1, 1, 1, 1, 1, 1, 1,
+                      0, 1, 1, 1, 1, 1, 0,
+                      0, 1, 1, 1, 1, 1, 0,
+                      0, 0, 0, 1, 0, 0, 0,
+    
+                      0, 0, 0, 0, 0, 0, 0,
+                      0, 0, 1, 1, 1, 0, 0,
+                      0, 1, 1, 1, 1, 1, 0,
+                      0, 1, 1, 1, 1, 1, 0,
+                      0, 1, 1, 1, 1, 1, 0,
+                      0, 0, 1, 1, 1, 0, 0,
+                      0, 0, 0, 0, 0, 0, 0};
+
+bool Chunk::generateTree(int y, int x, int z) {
+    //先检查能否生成树
+    int tmpy = y+4;
+    SubChunk *tmp = subChunks[tmpy/16];
+    for(int i = 0; i < 7; i++) {
+        if(tmp->BlockType[tmpy%16][x-3+i][z-3] != (char)AIR ||
+           tmp->BlockType[tmpy%16][x-3+i][z+3] != (char)AIR ||
+           tmp->BlockType[tmpy%16][x-3][z+i-3] != (char)AIR ||
+           tmp->BlockType[tmpy%16][x+3][z+i-3] != (char)AIR) {
+            return false;
+        }
+    }
+    //生成叶子
+    for(int i = 0; i < 4; i++) {
+        int tmpy = y+4+i;
+        for(int j = 0; j < 7; j++) {
+            int tmpx = x+j-3;
+            for(int k = 0; k < 7; k++) {
+                int tmpz = z+k-3;
+                if(tree[i][j][k] == 1) {
+                    subChunks[tmpy/16]->BlockType[tmpy%16][tmpx][tmpz] = LEAF;
+                }
+            }
+        }
+    }
+    //生成树干
+    for(int k = 1; k < 8; k++) {
+        subChunks[(y+k)/16]->BlockType[(y+k)%16][x][z] = TRUNK;
+    }
+    return true;
 }
 
-//仅用于测试，该模块能正确运行后去掉
-/*char* Chunk::readChunk()
-{
-    char *ret = (char *)malloc(16*16*256*sizeof(char));
-    int size = 16*16*16;
-    for(int i = 0; i < 16; i++)
-        memcpy(ret+i*size, subChunks[i]->BlockType, size*sizeof(char));
-    return ret;
-}*/
 
 bool Chunk::readFile(string filePath){
     fstream fin;

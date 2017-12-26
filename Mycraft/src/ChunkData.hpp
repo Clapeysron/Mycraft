@@ -135,7 +135,7 @@ public:
     Chunk*recycle(int x, int z);
     bool generateMap(); //called by initChunks
     void generateHerb();
-    void generateTree();
+    bool generateTree(int y, int x, int z);
     bool readFile(string filePath); //TO-DO, called by initChunks or updateChunks
     bool writeFile(string filePath); //TO-DO, called by updateChunks
     char* readChunk(); //called by render(test ver)
