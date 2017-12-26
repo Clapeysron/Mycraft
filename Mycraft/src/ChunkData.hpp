@@ -91,7 +91,7 @@ public:
     void updateQuads(int side); //for walkong update
     void adjBlocksEnqueue(); //for rendering
     void addVertices(int dir, int y, int x, int z); //called by updateQuads
-    bool waterFilling(int y, int x, int z);
+    
     //只有移动或者放置非透明块时有影响
     char removeBlock(int y, int x, int z);
     //设置为空气
@@ -141,6 +141,7 @@ public:
     char* readChunk(); //called by render(test ver)
     void addVertices(int dir, int y, int x, int z);
     void addTransBlock(char type, int y, int x, int z);
+    void addWater(int y, int x, int z);
     void updateWater();
     void updateTransQuads();
     
