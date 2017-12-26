@@ -869,8 +869,8 @@ void Chunk::updateWater() {
             if(subChunks[index]->BlockType[offset][i][j] == (char)WATER) {
                 int yPosIndex = SEA_LEVEL/16;
                 int yPosOffset = SEA_LEVEL%16;
-                char yPosType = (yPosIndex < 16)?subChunks[yPosIndex]->BlockType[yPosOffset][i][j] : BOUND;
-                if(yPosType == (char)AIR)
+                //char yPosType = (yPosIndex < 16)?subChunks[yPosIndex]->BlockType[yPosOffset][i][j] : BOUND;
+                //if(yPosType == (char)AIR)
                 addVertices(YPOS, SEA_LEVEL-1, i+x, j+z);
             }
         }
@@ -1420,6 +1420,11 @@ void SubChunk::set_texture(float* tmp, char type, int dir) {
         for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
             tmp[m+6] += FLOWER_X;
             tmp[m+7] += FLOWER_Y;
+        }
+    } else if (type == BASE_ROCK) {
+        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
+            tmp[m+6] += BASE_ROCK_X;
+            tmp[m+7] += BASE_ROCK_Y;
         }
     }
 }
