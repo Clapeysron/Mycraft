@@ -115,8 +115,7 @@
 
 // Water offset with the aside block
 #define WATER_OFFSET 0.85
-
 // Tree Density
-#define TREE_DENSITY 32
+#define TREE_DENSITY 20
 
 #endif /* game_settings_h */

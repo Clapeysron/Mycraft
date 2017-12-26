@@ -9,7 +9,7 @@
 #include "Render.hpp"
 #include "Stbi_load.hpp"
 //#define TIMETEST
-#define DEPTHTEST
+//#define DEPTHTEST
 
 bool Render::firstMouse = true;
 float Render::yaw   =  -90.0f;
@@ -28,8 +28,7 @@ glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 Render::Render() {
     dayTime = 9.0f;
     srand((unsigned)time(NULL));
-    //randomSunDirection = fmod(rand(), 2*M_PI);
-    randomSunDirection = M_PI/6;
+    randomSunDirection = fmod(rand(), 2*M_PI);
     lastFrame = 0.0f;
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -83,8 +82,7 @@ void Render::initial(Game &game) {
     depthMap_init();
     Depth_debug_Shader = Shader("shader/Depth_debug.vs", "shader/Depth_debug.fs");
     Depth_debug_Shader.setInt("depthMap", 0);
-    steve_model = Model("model/steve.obj");
-    
+    steve_model = Model("model/alex.obj"); 
 }
 
 void Render::depthMap_init() {
@@ -165,7 +163,7 @@ void Render::render(Game& game) {
     float currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
-    dayTime += deltaTime/10;
+    dayTime += deltaTime/20;
     dayTime = dayTime > 24 ? dayTime : dayTime - 24;
     printf("==========================\n");
     printf("fps: %.2f\n",1.0f/deltaTime);
@@ -201,7 +199,7 @@ void Render::render(Game& game) {
     timeMark = glfwGetTime();
 #endif
     
-    float shadowRadius = (RADIUS*2+1)*8;
+    float shadowRadius = (RADIUS*2+1)*8*1.2;
     float dayTheta = (dayTime-8)*M_PI/12;
     // depth scene
     glm::mat4 lightProjection, lightView, lightSpaceMatrix;
@@ -295,7 +293,13 @@ void Render::render(Game& game) {
 #endif
     
     // Draw Sun or Moon
-    Sun_Moon.draw(dayTime, game.steve_position, view, projection);
+    glm::mat4 sun_model(1);
+    sun_model = glm::translate(sun_model, lightPos);
+    sun_model = glm::scale(sun_model, glm::vec3(20.f, 20.f, 20.f));
+    glm::vec3 axis = glm::cross(lightDirection ,glm::vec3(0,0,1));
+    float sun_theta = glm::angle(lightDirection, glm::vec3(0,0,1));
+    sun_model = glm::rotate(sun_model, sun_theta, glm::cross(lightDirection ,glm::vec3(0,0,1)));
+    Sun_Moon.draw(view, projection, sun_model);
     
 #ifdef TIMETEST
     printf("Sun scene draw: %f\n", timeMark - glfwGetTime());

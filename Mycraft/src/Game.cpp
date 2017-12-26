@@ -27,7 +27,7 @@ bool Game::move(glm::vec3 new_position) {
             for (int dz=0; dz<2; dz++) {
                 for (int dy=0; dy<3; dy++) {
                     char type = visibleChunks.getBlockType(base_y+dy, base_x+dx, base_z+dz);
-                    if (type >> 4 != -1) {
+                    if ( ((unsigned char)type < 0xc0 || (unsigned char)type > 0xc2) && ((unsigned char)type > 0xf2 || (unsigned char)type < 0xf0)) {
                         if ( if_in_block(base_y+dy, base_x+dx, base_z+dz, new_position) == true ) return false;
                     }
                 }

@@ -660,14 +660,12 @@ void Chunk::generateHerb() {
             int y = height[i][j];
             int randz = glm::abs((z*(z*z*prime1[0]+prime2[0])+prime3[0])&0x7fffffff);
             int randy = glm::abs((y*(y*y*prime1[0]+prime2[0])+prime3[0])&0x7fffffff);
-            if(glm::abs(randx*randy*randz)%64 == 1) {
-                if(y > SEA_LEVEL) {
+            if(y > SEA_LEVEL) {
+                if(glm::abs(randx*randy*randz)%64 == 1) {
                     subChunks[(y+1)/16]->BlockType[(y+1)%16][i][j] = GRASS;
                 }
-            }
-            if(hasTree == false && glm::abs(randx*randy*randz)%512 > (512-TREE_DENSITY) &&
-               i > 5 && i < 10 && j > 5 && j < 10) {
-                if(y > SEA_LEVEL) {
+                if(hasTree == false && glm::abs(randx*randy*randz)%512 > 500 &&
+                   i > 5 && i < 10 && j > 5 && j < 10) {
                     hasTree = generateTree(y, i, j);
                 }
             }
@@ -708,6 +706,9 @@ int tree[4][7][7] = {0, 0, 0, 1, 0, 0, 0,
                       0, 0, 0, 0, 0, 0, 0};
 
 bool Chunk::generateTree(int y, int x, int z) {
+    if(this->x == 0 && this->z == 0) {
+        return false;
+    }
     //先检查能否生成树
     int tmpy = y+4;
     SubChunk *tmp = subChunks[tmpy/16];
@@ -719,6 +720,8 @@ bool Chunk::generateTree(int y, int x, int z) {
             return false;
         }
     }
+    if(subChunks[(y+7)/16]->isEmpty)
+        return false;
     //生成叶子
     for(int i = 0; i < 4; i++) {
         int tmpy = y+4+i;
@@ -733,12 +736,12 @@ bool Chunk::generateTree(int y, int x, int z) {
         }
     }
     //生成树干
-    for(int k = 1; k < 5; k++) {
+    subChunks[y/16]->BlockType[y%16][x][z] = SOIL;
+    for(int k = 1; k < 6; k++) {
         subChunks[(y+k)/16]->BlockType[(y+k)%16][x][z] = TRUNK;
     }
     return true;
 }
-
 
 bool Chunk::readFile(string filePath){
     fstream fin;
