@@ -348,6 +348,87 @@ inline void SubChunk::setVisibility(int dir){
     adjVisibility |= dir;
 }
 
+bool SubChunk::waterFilling(int y, int x, int z) {
+    if(BlockType[y][x][z] != (char)AIR || y >= SEA_LEVEL)
+        return false;
+    BlockType[y][x][z] = WATER;
+    class Coordinate{
+        public:
+        int x;
+        int y;
+        int z;
+        //int visited;
+        //Coordinate() {visited = 0;}
+        Coordinate* set(int y, int x, int z) {
+            this->x = x;
+            this->y = y;
+            this->z = z;
+            //visited = 1;
+            return this;
+        }
+    };
+    queue<Coordinate *> scanQueue;
+    Coordinate *tmp;
+    Coordinate blocks[16][16][16];
+    scanQueue.push(blocks[y][x][z].set(y, x, z));
+    while(!scanQueue.empty()) {
+        tmp = scanQueue.front();
+        scanQueue.pop();
+        //BlockType[tmp->y][tmp->x][tmp->z] = WATER;
+        if(tmp->x == 0) {
+            if(xNeg != NULL)
+                xNeg->waterFilling(tmp->y, 15, tmp->z);
+        }
+        else if(BlockType[tmp->y][tmp->x-1][tmp->z] == (char)AIR) {
+            scanQueue.push(blocks[tmp->y][tmp->x-1][tmp->z].set(tmp->y, tmp->x-1, tmp->z));
+            BlockType[tmp->y][tmp->x-1][tmp->z] = WATER;
+        }
+        if(tmp->x == 15) {
+            if(xPos != NULL)
+                xPos->waterFilling(tmp->y, 0, tmp->z);
+        }
+        else if(BlockType[tmp->y][tmp->x+1][tmp->z] == (char)AIR) {
+            scanQueue.push(blocks[tmp->y][tmp->x+1][tmp->z].set(tmp->y, tmp->x+1, tmp->z));
+            BlockType[tmp->y][tmp->x+1][tmp->z] = WATER;
+        }
+        if(tmp->z == 0) {
+            if(zNeg != NULL)
+                zNeg->waterFilling(tmp->y, tmp->x, 15);
+        }
+        else if(BlockType[tmp->y][tmp->x][tmp->z-1] == (char)AIR) {
+            scanQueue.push(blocks[tmp->y][tmp->x][tmp->z-1].set(tmp->y, tmp->x, tmp->z-1));
+            BlockType[tmp->y][tmp->x][tmp->z-1] = WATER;
+        }
+        if(tmp->z == 15) {
+            if(zPos != NULL)
+                zPos->waterFilling(tmp->y, tmp->x, 0);
+        }
+        else if(BlockType[tmp->y][tmp->x][tmp->z+1] == (char)AIR) {
+            scanQueue.push(blocks[tmp->y][tmp->x][tmp->z+1].set(tmp->y, tmp->x, tmp->z+1));
+            BlockType[tmp->y][tmp->x][tmp->z+1] = WATER;
+        }
+        if(tmp->y == 0){
+            if(yNeg != NULL)
+                yNeg->waterFilling(15, tmp->x, tmp->z);
+        }
+        else if(BlockType[tmp->y-1][tmp->x][tmp->z] == (char)AIR) {
+            scanQueue.push(blocks[tmp->y-1][tmp->x][tmp->z].set(tmp->y-1, tmp->x, tmp->z));
+            BlockType[tmp->y-1][tmp->x][tmp->z] = WATER;
+        }
+        if(tmp->y == 15){
+            if(yPos != NULL)
+                yPos->waterFilling(0, tmp->x, tmp->z);
+        }
+        else if(BlockType[tmp->y+1][tmp->x][tmp->z] == (char)AIR && tmp->y+1+this->y < SEA_LEVEL) {
+            scanQueue.push(blocks[tmp->y+1][tmp->x][tmp->z].set(tmp->y+1, tmp->x, tmp->z));
+            BlockType[tmp->y+1][tmp->x][tmp->z] = WATER;
+        }
+    }
+    if(SEA_LEVEL <= this->y+y+16 && this->y+y < SEA_LEVEL)
+        parent->updateWater();
+    return true;
+}
+
 //移除方块
 char SubChunk::removeBlock(int y, int x, int z){
     char type = BlockType[y][x][z];
@@ -358,13 +439,11 @@ char SubChunk::removeBlock(int y, int x, int z){
     char zNegType = (z == 0)? ((zNeg)? zNeg->BlockType[y][x][15]: BOUND) : BlockType[y][x][z-1];
     char zPosType = (z == 15)? ((zPos)? zPos->BlockType[y][x][0]: BOUND) : BlockType[y][x][z+1];
     char yPosType = (y == 15)? ((yPos)? yPos->BlockType[0][x][z]: BOUND) : BlockType[y+1][x][z];
+    BlockType[y][x][z] = AIR;
     if(xNegType == (char)WATER || xPosType == (char)WATER ||
        zNegType == (char)WATER || zPosType == (char)WATER || yPosType == (char)WATER) {
-        BlockType[y][x][z] = WATER;
-        parent->addWater(y, x ,z);
-    }
-    else {
-        BlockType[y][x][z] = AIR;
+        waterFilling(y, x, z);
+        //parent->addWater(y, x ,z);
     }
     updateQuads();
     if((type&0x80) == 0)
@@ -757,10 +836,6 @@ void Chunk::addVertices(int dir, int y, int x, int z) {
     Water.insert(Water.end(), tmp, tmp+QUAD_SIZE);
 }
 
-void Chunk::addWater(int y, int x, int z){
-    addVertices(YPOS, SEA_LEVEL-1, this->x+x, this->z+z);
-    bufferObject.updateBuffer(true, &Water[0], Water.size());
-}
 
 void Chunk::addTransBlock(char type, int y, int x, int z) {
     if((type&0xc0) == 0xc0) {
