@@ -100,12 +100,9 @@ Sky::~Sky() {
 void Sky::draw(glm::vec3 position, glm::mat4 view, glm::mat4 projection) {
     glDepthFunc(GL_LEQUAL);
     Sky_Shader.use();
-    glm::mat4 model(1);
     view = glm::mat4(glm::mat3(view));
     Sky_Shader.setMat4("view", view);
     Sky_Shader.setMat4("projection", projection);
-    model = glm::translate(model, position);
-    Sky_Shader.setMat4("model", model);
     glBindVertexArray(VAO);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, Skybox_pic);
