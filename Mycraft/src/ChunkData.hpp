@@ -32,8 +32,9 @@ using namespace std;
 class SubChunk;
 static queue<SubChunk*> scanQueue;
 
-extern float vertex[6][48];
+extern float vertex[FACE_TYPE_NUM][QUAD_SIZE];
 extern float vertices[6][48];
+extern float waterVertices[QUAD_SIZE];
 
 static int unclickable[] = {WATER};
 
@@ -62,6 +63,8 @@ public:
 };
 static vector<float> transQuads;
 
+class Chunk;
+
 class SubChunk{
     friend class Chunk;
     friend class VisibleChunks;
@@ -80,7 +83,8 @@ public:
     SubChunk* recycle(int y, int x, int z);
     void setPathHistory(int direction); //clear path history
     int getPathHistory(); //????????
-    void updateNeighbor(SubChunk* dir[6]); //for walking update
+    Block *getBufferObject();
+    void updateNeighbor(Chunk* parent, SubChunk* dir[6]); //for walking update
     void updateVisibility(); //for walking update
     void setVisibility(int dir); //for remove&place update
     void updateQuads(); //for walking update
@@ -108,6 +112,7 @@ private:
     int pathHistory;
     int adjVisibility;
     //neighbor subchunks
+    Chunk* parent;
     SubChunk *xNeg;
     SubChunk *xPos;
     SubChunk *zNeg;
@@ -117,8 +122,6 @@ private:
     //Quads need rendering
     vector<float> Quads;
     Block bufferObject;
-    vector<float> Water;
-    Block WBO;
     bool inFrustum(int x, int y, int z);
     void set_texture(float* tmp, char type, int dir);
 };
@@ -130,10 +133,18 @@ public:
     Chunk(int x, int z);
     ~Chunk();
     Chunk*recycle(int x, int z);
-    bool generateMap(bool isSea = false, int seaLevel = 0); //called by initChunks
+    bool generateMap(); //called by initChunks
+    void generateHerb();
+    void generateTree();
     bool readFile(string filePath); //TO-DO, called by initChunks or updateChunks
     bool writeFile(string filePath); //TO-DO, called by updateChunks
     char* readChunk(); //called by render(test ver)
+    void addVertices(int dir, int y, int x, int z);
+    void addTransBlock(char type, int y, int x, int z);
+    void addWater(int y, int x, int z);
+    void updateWater();
+    void updateTransQuads();
+    
 private:
     SubChunk *subChunks[16];
     int height[16][16];
@@ -146,6 +157,10 @@ private:
     Chunk *zNeg;
     Chunk *zPos;
     //called by updateChunks
+    vector<float> Water;
+    Block bufferObject;
+    vector<float> transQuads;
+    Block transBufObj;
     void updateNeighbor(Chunk *xNegChunk, Chunk *xPosChunk, Chunk *zNegChunk, Chunk *zPosChunk);
     void setCoordinate(int x, int z);
 };
@@ -158,6 +173,7 @@ public:
     bool updataChunks(float x, float y, float z); //update map
     Chunk *getCurChunk();
     SubChunk *getCurSubChunk();
+    queue<SubChunk*> getRenderQueue();
     void getRenderingSubChunks(int y, int x, int z); //called by render
     void draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection, glm::vec3 chosen_block_pos);
     void drawDepth(Shader& Depth_Shader, unsigned int texture_pic);

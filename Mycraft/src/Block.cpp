@@ -8,49 +8,74 @@
 
 #include "Block.hpp"
 
-float vertex[QUAD_SIZE/VERTEX_SIZE][QUAD_SIZE] = {
+float vertex[FACE_TYPE_NUM][QUAD_SIZE] = {
     // x-
-    0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.1f,
-    0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.1f, 0.1f,
-    0.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.1f, 0.0f,
-    0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 0.1f,
-    0.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, 0.1f, 0.0f,
+    0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, TEXTURE_MIN, TEXTURE_MAX,
+    0.0f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, TEXTURE_MAX, TEXTURE_MAX,
+    0.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, TEXTURE_MAX, TEXTURE_MIN,
+    0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, TEXTURE_MIN, TEXTURE_MIN,
+    0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, TEXTURE_MIN, TEXTURE_MAX,
+    0.0f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, TEXTURE_MAX, TEXTURE_MIN,
     // x+
-    1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.1f, 0.1f,
-    1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.1f,
-    1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-    1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.1f, 0.0f,
-    1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.1f, 0.1f,
-    1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+    1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, TEXTURE_MAX, TEXTURE_MAX,
+    1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, TEXTURE_MIN, TEXTURE_MAX,
+    1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, TEXTURE_MIN, TEXTURE_MIN,
+    1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, TEXTURE_MAX, TEXTURE_MIN,
+    1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, TEXTURE_MAX, TEXTURE_MAX,
+    1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, TEXTURE_MIN, TEXTURE_MIN,
     //z-
-    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.1f, 0.1f,
-    0.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.1f, 0.0f,
-    1.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
-    1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.1f,
-    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.1f, 0.1f,
-    1.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, TEXTURE_MAX, TEXTURE_MAX,
+    0.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f, TEXTURE_MAX, TEXTURE_MIN,
+    1.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f, TEXTURE_MIN, TEXTURE_MIN,
+    1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, TEXTURE_MIN, TEXTURE_MAX,
+    0.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, TEXTURE_MAX, TEXTURE_MAX,
+    1.0f, 1.0f, 0.0f, 0.0f, 0.0f, -1.0f, TEXTURE_MIN, TEXTURE_MIN,
     //z+
-    0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.1f,
-    0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-    1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.1f, 0.0f,
-    1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.1f, 0.1f,
-    0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.1f,
-    1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.1f, 0.0f,
+    0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, TEXTURE_MIN, TEXTURE_MAX,
+    0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, TEXTURE_MIN, TEXTURE_MIN,
+    1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, TEXTURE_MAX, TEXTURE_MIN,
+    1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, TEXTURE_MAX, TEXTURE_MAX,
+    0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, TEXTURE_MIN, TEXTURE_MAX,
+    1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, TEXTURE_MAX, TEXTURE_MIN,
     //y-
-    0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.1f, 0.1f,
-    0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.1f, 0.0f,
-    1.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-    1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.1f,
-    0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, 0.1f, 0.1f,
-    1.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+    0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, TEXTURE_MAX, TEXTURE_MAX,
+    0.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, TEXTURE_MAX, TEXTURE_MIN,
+    1.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, TEXTURE_MIN, TEXTURE_MIN,
+    1.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, TEXTURE_MIN, TEXTURE_MAX,
+    0.0f, 0.0f, 0.0f, 0.0f, -1.0f, 0.0f, TEXTURE_MAX, TEXTURE_MAX,
+    1.0f, 0.0f, 1.0f, 0.0f, -1.0f, 0.0f, TEXTURE_MIN, TEXTURE_MIN,
     //y+
-    0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.1f,
-    0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-    1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.1f, 0.0f,
-    1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.1f, 0.1f,
-    0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.1f,
-    1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.1f, 0.0f
+    0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, TEXTURE_MIN, TEXTURE_MAX,
+    0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, TEXTURE_MIN, TEXTURE_MIN,
+    1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, TEXTURE_MAX, TEXTURE_MIN,
+    1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, TEXTURE_MAX, TEXTURE_MAX,
+    0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, TEXTURE_MIN, TEXTURE_MAX,
+    1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, TEXTURE_MAX, TEXTURE_MIN,
+    
+    // x_center
+    0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, TEXTURE_MIN, TEXTURE_MAX,
+    0.5f, 0.0f, 1.0f, -1.0f, 0.0f, 0.0f, TEXTURE_MAX, TEXTURE_MAX,
+    0.5f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, TEXTURE_MAX, TEXTURE_MIN,
+    0.5f, 1.0f, 0.0f, -1.0f, 0.0f, 0.0f, TEXTURE_MIN, TEXTURE_MIN,
+    0.5f, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f, TEXTURE_MIN, TEXTURE_MAX,
+    0.5f, 1.0f, 1.0f, -1.0f, 0.0f, 0.0f, TEXTURE_MAX, TEXTURE_MIN,
+    
+    //z_center
+    0.0f, 0.0f, 0.5f, 0.0f, 0.0f, -1.0f, TEXTURE_MAX, TEXTURE_MAX,
+    0.0f, 1.0f, 0.5f, 0.0f, 0.0f, -1.0f, TEXTURE_MAX, TEXTURE_MIN,
+    1.0f, 1.0f, 0.5f, 0.0f, 0.0f, -1.0f, TEXTURE_MIN, TEXTURE_MIN,
+    1.0f, 0.0f, 0.5f, 0.0f, 0.0f, -1.0f, TEXTURE_MIN, TEXTURE_MAX,
+    0.0f, 0.0f, 0.5f, 0.0f, 0.0f, -1.0f, TEXTURE_MAX, TEXTURE_MAX,
+    1.0f, 1.0f, 0.5f, 0.0f, 0.0f, -1.0f, TEXTURE_MIN, TEXTURE_MIN
+};
+
+float waterVertices[QUAD_SIZE] = {
+    0.0f, WATER_OFFSET, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.1f,
+    0.0f, WATER_OFFSET, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+    1.0f, WATER_OFFSET, 1.0f, 0.0f, 1.0f, 0.0f, 0.1f, 0.0f,
+    1.0f, WATER_OFFSET, 0.0f, 0.0f, 1.0f, 0.0f, 0.1f, 0.1f,
+    0.0f, WATER_OFFSET, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.1f,
+    1.0f, WATER_OFFSET, 1.0f, 0.0f, 1.0f, 0.0f, 0.1f, 0.0f
 };
 
 std::vector<float> Quads;
