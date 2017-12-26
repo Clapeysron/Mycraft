@@ -16,8 +16,8 @@
 #include "Gui.hpp"
 #include <math.h>
 
-#define SHADOW_WIDTH 12800
-#define SHADOW_HEIGHT 12800
+#define SHADOW_WIDTH 16384
+#define SHADOW_HEIGHT 16384
 
 class Render
 {
@@ -34,6 +34,8 @@ public:
     Shader Steve_Shader;
     Model steve_model;
 private:
+    float dayTime;
+    float randomSunDirection;
     static int screen_width, screen_height;
     unsigned int texture_pic;
     unsigned int depthMap_fbo;

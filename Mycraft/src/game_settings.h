@@ -100,6 +100,8 @@
 #define DIAMAND_ORE_Y 0.2f
 #define FLOWER_X 0.0f
 #define FLOWER_Y 0.4f
+#define BASE_ROCK_X 0.4f
+#define BASE_ROCK_Y 0.0f
 
 #define SEA_LEVEL 115
 
