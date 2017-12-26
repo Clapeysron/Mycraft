@@ -204,11 +204,20 @@ void Render::render(Game& game) {
     // depth scene
     glm::mat4 lightProjection, lightView, lightSpaceMatrix;
     glm::vec3 lightDirection(sin(randomSunDirection)*cos(dayTheta), -sin(dayTheta), cos(randomSunDirection)*cos(dayTheta));
+    glm::mat4 depth_steve_model(1);
+    if (game.game_perspective == THIRD_PERSON) {
+        depth_steve_model = glm::translate(depth_steve_model, game.steve_position);
+        depth_steve_model = glm::translate(depth_steve_model, glm::vec3(0, -STEVE_HEIGHT+0.1, 0));
+        depth_steve_model = glm::rotate(depth_steve_model, steve_turn_angle(cameraFront), glm::vec3(0, 1, 0));
+        depth_steve_model = glm::scale(depth_steve_model, glm::vec3(0.3f * STEVE_HEIGHT));
+        Depth_Shader.setMat4("model", depth_steve_model);
+        steve_model.Draw(Depth_Shader);
+    }
     glm::vec3 lightPos = game.steve_position;
     lightPos.y += shadowRadius*sin(dayTheta);
     lightPos.x += -shadowRadius*sin(randomSunDirection)*cos(dayTheta);
     lightPos.z += -shadowRadius*cos(randomSunDirection)*cos(dayTheta);
-    GLfloat near_plane = 0.0f, far_plane = shadowRadius + 256.0f;
+    /*GLfloat near_plane = 0.0f, far_plane = shadowRadius + 256.0f;
     lightProjection = glm::ortho(-shadowRadius, shadowRadius, -shadowRadius, shadowRadius, near_plane, far_plane);
     lightView = glm::lookAt(lightPos, lightPos + lightDirection, glm::vec3(lightDirection.x, lightDirection.z, -lightDirection.y/(tan(dayTheta)*tan(dayTheta))));
     lightSpaceMatrix = lightProjection * lightView;
@@ -220,17 +229,8 @@ void Render::render(Game& game) {
     glCullFace(GL_FRONT);
     Depth_Shader.setMat4("model", glm::mat4(1));
     game.visibleChunks.drawDepth(Depth_Shader, texture_pic);
-    glm::mat4 depth_steve_model(1);
-    if (game.game_perspective == THIRD_PERSON) {
-        depth_steve_model = glm::translate(depth_steve_model, game.steve_position);
-        depth_steve_model = glm::translate(depth_steve_model, glm::vec3(0, -STEVE_HEIGHT+0.1, 0));
-        depth_steve_model = glm::rotate(depth_steve_model, steve_turn_angle(cameraFront), glm::vec3(0, 1, 0));
-        depth_steve_model = glm::scale(depth_steve_model, glm::vec3(0.3f * STEVE_HEIGHT));
-        Depth_Shader.setMat4("model", depth_steve_model);
-        steve_model.Draw(Depth_Shader);
-    }
     glCullFace(GL_BACK);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);*/
     
 #ifdef TIMETEST
     printf("Depth scene draw: %f\n", timeMark - glfwGetTime());

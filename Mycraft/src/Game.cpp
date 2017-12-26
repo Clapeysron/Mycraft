@@ -49,7 +49,7 @@ bool Game::if_in_block(int y, int x, int z, glm::vec3 position) {
 }
 
 bool Game::gravity_move(float deltaTime) {
-    vertical_v -= GRAVITY/16;
+    vertical_v -= deltaTime*GRAVITY*3;
     glm::vec3 new_position;
     new_position = steve_position + deltaTime * glm::vec3(0.0f, vertical_v, 0.0f);
     if ( !move(new_position) ) {
