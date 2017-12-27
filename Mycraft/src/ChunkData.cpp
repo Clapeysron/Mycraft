@@ -88,6 +88,9 @@ void SubChunk::updateQuads(){
     if(isEmpty)
         return; //如果为空，Quads为空
     
+    //初始化阴影
+    memset(vertexShadow, 0xffff, 16*16*16*sizeof(unsigned short));
+    
     for(int i = 0; i < 16; i++)
     {
         for(int j = 0; j <16; j++)
@@ -96,43 +99,79 @@ void SubChunk::updateQuads(){
             {
                 if(BlockType[i][j][k] == (char)AIR)
                     continue;
-                
+                //添加可见面（把电影阴影数据一同传入）
                 if((BlockType[i][j][k]&0xc0) != 0xc0) {
-                    xNegType = (j == 0)? ((xNeg)?
-                                          xNeg->BlockType[i][15][k]: BOUND) : BlockType[i][j-1][k];
-                    xPosType = (j == 15)? ((xPos)?
-                                           xPos->BlockType[i][0][k]: BOUND) : BlockType[i][j+1][k];
-                    zNegType = (k == 0)? ((zNeg)?
-                                          zNeg->BlockType[i][j][15]: BOUND) : BlockType[i][j][k-1];
-                    zPosType = (k == 15)? ((zPos)?
-                                           zPos->BlockType[i][j][0]: BOUND) : BlockType[i][j][k+1];
-                    yNegType = (i == 0)? ((yNeg)?
-                                          yNeg->BlockType[15][j][k]: BOUND) : BlockType[i-1][j][k];
-                    yPosType = (i == 15)? ((yPos)?
-                                           yPos->BlockType[0][j][k]: BOUND) : BlockType[i+1][j][k];
-
+                    xNegType = (j == 0)?
+                    ((xNeg)?xNeg->BlockType[i][15][k]: BOUND) : BlockType[i][j-1][k];
+                    xPosType = (j == 15)?
+                    ((xPos)?xPos->BlockType[i][0][k]: BOUND) : BlockType[i][j+1][k];
+                    zNegType = (k == 0)?
+                    ((zNeg)?zNeg->BlockType[i][j][15]: BOUND) : BlockType[i][j][k-1];
+                    zPosType = (k == 15)?
+                    ((zPos)?zPos->BlockType[i][j][0]: BOUND) : BlockType[i][j][k+1];
+                    yNegType = (i == 0)?
+                    ((yNeg)?yNeg->BlockType[15][j][k]: BOUND) : BlockType[i-1][j][k];
+                    yPosType = (i == 15)?
+                    ((yPos)?yPos->BlockType[0][j][k]: BOUND) : BlockType[i+1][j][k];
                     if(yPosType & 0x80) //up
                     {
+                        //先检查顶点阴影
+                        /*if(i == 15 && yPos->vertexShadow[0][j][k] != 0xffff) {
+                            yPos->addVertexShadow(0, j, k);
+                        }
+                        else if(vertexShadow[i+1][j][k] != 0xffff) {
+                            addVertexShadow(i+1, j, k);
+                        }*/
                         addVertices(YPOS, i, j, k);
                     } //如果相邻方块为透明或未填满，则该面为可见面
                     if(yNegType & 0x80) //down
                     {
+                        if(i == 0 && yNeg->vertexShadow[15][j][k] != 0xffff) {
+                            //yPos->addVertexShadow(0, j, k);
+                        }
+                        else if(vertexShadow[i-1][j][k] != 0xffff) {
+                            //addVertexShadow(i-1, j, k);
+                        }
                         addVertices(YNEG, i, j, k);
                     }
                     if(xPosType & 0x80) //right
                     {
+                        /*if(j == 15 && xPos->vertexShadow[i][0][k] != 0xffff) {
+                            xPos->addVertexShadow(0, j, k);
+                        }
+                        else if(vertexShadow[i][j+1][k] != 0xffff) {
+                            addVertexShadow(i, j+1, k);
+                        }*/
                         addVertices(XPOS, i, j, k);
                     }
                     if(xNegType & 0x80) //left
                     {
+                        /*if(j == 0 && xNeg->vertexShadow[i][15][k] != 0xffff) {
+                            xNeg->addVertexShadow(0, j, k);
+                        }
+                        else if(vertexShadow[i][j-1][k] != 0xffff) {
+                            addVertexShadow(i, j-1, k);
+                        }*/
                         addVertices(XNEG, i, j, k);
                     }
                     if(zPosType & 0x80) //front
                     {
+                        /*if(k == 15 && zPos->vertexShadow[i][j][0] != 0xffff) {
+                            zPos->addVertexShadow(i, j, 0);
+                        }
+                        else if(vertexShadow[i][j][k+1] != 0xffff) {
+                            addVertexShadow(i, j, k+1);
+                        }*/
                         addVertices(ZPOS, i, j, k);
                     }
                     if(zNegType & 0x80) //behind
                     {
+                        /*if(k == 0 && zNeg->vertexShadow[i][j][15] != 0xffff) {
+                            zNeg->addVertexShadow(i, j, 15);
+                        }
+                        else if(vertexShadow[i][j][k-1] != 0xffff) {
+                            addVertexShadow(i, j, k-1);
+                        }*/
                         addVertices(ZNEG, i, j, k);
                     }
                 }
@@ -145,6 +184,70 @@ void SubChunk::updateQuads(){
     }
     if(Quads.size() > 0)
         bufferObject.updateBuffer(true, &Quads[0], Quads.size()); //更新VBO绑定数据
+}
+
+void SubChunk::addVertexShadow(int y, int x, int z) {
+    char xNegType = (x == 0)? ((xNeg)?xNeg->BlockType[y][15][z]: BOUND) : BlockType[y][x-1][z];
+    char xPosType = (x == 15)? ((xPos)?xPos->BlockType[y][0][z]: BOUND) : BlockType[y][x+1][z];
+    char zNegType = (z == 0)? ((zNeg)?zNeg->BlockType[y][x][15]: BOUND) : BlockType[y][x][z-1];
+    char zPosType = (z == 15)? ((zPos)?zPos->BlockType[y][x][0]: BOUND) : BlockType[y][x][z+1];
+    char yNegType = (y == 0)? ((yNeg)?yNeg->BlockType[15][x][y]: BOUND) : BlockType[y-1][x][z];
+    char yPosType = (y == 15)? ((yPos)?yPos->BlockType[0][x][y]: BOUND) : BlockType[y+1][x][z];
+    //添加点阴影数据
+    unsigned short yNeg = ((yNegType&0x80) == 0)||(yNegType == (char)LEAF);
+    unsigned short yPos = ((yPosType&0x80) == 0)||(yPosType == (char)LEAF);
+    unsigned short xNeg = ((xNegType&0x80) == 0)||(xNegType == (char)LEAF);
+    unsigned short xPos = ((xPosType&0x80) == 0)||(xPosType == (char)LEAF);
+    unsigned short zNeg = ((zNegType&0x80) == 0)||(zNegType == (char)LEAF);
+    unsigned short zPos = ((zPosType&0x80) == 0)||(zPosType == (char)LEAF);
+    unsigned short tmp;
+    tmp = 3;
+    tmp -= yNeg+xNeg+zPos;
+    if(tmp >= 2)
+        tmp = 2;
+    vertexShadow[y][x][z] &= tmp<<QUADRANT1_OFFSET;
+    
+    tmp = 3;
+    tmp -= yNeg+xPos+zPos;
+    if(tmp >= 2)
+    tmp = 2;
+    vertexShadow[y][x][z] &= tmp<<QUADRANT2_OFFSET;
+    
+    tmp = 3;
+    tmp -= yNeg+xPos+zNeg;
+    if(tmp >= 2)
+    tmp = 2;
+    vertexShadow[y][x][z] &= tmp<<QUADRANT3_OFFSET;
+    
+    tmp = 3;
+    tmp -= yNeg+xNeg+zNeg;
+    if(tmp >= 2)
+    tmp = 2;
+    vertexShadow[y][x][z] &= tmp<<QUADRANT4_OFFSET;
+    
+    tmp = 3;
+    tmp -= yPos+xNeg+zPos;
+    if(tmp >= 2)
+    tmp = 2;
+    vertexShadow[y][x][z] &= tmp<<QUADRANT5_OFFSET;
+    
+    tmp = 3;
+    tmp -= yPos+xPos+zPos;
+    if(tmp >= 2)
+    tmp = 2;
+    vertexShadow[y][x][z] &= tmp<<QUADRANT6_OFFSET;
+    
+    tmp = 3;
+    tmp -= yPos+xPos+zNeg;
+    if(tmp >= 2)
+    tmp = 2;
+    vertexShadow[y][x][z] &= tmp<<QUADRANT7_OFFSET;
+    
+    tmp = 3;
+    tmp -= yPos+xNeg+zNeg;
+    if(tmp >= 2)
+    tmp = 2;
+    vertexShadow[y][x][z] &= tmp<<QUADRANT8_OFFSET;
 }
 
 //添加子区块某个面的可见面(只在边界面变为非边界面时调用)
@@ -223,6 +326,9 @@ void SubChunk::updateQuads(){
     }
 }*/
 
+int faceShadow[6][6][4] = {};
+
+
 //向vector中添加一个面的数据(QUAD_SIZE个float)
 void SubChunk::addVertices(int dir, int y, int x, int z)
 {
@@ -242,6 +348,15 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
             tmp[m+2] += z+this->z;
         }
         set_texture(tmp, SubChunk::BlockType[y][x][z], dir);
+        //设置阴影信息
+        /*if(dir >= XNEG && dir <= YPOS) {
+            for(int i = 0; i < 6; i++) {
+                y =
+                x =
+                z = ;
+                unsigned short res = (vertexShadow[y][x][z]>>faceShadow[dir][i][3])&0x0003;
+            }
+        }*/
         Quads.insert(Quads.end(), tmp, tmp+QUAD_SIZE);
     }
 }
@@ -660,14 +775,12 @@ void Chunk::generateHerb() {
             int y = height[i][j];
             int randz = glm::abs((z*(z*z*prime1[0]+prime2[0])+prime3[0])&0x7fffffff);
             int randy = glm::abs((y*(y*y*prime1[0]+prime2[0])+prime3[0])&0x7fffffff);
-            if(glm::abs(randx*randy*randz)%64 == 1) {
-                if(y > SEA_LEVEL) {
+            if(y > SEA_LEVEL) {
+                if(glm::abs(randx*randy*randz)%64 == 1) {
                     subChunks[(y+1)/16]->BlockType[(y+1)%16][i][j] = GRASS;
                 }
-            }
-            if(hasTree == false && glm::abs(randx*randy*randz)%512 > 507 &&
-               i > 5 && i < 10 && j > 5 && j < 10) {
-                if(y > SEA_LEVEL) {
+                if(hasTree == false && glm::abs(randx*randy*randz)%512 > 500 &&
+                   i > 5 && i < 10 && j > 5 && j < 10) {
                     hasTree = generateTree(y, i, j);
                 }
             }
@@ -708,6 +821,9 @@ int tree[4][7][7] = {0, 0, 0, 1, 0, 0, 0,
                       0, 0, 0, 0, 0, 0, 0};
 
 bool Chunk::generateTree(int y, int x, int z) {
+    if((this->x == 0 && this->z == 0) || subChunks[(y+7)/16]->isEmpty) {
+        return false;
+    }
     //先检查能否生成树
     int tmpy = y+4;
     SubChunk *tmp = subChunks[tmpy/16];
@@ -733,7 +849,8 @@ bool Chunk::generateTree(int y, int x, int z) {
         }
     }
     //生成树干
-    for(int k = 1; k < 8; k++) {
+    subChunks[y/16]->BlockType[y%16][x][z] = SOIL;
+    for(int k = 1; k < 6; k++) {
         subChunks[(y+k)/16]->BlockType[(y+k)%16][x][z] = TRUNK;
     }
     return true;

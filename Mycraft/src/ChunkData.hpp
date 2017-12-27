@@ -65,7 +65,7 @@ static vector<float> transQuads;
 
 class Chunk;
 
-class SubChunk{
+class SubChunk {
     friend class Chunk;
     friend class VisibleChunks;
 public:
@@ -91,7 +91,7 @@ public:
     void updateQuads(int side); //for walkong update
     void adjBlocksEnqueue(); //for rendering
     void addVertices(int dir, int y, int x, int z); //called by updateQuads
-    
+    void addVertexShadow(int y, int x, int z);
     //只有移动或者放置非透明块时有影响
     char removeBlock(int y, int x, int z);
     //设置为空气
@@ -107,6 +107,7 @@ private:
     int y;
     int z;
     char BlockType[16][16][16]; //yxz, 256-type of cubes
+    unsigned short vertexShadow[16][16][16];
     int count;
     bool isEmpty;
     int pathHistory;
@@ -159,13 +160,13 @@ private:
     //called by updateChunks
     vector<float> Water;
     Block bufferObject;
-    vector<float> transQuads;
-    Block transBufObj;
+    //vector<float> transQuads;
+    //Block transBufObj;
     void updateNeighbor(Chunk *xNegChunk, Chunk *xPosChunk, Chunk *zNegChunk, Chunk *zPosChunk);
     void setCoordinate(int x, int z);
 };
 
-class VisibleChunks{
+class VisibleChunks {
 public:
     VisibleChunks(float x, float y, float z);
     ~VisibleChunks();

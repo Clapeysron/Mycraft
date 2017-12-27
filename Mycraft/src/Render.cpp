@@ -76,8 +76,8 @@ void Render::initial(Game &game) {
     Gui.gui_init();
     Gui.Gui_Shader = Shader("shader/Gui.vs", "shader/Gui.fs");
     texture_init();
-    Depth_Shader = Shader("shader/Depth.vs", "shader/Depth.fs");
-    depthMap_init();
+    //Depth_Shader = Shader("shader/Depth.vs", "shader/Depth.fs");
+    //depthMap_init();
     Depth_debug_Shader = Shader("shader/Depth_debug.vs", "shader/Depth_debug.fs");
     Depth_debug_Shader.setInt("depthMap", 0);
     steve_model = Model("model/steve.obj");
@@ -179,7 +179,7 @@ void Render::render(Game& game) {
     // depth scene
     glm::mat4 lightProjection, lightView, lightSpaceMatrix;
     glm::vec3 lightDirection(sin(randomSunDirection)*cos(dayTheta), -sin(dayTheta), cos(randomSunDirection)*cos(dayTheta));
-    glm::vec3 lightPos = game.steve_position;
+    /*glm::vec3 lightPos = game.steve_position;
     lightPos.y += shadowRadius*sin(dayTheta);
     lightPos.x += -shadowRadius*sin(randomSunDirection)*cos(dayTheta);
     lightPos.z += -shadowRadius*cos(randomSunDirection)*cos(dayTheta);
@@ -203,7 +203,7 @@ void Render::render(Game& game) {
         depth_steve_model = glm::scale(depth_steve_model, glm::vec3(0.3f * STEVE_HEIGHT));
         Depth_Shader.setMat4("model", depth_steve_model);
         steve_model.Draw(Depth_Shader);
-    }
+    }*/
     glCullFace(GL_BACK);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -224,7 +224,7 @@ void Render::render(Game& game) {
         game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, lightSpaceMatrix, lightDirection, chosen_block_pos);
     }
     // steve render
-    if (game.game_perspective == THIRD_PERSON) {
+    /*if (game.game_perspective == THIRD_PERSON) {
         Steve_Shader.use();
         Steve_Shader.setMat4("projection", projection);
         Steve_Shader.setMat4("view", view);
@@ -232,7 +232,7 @@ void Render::render(Game& game) {
         Steve_Shader.setVec3("sunlight.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
         Steve_Shader.setMat4("model", depth_steve_model);
         steve_model.Draw(Steve_Shader);
-    }
+    }*/
     
     // depth shadow draw DEBUG
 //    Depth_debug_Shader.use();

@@ -18,7 +18,7 @@
 #define FACE_TYPE_NUM 8
 
 //transparent material or model (MSB = 1)
-//non-trans cube 0x1000xxxx
+//trans cube 0x1000xxxx
 #define LEAF 0x80
 #define GLASS 0x81
 
@@ -106,5 +106,14 @@
 #define SEA_LEVEL 115
 
 #define WATER_OFFSET 0.8
+
+#define QUADRANT1_OFFSET 14
+#define QUADRANT2_OFFSET 12
+#define QUADRANT3_OFFSET 10
+#define QUADRANT4_OFFSET 8
+#define QUADRANT5_OFFSET 6
+#define QUADRANT6_OFFSET 4
+#define QUADRANT7_OFFSET 2
+#define QUADRANT8_OFFSET 0
 
 #endif /* game_settings_h */
