@@ -83,7 +83,7 @@ void main()
         // Without Shadow mapping
         //result = isChosen * color;
         // With Shadow mapping
-        result = (1.0f - shadow) * diffuse * isChosen * color;
+        result = (sunlight.ambient +(1.0f-shadow)*diffuse) * isChosen * color;
     }
     FragColor = vec4(result, alpha);
 }

@@ -6,8 +6,18 @@ uniform float dayTime;
 const float M_PI = 3.14159265;
 void main()
 {
-    float dayIntensity = sin((dayTime-8)*M_PI/24)*0.2;
-    FragColor = (0.9 + dayIntensity) * texture(Sun_Moon_texture, TexCoord);
-    FragColor.r = FragColor.r * (1.2 - dayIntensity);
-    
+    vec4 outColor = texture(Sun_Moon_texture, TexCoord);
+    vec2 redSunTexCoord = vec2(TexCoord.x+0.1, TexCoord.y);
+    vec4 redSun = texture(Sun_Moon_texture, redSunTexCoord);
+    if (dayTime >=5.5 && dayTime <= 6.5) {
+        float dayIntensity = sin((6.5-dayTime)*M_PI);
+        FragColor = dayIntensity*redSun + (1-dayIntensity)*outColor;
+    } else if (dayTime<6 || dayTime>18) {
+        FragColor = redSun;
+    } else if (dayTime >= 17 && dayTime <= 19) {
+        float dayIntensity = sin((dayTime-17)*M_PI/2);
+        FragColor = dayIntensity*redSun + (1-dayIntensity)*outColor;
+    } else {
+        FragColor = outColor;
+    }
 }

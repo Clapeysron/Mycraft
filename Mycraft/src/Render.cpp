@@ -27,7 +27,7 @@ glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
 Render::Render() {
-    dayTime = 6.0f;
+    dayTime = 18.0f;
     //srand(0);
     srand((unsigned)time(NULL));
     randomSunDirection = fmod(rand(), 2*M_PI);
@@ -66,7 +66,6 @@ Render::Render() {
 }
 
 void Render::initial(Game &game) {
-    Sun_Moon_light = glm::vec3(0.3, 0.3, 0.3);
     view = glm::lookAt(game.steve_position, game.steve_position + cameraFront, cameraUp);
     projection = glm::perspective(glm::radians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
     Block_Shader = Shader("shader/Block.vs", "shader/Block.fs");
@@ -76,8 +75,10 @@ void Render::initial(Game &game) {
     Steve_Shader = Shader("shader/Steve.vs", "shader/Steve.fs");
     Sky.Sky_init();
     Sky.Sky_Shader = Shader("shader/Skybox.vs", "shader/Skybox.fs");
-    Sun_Moon.Sun_Moon_init();
-    Sun_Moon.Sun_Moon_Shader = Shader("shader/Sun_Moon.vs", "shader/Sun_Moon.fs");
+    Sun.Sun_Moon_init();
+    Sun.Sun_Moon_Shader = Shader("shader/Sun_Moon.vs", "shader/Sun_Moon.fs");
+    Moon.Sun_Moon_init();
+    Moon.Sun_Moon_Shader = Shader("shader/Sun_Moon.vs", "shader/Sun_Moon.fs");
     Gui.gui_init();
     Gui.Gui_Shader = Shader("shader/Gui.vs", "shader/Gui.fs");
     texture_init();
@@ -162,13 +163,14 @@ void Render::render(Game& game) {
     float totalTimeMark;
     totalTimeMark = glfwGetTime();
 #endif
-    
     float currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
     dayTime += deltaTime/10;
     dayTime = (dayTime>24) ? dayTime - 24 : dayTime;
+    Sun_Moon_light = calLight(dayTime);
     printf("==========================\n");
+    printf("Time: %d:%d\n", (int)floor(dayTime), (int)floor((dayTime-floor(dayTime))*60));
     printf("fps: %.2f\n",1.0f/deltaTime);
     printf("view x:%.2f y:%.2f z:%.2f", cameraFront.x, cameraFront.y, cameraFront.z);
     
@@ -217,9 +219,14 @@ void Render::render(Game& game) {
         steve_model.Draw(Depth_Shader);
     }
     glm::vec3 lightPos = game.steve_position;
-    lightPos.y += shadowRadius*sin(dayTheta);
+    lightPos.y = 120.0f + shadowRadius*sin(dayTheta);
     lightPos.x += -shadowRadius*sin(randomSunDirection)*cos(dayTheta);
     lightPos.z += -shadowRadius*cos(randomSunDirection)*cos(dayTheta);
+    glm::vec3 moonPos = game.steve_position;
+    moonPos.y = 120.0f - shadowRadius*sin(dayTheta);
+    moonPos.x += shadowRadius*sin(randomSunDirection)*cos(dayTheta);
+    moonPos.z += shadowRadius*cos(randomSunDirection)*cos(dayTheta);
+    bool isDaylight = dayTime >= 5.5 || dayTime <= 20;
 #ifdef SHADOW_MAPPING
     GLfloat near_plane = 0.0f, far_plane = shadowRadius + 256.0f;
     lightProjection = glm::ortho(-shadowRadius, shadowRadius, -shadowRadius, shadowRadius, near_plane, far_plane);
@@ -305,7 +312,16 @@ void Render::render(Game& game) {
     //float sun_theta = glm::angle(lightDirection, glm::vec3(0,0,1));
     sun_model = glm::rotate(sun_model, atan(lightDirection.x/lightDirection.z) + (float)M_PI, glm::vec3(0,1,0));
     sun_model = glm::rotate(sun_model, (randomSunDirection > M_PI) ? dayTheta : dayTheta - (float)M_PI, glm::vec3(1,0,0));
-    Sun_Moon.draw(view, projection, sun_model, dayTime);
+    if (isDaylight) Sun.draw(view, projection, sun_model, dayTime);
+    
+    glm::mat4 moon_model(1);
+    moon_model = glm::translate(moon_model, moonPos);
+    moon_model = glm::scale(moon_model, glm::vec3(60.f, 60.f, 60.f));
+    //glm::vec3 axis = glm::cross(lightDirection ,glm::vec3(0,0,1));
+    //float sun_theta = glm::angle(lightDirection, glm::vec3(0,0,1));
+    moon_model = glm::rotate(moon_model, atan(lightDirection.x/lightDirection.z) + (float)M_PI, glm::vec3(0,1,0));
+    moon_model = glm::rotate(moon_model, (randomSunDirection > M_PI) ? -dayTheta : -dayTheta + (float)M_PI, glm::vec3(1,0,0));
+    Moon.draw(view, projection, moon_model, dayTime);
     
 #ifdef TIMETEST
     printf("Sun scene draw: %f\n", timeMark - glfwGetTime());
@@ -340,6 +356,22 @@ float Render::cal_angle(glm::vec3 cameraFront) {
         return atan(cameraFront.x/cameraFront.z) + M_PI;
     } else {
         return atan(cameraFront.x/cameraFront.z);
+    }
+}
+
+glm::vec3 Render::calLight(float dayTime) {
+    glm::vec3 dayLight(0.3f, 0.3f, 0.3f);
+    glm::vec3 nightLight(0.05f, 0.05f, 0.05f);
+    if (dayTime >=5.5 && dayTime <= 6.5) {
+        float dayIntensity = sin((6.5-dayTime)*M_PI/2);
+        return dayIntensity*nightLight + (1-dayIntensity)*dayLight;
+    } else if (dayTime<5.5 || dayTime>19) {
+        return nightLight;
+    } else if (dayTime >= 17 && dayTime <= 20) {
+        float dayIntensity = sin((dayTime-17)*M_PI/6);
+        return dayIntensity*nightLight + (1-dayIntensity)*dayLight;
+    } else {
+        return dayLight;
     }
 }
 

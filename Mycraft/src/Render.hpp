@@ -27,7 +27,8 @@ public:
     void initial(Game& game);
     void render(Game& game);
     Sky Sky;
-    Sun_Moon Sun_Moon;
+    Sun_Moon Sun;
+    Sun_Moon Moon;
     Gui Gui;
     GLFWwindow* window;
     Shader Block_Shader;
@@ -60,6 +61,7 @@ private:
     static bool tryPlace;
     void texture_init();
     void depthMap_init();
+    glm::vec3 calLight(float dayTime);
     float cal_angle(glm::vec3 cameraFront);
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);

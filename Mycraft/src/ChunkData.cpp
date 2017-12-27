@@ -8,13 +8,11 @@
 
 #include "ChunkData.hpp"
 
-
-
-inline void SubChunk::setPathHistory(int direction){
+inline void SubChunk::setPathHistory(int direction) {
     pathHistory |= direction;
 }
 
-inline int SubChunk::getPathHistory(){
+inline int SubChunk::getPathHistory() {
     return pathHistory;
 }
 
