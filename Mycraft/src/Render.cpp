@@ -27,10 +27,11 @@ glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
 Render::Render() {
-    dayTime = 17.0f;
+    dayTime = 14.0f;
     //srand(0);
     srand((unsigned)time(NULL));
     randomSunDirection = fmod(rand(), 2*M_PI);
+    //printf("randomSunDirection: %.2f\n",randomSunDirection)
     lastFrame = 0.0f;
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -323,7 +324,7 @@ void Render::render(Game& game) {
     //glm::vec3 axis = glm::cross(lightDirection ,glm::vec3(0,0,1));
     //float sun_theta = glm::angle(lightDirection, glm::vec3(0,0,1));
     sun_model = glm::rotate(sun_model, atan(lightDirection.x/lightDirection.z) + (float)M_PI, glm::vec3(0,1,0));
-    sun_model = glm::rotate(sun_model, (randomSunDirection > M_PI) ? dayTheta : dayTheta - (float)M_PI, glm::vec3(1,0,0));
+    sun_model = glm::rotate(sun_model, (randomSunDirection >= M_PI/2 && randomSunDirection <= M_PI*3/2) ? dayTheta : -dayTheta, glm::vec3(1,0,0));
     if (isDaylight) Sun.draw(view, projection, sun_model, dayTime);
     
     glm::mat4 moon_model(1);
@@ -332,7 +333,7 @@ void Render::render(Game& game) {
     //glm::vec3 axis = glm::cross(lightDirection ,glm::vec3(0,0,1));
     //float sun_theta = glm::angle(lightDirection, glm::vec3(0,0,1));
     moon_model = glm::rotate(moon_model, atan(lightDirection.x/lightDirection.z) + (float)M_PI, glm::vec3(0,1,0));
-    moon_model = glm::rotate(moon_model, (randomSunDirection > M_PI) ? -dayTheta : -dayTheta + (float)M_PI, glm::vec3(1,0,0));
+    moon_model = glm::rotate(moon_model, (randomSunDirection >= M_PI/2 && randomSunDirection <= M_PI*3/2) ? -dayTheta : dayTheta, glm::vec3(1,0,0));
     Moon.draw(view, projection, moon_model, dayTime);
     
 #ifdef TIMETEST
