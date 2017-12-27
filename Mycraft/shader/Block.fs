@@ -70,20 +70,20 @@ void main()
     vec3 diffuse = sunlight.ambient * diff * 2.5;
     float isChosen = isChosen(fs_in.FragPos);
     // With Shadow mapping
-    float shadow = ShadowCalculation(fs_in.FragPosLightSpace);
+     float shadow = ShadowCalculation(fs_in.FragPosLightSpace);
     vec3 result;
     if (alpha == 1.0f) {
         // Without Shadow mapping
-        result = (sunlight.ambient + diffuse) * isChosen * color;
+        //result = (sunlight.ambient + diffuse) * isChosen * color;
         // With Shadow mapping
-        //result = (sunlight.ambient + (1.0f - shadow) * diffuse) * isChosen * color;
+        result = (sunlight.ambient + (1.0f - shadow) * diffuse) * isChosen * color;
     } else if (alpha == 0.0f) {
         discard;
     } else {
         // Without Shadow mapping
-        result = isChosen * color;
+        //result = isChosen * color;
         // With Shadow mapping
-        //result = (1.0f - shadow) * isChosen * color;
+        result = (1.0f - shadow) * diffuse * isChosen * color;
     }
     FragColor = vec4(result, alpha);
 }

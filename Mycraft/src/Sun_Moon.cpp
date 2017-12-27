@@ -9,15 +9,18 @@
 #include "Sun_Moon.hpp"
 
 float sunMoonVertices[] = {
-    0.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, 1.0f, 0.0f, 1.0f,
-    1.0f, 1.0f, 0.1f, 1.0f,
-    1.0f, 0.0f, 0.1f, 0.0f,
-    0.0f, 0.0f, 0.0f, 0.0f,
-    1.0f, 1.0f, 0.1f, 1.0f
+    -0.5f, -0.5f, 0.0f, 0.0f,
+    -0.5f, 0.5f, 0.0f, 1.0f,
+    0.5f, 0.5f, 0.1f, 1.0f,
+    0.5f, -0.5f, 0.1f, 0.0f,
+    -0.5f, -0.5f, 0.0f, 0.0f,
+    0.5f, 0.5f, 0.1f, 1.0f
 };
 
 void Sun_Moon::Sun_Moon_init() {
+    /*for (int i=0; i<24; i=i+4) {
+        sunMoonVertices[i+2] += 0.1f;
+    }*/
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glBindVertexArray(VAO);
@@ -45,12 +48,13 @@ void Sun_Moon::Sun_Moon_init() {
     stbi_image_free_out(data);
 }
 
-void Sun_Moon::draw(glm::mat4 view, glm::mat4 projection, glm::mat4 model) {
+void Sun_Moon::draw(glm::mat4 view, glm::mat4 projection, glm::mat4 model, float dayTime) {
     glDepthFunc(GL_LEQUAL);
     Sun_Moon_Shader.use();
     Sun_Moon_Shader.setMat4("view", view);
     Sun_Moon_Shader.setMat4("model", model);
     Sun_Moon_Shader.setMat4("projection", projection);
+    Sun_Moon_Shader.setFloat("dayTime", dayTime);
     glBindVertexArray(VAO);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, Sun_Moon_Shader_pic);

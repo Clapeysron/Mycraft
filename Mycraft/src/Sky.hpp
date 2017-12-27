@@ -14,7 +14,7 @@
 class Sky {
 public:
     ~Sky();
-    void draw(glm::vec3 position, glm::mat4 view, glm::mat4 projection);
+    void draw(glm::vec3 position, glm::mat4 view, glm::mat4 projection, float dayTime);
     Shader Sky_Shader;
     void Sky_init();
 private:

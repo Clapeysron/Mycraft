@@ -38,6 +38,7 @@ public:
 private:
     float dayTime;
     float randomSunDirection;
+    glm::vec3 Sun_Moon_light;
     static int screen_width, screen_height;
     unsigned int texture_pic;
     unsigned int depthMap_fbo;
@@ -59,7 +60,7 @@ private:
     static bool tryPlace;
     void texture_init();
     void depthMap_init();
-    float steve_turn_angle(glm::vec3 cameraFront);
+    float cal_angle(glm::vec3 cameraFront);
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
     static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);

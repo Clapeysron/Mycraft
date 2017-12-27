@@ -175,7 +175,7 @@ public:
     SubChunk *getCurSubChunk();
     queue<SubChunk*> getRenderQueue();
     void getRenderingSubChunks(int y, int x, int z); //called by render
-    void draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection, glm::vec3 chosen_block_pos);
+    void draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection, glm::vec3 chosen_block_pos, glm::vec3 Sun_Moon_light);
     void drawDepth(Shader& Depth_Shader, unsigned int texture_pic);
     char getBlockType(int y, int x, int z);
     bool placeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront, char type);

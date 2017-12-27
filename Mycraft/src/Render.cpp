@@ -10,6 +10,7 @@
 #include "Stbi_load.hpp"
 //#define TIMETEST
 //#define DEPTHTEST
+#define SHADOW_MAPPING
 
 bool Render::firstMouse = true;
 float Render::yaw   =  -90.0f;
@@ -26,7 +27,8 @@ glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
 Render::Render() {
-    dayTime = 9.0f;
+    dayTime = 6.0f;
+    //srand(0);
     srand((unsigned)time(NULL));
     randomSunDirection = fmod(rand(), 2*M_PI);
     lastFrame = 0.0f;
@@ -64,6 +66,7 @@ Render::Render() {
 }
 
 void Render::initial(Game &game) {
+    Sun_Moon_light = glm::vec3(0.3, 0.3, 0.3);
     view = glm::lookAt(game.steve_position, game.steve_position + cameraFront, cameraUp);
     projection = glm::perspective(glm::radians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
     Block_Shader = Shader("shader/Block.vs", "shader/Block.fs");
@@ -163,8 +166,8 @@ void Render::render(Game& game) {
     float currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
-    dayTime += deltaTime/20;
-    dayTime = dayTime > 24 ? dayTime : dayTime - 24;
+    dayTime += deltaTime/10;
+    dayTime = (dayTime>24) ? dayTime - 24 : dayTime;
     printf("==========================\n");
     printf("fps: %.2f\n",1.0f/deltaTime);
     printf("view x:%.2f y:%.2f z:%.2f", cameraFront.x, cameraFront.y, cameraFront.z);
@@ -200,7 +203,7 @@ void Render::render(Game& game) {
 #endif
     
     float shadowRadius = (RADIUS*2+1)*8*1.2;
-    float dayTheta = (dayTime-8)*M_PI/12;
+    float dayTheta = (dayTime-SUNRISE_TIME)*M_PI/12;
     // depth scene
     glm::mat4 lightProjection, lightView, lightSpaceMatrix;
     glm::vec3 lightDirection(sin(randomSunDirection)*cos(dayTheta), -sin(dayTheta), cos(randomSunDirection)*cos(dayTheta));
@@ -208,7 +211,7 @@ void Render::render(Game& game) {
     if (game.game_perspective == THIRD_PERSON) {
         depth_steve_model = glm::translate(depth_steve_model, game.steve_position);
         depth_steve_model = glm::translate(depth_steve_model, glm::vec3(0, -STEVE_HEIGHT+0.1, 0));
-        depth_steve_model = glm::rotate(depth_steve_model, steve_turn_angle(cameraFront), glm::vec3(0, 1, 0));
+        depth_steve_model = glm::rotate(depth_steve_model, cal_angle(cameraFront), glm::vec3(0, 1, 0));
         depth_steve_model = glm::scale(depth_steve_model, glm::vec3(0.3f * STEVE_HEIGHT));
         Depth_Shader.setMat4("model", depth_steve_model);
         steve_model.Draw(Depth_Shader);
@@ -217,7 +220,8 @@ void Render::render(Game& game) {
     lightPos.y += shadowRadius*sin(dayTheta);
     lightPos.x += -shadowRadius*sin(randomSunDirection)*cos(dayTheta);
     lightPos.z += -shadowRadius*cos(randomSunDirection)*cos(dayTheta);
-    /*GLfloat near_plane = 0.0f, far_plane = shadowRadius + 256.0f;
+#ifdef SHADOW_MAPPING
+    GLfloat near_plane = 0.0f, far_plane = shadowRadius + 256.0f;
     lightProjection = glm::ortho(-shadowRadius, shadowRadius, -shadowRadius, shadowRadius, near_plane, far_plane);
     lightView = glm::lookAt(lightPos, lightPos + lightDirection, glm::vec3(lightDirection.x, lightDirection.z, -lightDirection.y/(tan(dayTheta)*tan(dayTheta))));
     lightSpaceMatrix = lightProjection * lightView;
@@ -230,7 +234,8 @@ void Render::render(Game& game) {
     Depth_Shader.setMat4("model", glm::mat4(1));
     game.visibleChunks.drawDepth(Depth_Shader, texture_pic);
     glCullFace(GL_BACK);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);*/
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+#endif
     
 #ifdef TIMETEST
     printf("Depth scene draw: %f\n", timeMark - glfwGetTime());
@@ -249,9 +254,9 @@ void Render::render(Game& game) {
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glm::vec3 chosen_block_pos = game.visibleChunks.accessibleBlock(game.steve_position, cameraFront);
     if (game.game_perspective == THIRD_PERSON) {
-        game.visibleChunks.draw(game.steve_position - glm::vec3(5.0f)*cameraFront, view, projection, Block_Shader, texture_pic, depthMap_pic, lightSpaceMatrix, lightDirection, chosen_block_pos);
+        game.visibleChunks.draw(game.steve_position - glm::vec3(5.0f)*cameraFront, view, projection, Block_Shader, texture_pic, depthMap_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, Sun_Moon_light);
     } else {
-        game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, lightSpaceMatrix, lightDirection, chosen_block_pos);
+        game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, Sun_Moon_light);
     }
     // steve render
     if (game.game_perspective == THIRD_PERSON) {
@@ -259,7 +264,7 @@ void Render::render(Game& game) {
         Steve_Shader.setMat4("projection", projection);
         Steve_Shader.setMat4("view", view);
         Steve_Shader.setVec3("sunlight.lightDirection", lightDirection);
-        Steve_Shader.setVec3("sunlight.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
+        Steve_Shader.setVec3("sunlight.ambient", Sun_Moon_light);
         Steve_Shader.setMat4("model", depth_steve_model);
         steve_model.Draw(Steve_Shader);
     }
@@ -285,7 +290,7 @@ void Render::render(Game& game) {
     
     // Draw sky box
     glViewport(0, 0, screen_width, screen_height);
-    Sky.draw(game.steve_position, view, projection);
+    Sky.draw(game.steve_position, view, projection, dayTime);
     
 #ifdef TIMETEST
     printf("Skybox scene draw: %f\n", timeMark - glfwGetTime());
@@ -295,11 +300,12 @@ void Render::render(Game& game) {
     // Draw Sun or Moon
     glm::mat4 sun_model(1);
     sun_model = glm::translate(sun_model, lightPos);
-    sun_model = glm::scale(sun_model, glm::vec3(20.f, 20.f, 20.f));
-    glm::vec3 axis = glm::cross(lightDirection ,glm::vec3(0,0,1));
-    float sun_theta = glm::angle(lightDirection, glm::vec3(0,0,1));
-    sun_model = glm::rotate(sun_model, sun_theta, glm::cross(lightDirection ,glm::vec3(0,0,1)));
-    Sun_Moon.draw(view, projection, sun_model);
+    sun_model = glm::scale(sun_model, glm::vec3(60.f, 60.f, 60.f));
+    //glm::vec3 axis = glm::cross(lightDirection ,glm::vec3(0,0,1));
+    //float sun_theta = glm::angle(lightDirection, glm::vec3(0,0,1));
+    sun_model = glm::rotate(sun_model, atan(lightDirection.x/lightDirection.z) + (float)M_PI, glm::vec3(0,1,0));
+    sun_model = glm::rotate(sun_model, (randomSunDirection > M_PI) ? dayTheta : dayTheta - (float)M_PI, glm::vec3(1,0,0));
+    Sun_Moon.draw(view, projection, sun_model, dayTime);
     
 #ifdef TIMETEST
     printf("Sun scene draw: %f\n", timeMark - glfwGetTime());
@@ -329,7 +335,7 @@ void Render::render(Game& game) {
 #endif
 }
 
-float Render::steve_turn_angle(glm::vec3 cameraFront) {
+float Render::cal_angle(glm::vec3 cameraFront) {
     if (cameraFront.z < 0) {
         return atan(cameraFront.x/cameraFront.z) + M_PI;
     } else {

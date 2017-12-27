@@ -105,9 +105,9 @@
 #define BASE_ROCK_Y 0.0f
 #define LEAF_X 0.4f
 #define LEAF_Y 0.3f
-#define TRUNK_TOP_X 0.0f
+#define TRUNK_TOP_X 0.2f
 #define TRUNK_TOP_Y 0.1f
-#define TRUNK_SIDE_X 0.1f
+#define TRUNK_SIDE_X 0.3f
 #define TRUNK_SIDE_Y 0.1f
 
 // SEA_LEVEL
@@ -116,6 +116,8 @@
 // Water offset with the aside block
 #define WATER_OFFSET 0.85
 // Tree Density
-#define TREE_DENSITY 20
+#define TREE_DENSITY 400
+// Sun rise time
+#define SUNRISE_TIME 6
 
 #endif /* game_settings_h */

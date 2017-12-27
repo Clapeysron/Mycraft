@@ -1308,7 +1308,7 @@ void VisibleChunks::clearPathHistory(){
 }
 
 //渲染物体
-void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection, glm::vec3 chosen_block_pos) {
+void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection, glm::vec3 chosen_block_pos, glm::vec3 Sun_Moon_light) {
     calcFrustumPlane(view, projection);
     cout<<"y:"<<(int)cameraPos.y<<" x:"<<(int)cameraPos.x<<" z:"<<(int)cameraPos.z<<endl;
     updataChunks((int)cameraPos.y, (int)cameraPos.x, (int)cameraPos.z);
@@ -1316,7 +1316,7 @@ void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projecti
     Block_Shader.setMat4("view", view);
     Block_Shader.setMat4("projection", projection);
     Block_Shader.setVec3("sunlight.lightDirection", lightDirection);
-    Block_Shader.setVec3("sunlight.ambient", glm::vec3(0.3f, 0.3f, 0.3f));
+    Block_Shader.setVec3("sunlight.ambient", Sun_Moon_light);
     Block_Shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
     Block_Shader.setVec3("chosen_block_pos", chosen_block_pos);
     Block_Shader.setVec3("cameraPos", cameraPos);
