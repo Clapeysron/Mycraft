@@ -231,14 +231,7 @@ void Render::render(Game& game) {
     
 #ifdef SHADOW_MAPPING
     if (isDaylight) {
-        if (game.game_perspective == THIRD_PERSON) {
-            depth_steve_model = glm::translate(depth_steve_model, game.steve_position);
-            depth_steve_model = glm::translate(depth_steve_model, glm::vec3(0, -STEVE_HEIGHT+0.1, 0));
-            depth_steve_model = glm::rotate(depth_steve_model, cal_angle(cameraFront), glm::vec3(0, 1, 0));
-            depth_steve_model = glm::scale(depth_steve_model, glm::vec3(0.3f * STEVE_HEIGHT));
-            Depth_Shader.setMat4("model", depth_steve_model);
-            steve_model.Draw(Depth_Shader);
-        }
+        
         GLfloat near_plane = 0.0f, far_plane = shadowRadius + 256.0f;
         lightProjection = glm::ortho(-shadowRadius, shadowRadius, -shadowRadius, shadowRadius, near_plane, far_plane);
         lightView = glm::lookAt(lightPos, lightPos + lightDirection, glm::vec3(lightDirection.x, lightDirection.z, -lightDirection.y/(tan(dayTheta)*tan(dayTheta))));
@@ -251,6 +244,14 @@ void Render::render(Game& game) {
         glCullFace(GL_FRONT);
         Depth_Shader.setMat4("model", glm::mat4(1));
         game.visibleChunks.drawDepth(Depth_Shader, texture_pic);
+        if (game.game_perspective == THIRD_PERSON) {
+            depth_steve_model = glm::translate(depth_steve_model, game.steve_position);
+            depth_steve_model = glm::translate(depth_steve_model, glm::vec3(0, -STEVE_HEIGHT+0.1, 0));
+            depth_steve_model = glm::rotate(depth_steve_model, cal_angle(cameraFront), glm::vec3(0, 1, 0));
+            depth_steve_model = glm::scale(depth_steve_model, glm::vec3(0.3f * STEVE_HEIGHT));
+            Depth_Shader.setMat4("model", depth_steve_model);
+            steve_model.Draw(Depth_Shader);
+        }
         glCullFace(GL_BACK);
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
@@ -283,7 +284,13 @@ void Render::render(Game& game) {
         Steve_Shader.setMat4("projection", projection);
         Steve_Shader.setMat4("view", view);
         Steve_Shader.setVec3("sunlight.lightDirection", lightDirection);
-        Steve_Shader.setVec3("sunlight.ambient", Sun_Moon_light);
+        Steve_Shader.setVec3("sunlight.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+        Steve_Shader.setVec3("sunlight.lightambient", Sun_Moon_light);
+        depth_steve_model = glm::mat4(1);
+        depth_steve_model = glm::translate(depth_steve_model, game.steve_position);
+        depth_steve_model = glm::translate(depth_steve_model, glm::vec3(0, -STEVE_HEIGHT+0.1, 0));
+        depth_steve_model = glm::rotate(depth_steve_model, cal_angle(cameraFront), glm::vec3(0, 1, 0));
+        depth_steve_model = glm::scale(depth_steve_model, glm::vec3(0.3f * STEVE_HEIGHT));
         Steve_Shader.setMat4("model", depth_steve_model);
         steve_model.Draw(Steve_Shader);
     }
@@ -325,7 +332,7 @@ void Render::render(Game& game) {
     //float sun_theta = glm::angle(lightDirection, glm::vec3(0,0,1));
     sun_model = glm::rotate(sun_model, atan(lightDirection.x/lightDirection.z) + (float)M_PI, glm::vec3(0,1,0));
     sun_model = glm::rotate(sun_model, (randomSunDirection >= M_PI/2 && randomSunDirection <= M_PI*3/2) ? dayTheta : -dayTheta, glm::vec3(1,0,0));
-    if (isDaylight) Sun.draw(view, projection, sun_model, dayTime);
+    if (isDaylight) Sun.draw(view, projection, sun_model, dayTime, true);
     
     glm::mat4 moon_model(1);
     moon_model = glm::translate(moon_model, moonPos);
@@ -333,8 +340,8 @@ void Render::render(Game& game) {
     //glm::vec3 axis = glm::cross(lightDirection ,glm::vec3(0,0,1));
     //float sun_theta = glm::angle(lightDirection, glm::vec3(0,0,1));
     moon_model = glm::rotate(moon_model, atan(lightDirection.x/lightDirection.z) + (float)M_PI, glm::vec3(0,1,0));
-    moon_model = glm::rotate(moon_model, (randomSunDirection >= M_PI/2 && randomSunDirection <= M_PI*3/2) ? -dayTheta : dayTheta, glm::vec3(1,0,0));
-    Moon.draw(view, projection, moon_model, dayTime);
+    moon_model = glm::rotate(moon_model, (randomSunDirection >= M_PI/2 && randomSunDirection <= M_PI*3/2) ? dayTheta : -dayTheta, glm::vec3(1,0,0));
+    Moon.draw(view, projection, moon_model, dayTime, false);
     
 #ifdef TIMETEST
     printf("Sun scene draw: %f\n", timeMark - glfwGetTime());

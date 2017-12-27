@@ -14,6 +14,7 @@ in VS_OUT {
 struct Sunlight {
     vec3 lightDirection;
     vec3 ambient;
+    vec3 lightambient;
 };
 
 uniform Sunlight sunlight;
@@ -24,7 +25,7 @@ void main()
     vec3 norm = normalize(fs_in.Normal);
     vec3 lightDir = normalize(-sunlight.lightDirection);
     float diff = max(dot(lightDir, norm), 0.0);
-    vec3 diffuse = sunlight.ambient * diff;
+    vec3 diffuse = sunlight.lightambient * diff;
     
     //float shadow = ShadowCalculation(fs_in.FragPosLightSpace);
     vec3 result;

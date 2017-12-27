@@ -76,13 +76,14 @@ void Sun_Moon::Moon_init() {
     stbi_image_free_out(data);
 }
 
-void Sun_Moon::draw(glm::mat4 view, glm::mat4 projection, glm::mat4 model, float dayTime) {
+void Sun_Moon::draw(glm::mat4 view, glm::mat4 projection, glm::mat4 model, float dayTime, bool isSun) {
     glDepthFunc(GL_LEQUAL);
     Sun_Moon_Shader.use();
     Sun_Moon_Shader.setMat4("view", view);
     Sun_Moon_Shader.setMat4("model", model);
     Sun_Moon_Shader.setMat4("projection", projection);
     Sun_Moon_Shader.setFloat("dayTime", dayTime);
+    Sun_Moon_Shader.setBool("isSun", isSun);
     glBindVertexArray(VAO);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, Sun_Moon_Shader_pic);

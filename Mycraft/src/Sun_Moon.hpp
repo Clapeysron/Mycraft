@@ -13,7 +13,7 @@
 class Sun_Moon {
 public:
     ~Sun_Moon();
-    void draw(glm::mat4 view, glm::mat4 projection, glm::mat4 model, float dayTime);
+    void draw(glm::mat4 view, glm::mat4 projection, glm::mat4 model, float dayTime, bool isSun);
     Shader Sun_Moon_Shader;
     void Sun_init();
     void Moon_init();
