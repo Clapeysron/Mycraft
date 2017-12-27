@@ -27,7 +27,7 @@ glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
 Render::Render() {
-    dayTime = 18.0f;
+    dayTime = 17.0f;
     //srand(0);
     srand((unsigned)time(NULL));
     randomSunDirection = fmod(rand(), 2*M_PI);
@@ -75,10 +75,14 @@ void Render::initial(Game &game) {
     Steve_Shader = Shader("shader/Steve.vs", "shader/Steve.fs");
     Sky.Sky_init();
     Sky.Sky_Shader = Shader("shader/Skybox.vs", "shader/Skybox.fs");
-    Sun.Sun_Moon_init();
+    Sun.Sun_init();
     Sun.Sun_Moon_Shader = Shader("shader/Sun_Moon.vs", "shader/Sun_Moon.fs");
-    Moon.Sun_Moon_init();
+    Sun.Sun_Moon_Shader.setInt("Sun_Moon_texture", 0);
+    Sun.Sun_Moon_Shader.setInt("Star_texture", 1);
+    Moon.Moon_init();
     Moon.Sun_Moon_Shader = Shader("shader/Sun_Moon.vs", "shader/Sun_Moon.fs");
+    Moon.Sun_Moon_Shader.setInt("Sun_Moon_texture", 0);
+    Moon.Sun_Moon_Shader.setInt("Star_texture", 1);
     Gui.gui_init();
     Gui.Gui_Shader = Shader("shader/Gui.vs", "shader/Gui.fs");
     texture_init();
@@ -203,21 +207,18 @@ void Render::render(Game& game) {
     printf("Remove / Place block: %f\n", timeMark - glfwGetTime());
     timeMark = glfwGetTime();
 #endif
-    
+    bool isDaylight = (dayTime >= 5.5 && dayTime <= 19);
     float shadowRadius = (RADIUS*2+1)*8*1.2;
     float dayTheta = (dayTime-SUNRISE_TIME)*M_PI/12;
     // depth scene
     glm::mat4 lightProjection, lightView, lightSpaceMatrix;
-    glm::vec3 lightDirection(sin(randomSunDirection)*cos(dayTheta), -sin(dayTheta), cos(randomSunDirection)*cos(dayTheta));
-    glm::mat4 depth_steve_model(1);
-    if (game.game_perspective == THIRD_PERSON) {
-        depth_steve_model = glm::translate(depth_steve_model, game.steve_position);
-        depth_steve_model = glm::translate(depth_steve_model, glm::vec3(0, -STEVE_HEIGHT+0.1, 0));
-        depth_steve_model = glm::rotate(depth_steve_model, cal_angle(cameraFront), glm::vec3(0, 1, 0));
-        depth_steve_model = glm::scale(depth_steve_model, glm::vec3(0.3f * STEVE_HEIGHT));
-        Depth_Shader.setMat4("model", depth_steve_model);
-        steve_model.Draw(Depth_Shader);
+    glm::vec3 lightDirection;
+    if (isDaylight) {
+        lightDirection = glm::vec3(sin(randomSunDirection)*cos(dayTheta), -sin(dayTheta), cos(randomSunDirection)*cos(dayTheta));
+    } else {
+        lightDirection = glm::vec3(-sin(randomSunDirection)*cos(dayTheta), sin(dayTheta), -cos(randomSunDirection)*cos(dayTheta));
     }
+    glm::mat4 depth_steve_model(1);
     glm::vec3 lightPos = game.steve_position;
     lightPos.y = 120.0f + shadowRadius*sin(dayTheta);
     lightPos.x += -shadowRadius*sin(randomSunDirection)*cos(dayTheta);
@@ -226,22 +227,32 @@ void Render::render(Game& game) {
     moonPos.y = 120.0f - shadowRadius*sin(dayTheta);
     moonPos.x += shadowRadius*sin(randomSunDirection)*cos(dayTheta);
     moonPos.z += shadowRadius*cos(randomSunDirection)*cos(dayTheta);
-    bool isDaylight = dayTime >= 5.5 || dayTime <= 20;
+    
 #ifdef SHADOW_MAPPING
-    GLfloat near_plane = 0.0f, far_plane = shadowRadius + 256.0f;
-    lightProjection = glm::ortho(-shadowRadius, shadowRadius, -shadowRadius, shadowRadius, near_plane, far_plane);
-    lightView = glm::lookAt(lightPos, lightPos + lightDirection, glm::vec3(lightDirection.x, lightDirection.z, -lightDirection.y/(tan(dayTheta)*tan(dayTheta))));
-    lightSpaceMatrix = lightProjection * lightView;
-    Depth_Shader.use();
-    Depth_Shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
-    glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
-    glBindFramebuffer(GL_FRAMEBUFFER, depthMap_fbo);
-    glClear(GL_DEPTH_BUFFER_BIT);
-    glCullFace(GL_FRONT);
-    Depth_Shader.setMat4("model", glm::mat4(1));
-    game.visibleChunks.drawDepth(Depth_Shader, texture_pic);
-    glCullFace(GL_BACK);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    if (isDaylight) {
+        if (game.game_perspective == THIRD_PERSON) {
+            depth_steve_model = glm::translate(depth_steve_model, game.steve_position);
+            depth_steve_model = glm::translate(depth_steve_model, glm::vec3(0, -STEVE_HEIGHT+0.1, 0));
+            depth_steve_model = glm::rotate(depth_steve_model, cal_angle(cameraFront), glm::vec3(0, 1, 0));
+            depth_steve_model = glm::scale(depth_steve_model, glm::vec3(0.3f * STEVE_HEIGHT));
+            Depth_Shader.setMat4("model", depth_steve_model);
+            steve_model.Draw(Depth_Shader);
+        }
+        GLfloat near_plane = 0.0f, far_plane = shadowRadius + 256.0f;
+        lightProjection = glm::ortho(-shadowRadius, shadowRadius, -shadowRadius, shadowRadius, near_plane, far_plane);
+        lightView = glm::lookAt(lightPos, lightPos + lightDirection, glm::vec3(lightDirection.x, lightDirection.z, -lightDirection.y/(tan(dayTheta)*tan(dayTheta))));
+        lightSpaceMatrix = lightProjection * lightView;
+        Depth_Shader.use();
+        Depth_Shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+        glViewport(0, 0, SHADOW_WIDTH, SHADOW_HEIGHT);
+        glBindFramebuffer(GL_FRAMEBUFFER, depthMap_fbo);
+        glClear(GL_DEPTH_BUFFER_BIT);
+        glCullFace(GL_FRONT);
+        Depth_Shader.setMat4("model", glm::mat4(1));
+        game.visibleChunks.drawDepth(Depth_Shader, texture_pic);
+        glCullFace(GL_BACK);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
 #endif
     
 #ifdef TIMETEST
@@ -261,9 +272,9 @@ void Render::render(Game& game) {
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glm::vec3 chosen_block_pos = game.visibleChunks.accessibleBlock(game.steve_position, cameraFront);
     if (game.game_perspective == THIRD_PERSON) {
-        game.visibleChunks.draw(game.steve_position - glm::vec3(5.0f)*cameraFront, view, projection, Block_Shader, texture_pic, depthMap_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, Sun_Moon_light);
+        game.visibleChunks.draw(game.steve_position - glm::vec3(5.0f)*cameraFront, view, projection, Block_Shader, texture_pic, depthMap_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, Sun_Moon_light, isDaylight);
     } else {
-        game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, Sun_Moon_light);
+        game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, Sun_Moon_light, isDaylight);
     }
     // steve render
     if (game.game_perspective == THIRD_PERSON) {
@@ -297,7 +308,8 @@ void Render::render(Game& game) {
     
     // Draw sky box
     glViewport(0, 0, screen_width, screen_height);
-    Sky.draw(game.steve_position, view, projection, dayTime);
+    float starIntensity = calStarIntensity(dayTime);
+    Sky.draw(game.steve_position, view, projection, dayTime, starIntensity);
     
 #ifdef TIMETEST
     printf("Skybox scene draw: %f\n", timeMark - glfwGetTime());
@@ -316,7 +328,7 @@ void Render::render(Game& game) {
     
     glm::mat4 moon_model(1);
     moon_model = glm::translate(moon_model, moonPos);
-    moon_model = glm::scale(moon_model, glm::vec3(60.f, 60.f, 60.f));
+    moon_model = glm::scale(moon_model, glm::vec3(30.f, 30.f, 30.f));
     //glm::vec3 axis = glm::cross(lightDirection ,glm::vec3(0,0,1));
     //float sun_theta = glm::angle(lightDirection, glm::vec3(0,0,1));
     moon_model = glm::rotate(moon_model, atan(lightDirection.x/lightDirection.z) + (float)M_PI, glm::vec3(0,1,0));
@@ -359,16 +371,28 @@ float Render::cal_angle(glm::vec3 cameraFront) {
     }
 }
 
+float Render::calStarIntensity(float dayTime) {
+    if (dayTime >=5 && dayTime <= 6) {
+        return sin((6-dayTime)*M_PI/2);
+    } else if (dayTime<5 || dayTime>19) {
+        return 1.0f;
+    } else if (dayTime >= 18 && dayTime <= 19) {
+        return sin((dayTime-18)*M_PI/2);
+    } else {
+        return 0.0f;
+    }
+}
+
 glm::vec3 Render::calLight(float dayTime) {
-    glm::vec3 dayLight(0.3f, 0.3f, 0.3f);
-    glm::vec3 nightLight(0.05f, 0.05f, 0.05f);
+    glm::vec3 dayLight(0.4f);
+    glm::vec3 nightLight(0.0f);
     if (dayTime >=5.5 && dayTime <= 6.5) {
         float dayIntensity = sin((6.5-dayTime)*M_PI/2);
         return dayIntensity*nightLight + (1-dayIntensity)*dayLight;
     } else if (dayTime<5.5 || dayTime>19) {
         return nightLight;
-    } else if (dayTime >= 17 && dayTime <= 20) {
-        float dayIntensity = sin((dayTime-17)*M_PI/6);
+    } else if (dayTime >= 17 && dayTime <= 19) {
+        float dayIntensity = sin((dayTime-17)*M_PI/4);
         return dayIntensity*nightLight + (1-dayIntensity)*dayLight;
     } else {
         return dayLight;

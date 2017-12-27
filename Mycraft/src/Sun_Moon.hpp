@@ -15,7 +15,8 @@ public:
     ~Sun_Moon();
     void draw(glm::mat4 view, glm::mat4 projection, glm::mat4 model, float dayTime);
     Shader Sun_Moon_Shader;
-    void Sun_Moon_init();
+    void Sun_init();
+    void Moon_init();
 private:
     unsigned int VBO, VAO;
     unsigned int Sun_Moon_Shader_pic;

@@ -62,6 +62,7 @@ private:
     void texture_init();
     void depthMap_init();
     glm::vec3 calLight(float dayTime);
+    float calStarIntensity(float dayTime);
     float cal_angle(glm::vec3 cameraFront);
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);

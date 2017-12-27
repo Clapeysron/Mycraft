@@ -13,11 +13,13 @@ in VS_OUT {
 struct Sunlight {
     vec3 lightDirection;
     vec3 ambient;
+    vec3 lightambient;
 };
 
 uniform Sunlight sunlight;
 uniform vec3 cameraPos;
 uniform vec3 chosen_block_pos;
+uniform bool isDaylight;
 
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
@@ -67,23 +69,28 @@ void main()
     float ifFront = dot(cameraPos - fs_in.FragPos, norm) > 0 ? 1 : -1;
     lightDir = ifFront * lightDir;
     float diff = max(dot(lightDir, norm), 0.0);
-    vec3 diffuse = sunlight.ambient * diff * 2.5;
+    vec3 diffuse = sunlight.lightambient * diff * 2.5;
     float isChosen = isChosen(fs_in.FragPos);
+    float shadow;
     // With Shadow mapping
-     float shadow = ShadowCalculation(fs_in.FragPosLightSpace);
+    if (isDaylight) {
+        shadow = ShadowCalculation(fs_in.FragPosLightSpace);
+    } else {
+        shadow = 1.0f;
+    }
     vec3 result;
     if (alpha == 1.0f) {
         // Without Shadow mapping
         //result = (sunlight.ambient + diffuse) * isChosen * color;
         // With Shadow mapping
-        result = (sunlight.ambient + (1.0f - shadow) * diffuse) * isChosen * color;
+        result = (sunlight.ambient + (1.1f - shadow) * diffuse) * isChosen * color;
     } else if (alpha == 0.0f) {
         discard;
     } else {
         // Without Shadow mapping
         //result = isChosen * color;
         // With Shadow mapping
-        result = (sunlight.ambient +(1.0f-shadow)*diffuse) * isChosen * color;
+        result = (sunlight.ambient +(1.1f-shadow)*diffuse) * isChosen * color;
     }
     FragColor = vec4(result, alpha);
 }
