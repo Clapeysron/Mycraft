@@ -46,6 +46,8 @@ private:
     unsigned int depthMap_pic;
     static float deltaTime;
     float lastFrame;
+    float removeCount;
+    glm::vec3 prev_block_pos;
     glm::mat4 view;
     glm::mat4 projection;
     static float frustumPlanes[6][4];
@@ -57,7 +59,6 @@ private:
     static float fov;
     static float lastX;
     static float lastY;
-    static bool tryRemove;
     static bool tryPlace;
     static bool mouseHold;
     void texture_init();

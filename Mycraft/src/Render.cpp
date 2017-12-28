@@ -19,7 +19,6 @@ float Render::fov   =  45.0f;
 float Render::lastX =  800.0f / 2.0;
 float Render::lastY =  600.0 / 2.0;
 float Render::deltaTime = 0.0f;
-bool Render::tryRemove = false;
 bool Render::tryPlace = false;
 bool Render::mouseHold = false;
 int Render::screen_width = SCREEN_WIDTH*2;
@@ -28,7 +27,8 @@ glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
 Render::Render() {
-    dayTime = 14.0f;
+    dayTime = 6.0f;
+    removeCount = 0;
     //srand(0);
     srand((unsigned)time(NULL));
     randomSunDirection = fmod(rand(), 2*M_PI);
@@ -197,11 +197,31 @@ void Render::render(Game& game) {
     printf("Gravity move: %f\n", timeMark - glfwGetTime());
     timeMark = glfwGetTime();
 #endif
-    
-    if(tryRemove){
-        char type = game.visibleChunks.removeBlock(game.steve_position, cameraFront);
-        tryRemove = false;
+    glm::vec3 chosen_block_pos = game.visibleChunks.accessibleBlock(game.steve_position, cameraFront);
+    char chosen_block_type = game.visibleChunks.getBlockType(chosen_block_pos.y, chosen_block_pos.x, chosen_block_pos.z);
+    float broken_scale = 0;
+    if(mouseHold && chosen_block_pos==prev_block_pos) {
+        removeCount += deltaTime;
+        float broke_time;
+        if (game.game_mode == GOD_MODE) {
+            broke_time = 0.3;
+        } else {
+            broke_time = BlockInfoMap[chosen_block_type].broke_time;
+        }
+        broken_scale = removeCount/broke_time;
+        if (removeCount < broke_time) {
+        } else {
+            game.visibleChunks.removeBlock(game.steve_position, cameraFront);
+            removeCount = 0;
+        }
+    } else {
+        removeCount = 0;
     }
+    
+    std::cout << "removeCount:" << removeCount << endl;
+    std::cout << "broken_scale" << broken_scale << endl;
+    
+    prev_block_pos = chosen_block_pos;
     if(tryPlace){
         bool ret = game.visibleChunks.placeBlock(game.steve_position, cameraFront, DIAMAND_ORE);
         tryPlace = false;
@@ -274,11 +294,10 @@ void Render::render(Game& game) {
         view = glm::lookAt(game.steve_position - glm::vec3(5.0f)*cameraFront, game.steve_position + cameraFront, cameraUp);
     }
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
-    glm::vec3 chosen_block_pos = game.visibleChunks.accessibleBlock(game.steve_position, cameraFront);
     if (game.game_perspective == THIRD_PERSON) {
-        game.visibleChunks.draw(game.steve_position - glm::vec3(5.0f)*cameraFront, view, projection, Block_Shader, texture_pic, depthMap_pic, Sky.Skybox_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, Sun_Moon_light, isDaylight, dayTime, starIntensity);
+        game.visibleChunks.draw(game.steve_position - glm::vec3(5.0f)*cameraFront, view, projection, Block_Shader, texture_pic, depthMap_pic, Sky.Skybox_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, broken_scale, Sun_Moon_light, isDaylight, dayTime, starIntensity);
     } else {
-        game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, Sky.Skybox_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, Sun_Moon_light, isDaylight, dayTime, starIntensity);
+        game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, Sky.Skybox_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, broken_scale, Sun_Moon_light, isDaylight, dayTime, starIntensity);
     }
     // steve render
     if (game.game_perspective == THIRD_PERSON) {
@@ -444,19 +463,30 @@ void Render::mouse_callback(GLFWwindow* window, double xpos, double ypos)
 
 void Render::mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-    if (action == GLFW_RELEASE){
+    mouseHold = false;
+    if (action == GLFW_RELEASE) {
         switch(button) {
             case GLFW_MOUSE_BUTTON_LEFT:
-                tryRemove = true;
+                mouseHold = false;
                 break;
             case GLFW_MOUSE_BUTTON_RIGHT:
                 tryPlace = true;
                 break;
             default:
-                return;
+                break;
         }
     }
-    return;
+    
+    if (action == GLFW_PRESS) {
+        switch(button) {
+            case GLFW_MOUSE_BUTTON_LEFT:
+                mouseHold = true;
+                break;
+            default:
+                mouseHold = false;
+                break;
+        }
+    }
 }
 
 void Render::processInput(GLFWwindow *window, Game &game)

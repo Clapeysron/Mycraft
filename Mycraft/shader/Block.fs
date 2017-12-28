@@ -5,7 +5,7 @@ uniform sampler2D shadowMap;
 uniform sampler2D skybox;
 uniform float DayPos;
 uniform float starIntensity;
-
+uniform float broken_texture_x;
 in VS_OUT {
     vec3 FragPos;
     vec3 Normal;
@@ -77,6 +77,16 @@ void main()
     float diff = max(dot(lightDir, norm), 0.0);
     vec3 diffuse = sunlight.lightambient * diff * 2.5;
     float isChosen = isChosen(fs_in.FragPos);
+    
+    if (isChosen!= 1.0f && broken_texture_x!= 0.0f) {
+        float real_broken_texture_x = broken_texture_x + fs_in.TexCoord.x - floor(fs_in.TexCoord.x*10)/10;
+        float real_broken_texture_y = fs_in.TexCoord.y - floor(fs_in.TexCoord.y*10)/10 + 0.9;
+        vec4 broken_texture = texture(texture_pic, vec2(real_broken_texture_x, real_broken_texture_y));
+        if (broken_texture.a>0.05f) {
+            color = (broken_texture.r+0.1)*2 * color;
+        }
+    }
+    
     float shadow;
     // With Shadow mapping
     if (isDaylight) {
