@@ -11,6 +11,7 @@
 #include "opengl_header.h"
 #include "ChunkData.hpp"
 #include "Block.hpp"
+#include "BlockInfo.hpp"
 enum Game_mode {
     NORMAL_MODE,
     GOD_MODE
@@ -20,6 +21,8 @@ enum Game_perspective {
     FIRST_PERSON,
     THIRD_PERSON
 };
+
+
 
 class Game {
 public:

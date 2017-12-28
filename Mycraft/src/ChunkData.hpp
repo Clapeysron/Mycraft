@@ -19,6 +19,7 @@
 #include <stack>
 #include <map>
 #include "Block.hpp"
+#include "BlockInfo.hpp"
 #include "opengl_header.h"
 #include "game_settings.h"
 
@@ -165,17 +166,20 @@ private:
     void setCoordinate(int x, int z);
 };
 
+
+
 class VisibleChunks{
 public:
     VisibleChunks(float x, float y, float z);
     ~VisibleChunks();
+    void initBlockInfo();
     void initChunks(); //init map
     bool updataChunks(float x, float y, float z); //update map
     Chunk *getCurChunk();
     SubChunk *getCurSubChunk();
     queue<SubChunk*> getRenderQueue();
     void getRenderingSubChunks(int y, int x, int z); //called by render
-    void draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection, glm::vec3 chosen_block_pos, glm::vec3 Sun_Moon_light, bool isDaylight);
+    void draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, unsigned int skybox, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection, glm::vec3 chosen_block_pos, glm::vec3 Sun_Moon_light, bool isDaylight, float dayTime, float starIntensity);
     void drawDepth(Shader& Depth_Shader, unsigned int texture_pic);
     char getBlockType(int y, int x, int z);
     bool placeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront, char type);
@@ -187,7 +191,6 @@ private:
     SubChunk *curSubChunk;
     Chunk *Chunks[2*RADIUS+1][2*RADIUS+1];
     queue<SubChunk*> renderQueue;
-    
     void initQuads(); //called by constructor
     void initNeighbor(); //called by initQuads
     void updateQuads(int dir); //called by updataChunks

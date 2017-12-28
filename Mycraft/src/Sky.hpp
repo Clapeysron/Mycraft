@@ -18,9 +18,9 @@ public:
     Shader Sky_Shader;
     void Sky_init();
     void Star_init();
+    unsigned int Skybox_pic;
 private:
     unsigned int VBO, VAO;
-    unsigned int Skybox_pic;
     unsigned int Star_pic;
 };
 #endif /* Sky_hpp */

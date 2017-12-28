@@ -99,8 +99,8 @@
 #define WATER_Y 0.1f
 #define DIAMAND_ORE_X 0.1f
 #define DIAMAND_ORE_Y 0.2f
-#define FLOWER_X 0.0f
-#define FLOWER_Y 0.4f
+#define GRASS_X 0.0f
+#define GRASS_Y 0.4f
 #define BASE_ROCK_X 0.4f
 #define BASE_ROCK_Y 0.0f
 #define LEAF_X 0.4f

@@ -59,6 +59,7 @@ private:
     static float lastY;
     static bool tryRemove;
     static bool tryPlace;
+    static bool mouseHold;
     void texture_init();
     void depthMap_init();
     glm::vec3 calLight(float dayTime);

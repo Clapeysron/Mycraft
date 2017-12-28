@@ -21,6 +21,7 @@ float Render::lastY =  600.0 / 2.0;
 float Render::deltaTime = 0.0f;
 bool Render::tryRemove = false;
 bool Render::tryPlace = false;
+bool Render::mouseHold = false;
 int Render::screen_width = SCREEN_WIDTH*2;
 int Render::screen_height = SCREEN_HEIGHT*2;
 glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -73,6 +74,7 @@ void Render::initial(Game &game) {
     Block_Shader.use();
     Block_Shader.setInt("texture_pic", 0);
     Block_Shader.setInt("shadowMap", 1);
+    Block_Shader.setInt("skybox", 2);
     Steve_Shader = Shader("shader/Steve.vs", "shader/Steve.fs");
     Sky.Sky_init();
     Sky.Sky_Shader = Shader("shader/Skybox.vs", "shader/Skybox.fs");
@@ -173,6 +175,7 @@ void Render::render(Game& game) {
     lastFrame = currentFrame;
     dayTime += deltaTime/10;
     dayTime = (dayTime>24) ? dayTime - 24 : dayTime;
+    float starIntensity = calStarIntensity(dayTime);
     Sun_Moon_light = calLight(dayTime);
     printf("==========================\n");
     printf("Time: %d:%d\n", (int)floor(dayTime), (int)floor((dayTime-floor(dayTime))*60));
@@ -230,9 +233,8 @@ void Render::render(Game& game) {
     moonPos.z += shadowRadius*cos(randomSunDirection)*cos(dayTheta);
     
 #ifdef SHADOW_MAPPING
+    GLfloat near_plane = 0.0f, far_plane = shadowRadius + 512.0f;
     if (isDaylight) {
-        
-        GLfloat near_plane = 0.0f, far_plane = shadowRadius + 256.0f;
         lightProjection = glm::ortho(-shadowRadius, shadowRadius, -shadowRadius, shadowRadius, near_plane, far_plane);
         lightView = glm::lookAt(lightPos, lightPos + lightDirection, glm::vec3(lightDirection.x, lightDirection.z, -lightDirection.y/(tan(dayTheta)*tan(dayTheta))));
         lightSpaceMatrix = lightProjection * lightView;
@@ -274,9 +276,9 @@ void Render::render(Game& game) {
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     glm::vec3 chosen_block_pos = game.visibleChunks.accessibleBlock(game.steve_position, cameraFront);
     if (game.game_perspective == THIRD_PERSON) {
-        game.visibleChunks.draw(game.steve_position - glm::vec3(5.0f)*cameraFront, view, projection, Block_Shader, texture_pic, depthMap_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, Sun_Moon_light, isDaylight);
+        game.visibleChunks.draw(game.steve_position - glm::vec3(5.0f)*cameraFront, view, projection, Block_Shader, texture_pic, depthMap_pic, Sky.Skybox_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, Sun_Moon_light, isDaylight, dayTime, starIntensity);
     } else {
-        game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, Sun_Moon_light, isDaylight);
+        game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, Sky.Skybox_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, Sun_Moon_light, isDaylight, dayTime, starIntensity);
     }
     // steve render
     if (game.game_perspective == THIRD_PERSON) {
@@ -316,7 +318,6 @@ void Render::render(Game& game) {
     
     // Draw sky box
     glViewport(0, 0, screen_width, screen_height);
-    float starIntensity = calStarIntensity(dayTime);
     Sky.draw(game.steve_position, view, projection, dayTime, starIntensity);
     
 #ifdef TIMETEST

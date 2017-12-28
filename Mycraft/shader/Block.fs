@@ -2,12 +2,16 @@
 out vec4 FragColor;
 uniform sampler2D texture_pic;
 uniform sampler2D shadowMap;
+uniform sampler2D skybox;
+uniform float DayPos;
+uniform float starIntensity;
 
 in VS_OUT {
     vec3 FragPos;
     vec3 Normal;
     vec2 TexCoord;
     vec4 FragPosLightSpace;
+    vec4 ViewPos;
 } fs_in;
 
 struct Sunlight {
@@ -20,6 +24,8 @@ uniform Sunlight sunlight;
 uniform vec3 cameraPos;
 uniform vec3 chosen_block_pos;
 uniform bool isDaylight;
+
+const float fogDensity = 0.05;
 
 float ShadowCalculation(vec4 fragPosLightSpace)
 {
@@ -92,5 +98,13 @@ void main()
         // With Shadow mapping
         result = (sunlight.ambient +(1.1f-shadow)*diffuse) * isChosen * color;
     }
-    FragColor = vec4(result, alpha);
+    
+    //fog
+    
+    float dist = (length(fs_in.ViewPos)<100) ? 0 : length(fs_in.ViewPos)-100;
+    float fogFactor = 1.0/exp((dist*fogDensity)*(dist*fogDensity));
+    fogFactor = clamp(fogFactor, 0.0, 1.0);
+    vec2 SkyTexCoords = vec2(DayPos, 0.5);
+    vec4 fogColor = (1-starIntensity) * texture(skybox, SkyTexCoords) + starIntensity * vec4(0.0f, 0.0f, 0.0f, 1.0f);
+    FragColor = mix( fogColor, vec4(result, alpha), fogFactor);
 }
