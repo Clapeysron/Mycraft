@@ -36,6 +36,7 @@ public:
     glm::vec3 steve_position;
     float vertical_v;
     bool move(glm::vec3 new_postions);
+    bool trymove(glm::vec3 new_postions);
     bool gravity_move(float deltaTime);
 private:
     bool if_in_block(int x, int y, int z, glm::vec3 position);

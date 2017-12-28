@@ -9,8 +9,8 @@
 #ifndef game_settings_h
 #define game_settings_h
 
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
+#define SCREEN_WIDTH 2048
+#define SCREEN_HEIGHT 1152
 
 #define QUAD_SIZE 48
 #define QUAD_FACE_SIZE 8
@@ -91,15 +91,15 @@
 #define ROCK_Y 0.0f
 #define SOIL_X 0.2f
 #define SOIL_Y 0.0f
-#define GRASSLAND_TOP_X 0.0f
+#define GRASSLAND_TOP_X 0.9f
 #define GRASSLAND_TOP_Y 0.0f
-#define GRASSLAND_SIDE_X 0.1f
+#define GRASSLAND_SIDE_X 0.8f
 #define GRASSLAND_SIDE_Y 0.0f
 #define WATER_X 0.9f
 #define WATER_Y 0.1f
 #define DIAMAND_ORE_X 0.1f
 #define DIAMAND_ORE_Y 0.2f
-#define GRASS_X 0.0f
+#define GRASS_X 0.1f
 #define GRASS_Y 0.4f
 #define BASE_ROCK_X 0.4f
 #define BASE_ROCK_Y 0.0f

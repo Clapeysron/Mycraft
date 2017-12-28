@@ -21,8 +21,8 @@ float Render::lastY =  600.0 / 2.0;
 float Render::deltaTime = 0.0f;
 bool Render::tryPlace = false;
 bool Render::mouseHold = false;
-int Render::screen_width = SCREEN_WIDTH*2;
-int Render::screen_height = SCREEN_HEIGHT*2;
+int Render::screen_width = (SCREEN_WIDTH > 4096) ? 4096 : SCREEN_WIDTH;
+int Render::screen_height = (SCREEN_HEIGHT > 2064) ? 2064: SCREEN_HEIGHT;
 glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
@@ -42,7 +42,7 @@ Render::Render() {
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
-    window = glfwCreateWindow(screen_width/2, screen_height/2, "Mycraft", NULL, NULL);
+    window = glfwCreateWindow(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, "Mycraft", NULL, NULL);
     if (window == NULL)
     {
         std::cout << "Failed to create GLFW window" << std::endl;
@@ -177,6 +177,7 @@ void Render::render(Game& game) {
     dayTime = (dayTime>24) ? dayTime - 24 : dayTime;
     float starIntensity = calStarIntensity(dayTime);
     Sun_Moon_light = calLight(dayTime);
+    Ambient_light = calAmbient(dayTime);
     printf("==========================\n");
     printf("Time: %d:%d\n", (int)floor(dayTime), (int)floor((dayTime-floor(dayTime))*60));
     printf("fps: %.2f\n",1.0f/deltaTime);
@@ -223,7 +224,7 @@ void Render::render(Game& game) {
     
     prev_block_pos = chosen_block_pos;
     if(tryPlace){
-        bool ret = game.visibleChunks.placeBlock(game.steve_position, cameraFront, DIAMAND_ORE);
+        bool ret = game.visibleChunks.placeBlock(game.steve_position, cameraFront, ROCK);
         tryPlace = false;
     }
     
@@ -295,9 +296,9 @@ void Render::render(Game& game) {
     }
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     if (game.game_perspective == THIRD_PERSON) {
-        game.visibleChunks.draw(game.steve_position - glm::vec3(5.0f)*cameraFront, view, projection, Block_Shader, texture_pic, depthMap_pic, Sky.Skybox_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, broken_scale, Sun_Moon_light, isDaylight, dayTime, starIntensity);
+        game.visibleChunks.draw(game.steve_position - glm::vec3(5.0f)*cameraFront, view, projection, Block_Shader, texture_pic, depthMap_pic, Sky.Skybox_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, broken_scale, Sun_Moon_light, Ambient_light, isDaylight, dayTime, starIntensity);
     } else {
-        game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, Sky.Skybox_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, broken_scale, Sun_Moon_light, isDaylight, dayTime, starIntensity);
+        game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, Sky.Skybox_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, broken_scale, Sun_Moon_light, Ambient_light, isDaylight, dayTime, starIntensity);
     }
     // steve render
     if (game.game_perspective == THIRD_PERSON) {
@@ -412,8 +413,24 @@ float Render::calStarIntensity(float dayTime) {
 }
 
 glm::vec3 Render::calLight(float dayTime) {
-    glm::vec3 dayLight(0.4f);
+    glm::vec3 dayLight(0.3f);
     glm::vec3 nightLight(0.0f);
+    if (dayTime >=5.5 && dayTime <= 6.5) {
+        float dayIntensity = sin((6.5-dayTime)*M_PI/2);
+        return dayIntensity*nightLight + (1-dayIntensity)*dayLight;
+    } else if (dayTime<5.5 || dayTime>19) {
+        return nightLight;
+    } else if (dayTime >= 17 && dayTime <= 19) {
+        float dayIntensity = sin((dayTime-17)*M_PI/4);
+        return dayIntensity*nightLight + (1-dayIntensity)*dayLight;
+    } else {
+        return dayLight;
+    }
+}
+
+glm::vec3 Render::calAmbient(float dayTime) {
+    glm::vec3 dayLight(0.35f);
+    glm::vec3 nightLight(0.1f);
     if (dayTime >=5.5 && dayTime <= 6.5) {
         float dayIntensity = sin((6.5-dayTime)*M_PI/2);
         return dayIntensity*nightLight + (1-dayIntensity)*dayLight;
@@ -554,7 +571,7 @@ void Render::processInput(GLFWwindow *window, Game &game)
     }
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
         if (game.game_mode == NORMAL_MODE) {
-            if (game.vertical_v == 0) {
+            if (game.vertical_v == 0 && !game.trymove(game.steve_position-glm::vec3(0, 0.02, 0))) {
                 game.vertical_v = JUMP_V * 3;
             }
         } else {
