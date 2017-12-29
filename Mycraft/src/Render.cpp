@@ -233,7 +233,7 @@ void Render::render(Game& game) {
     timeMark = glfwGetTime();
 #endif
     bool isDaylight = (dayTime >= 5.5 && dayTime <= 19);
-    float shadowRadius = (RADIUS*2+1)*8*1.2;
+    float shadowRadius = (RADIUS*2+1)*8;
     float dayTheta = (dayTime-SUNRISE_TIME)*M_PI/12;
     // depth scene
     glm::mat4 lightProjection, lightView, lightSpaceMatrix;
@@ -255,8 +255,9 @@ void Render::render(Game& game) {
     
 #ifdef SHADOW_MAPPING
     GLfloat near_plane = 0.0f, far_plane = shadowRadius + 512.0f;
+    float orthoRatio = 1.2f;
     if (isDaylight) {
-        lightProjection = glm::ortho(-shadowRadius, shadowRadius, -shadowRadius, shadowRadius, near_plane, far_plane);
+        lightProjection = glm::ortho(-shadowRadius*orthoRatio, shadowRadius*orthoRatio, -shadowRadius*orthoRatio, shadowRadius*orthoRatio, near_plane, far_plane);
         lightView = glm::lookAt(lightPos, lightPos + lightDirection, glm::vec3(lightDirection.x, lightDirection.z, -lightDirection.y/(tan(dayTheta)*tan(dayTheta))));
         lightSpaceMatrix = lightProjection * lightView;
         Depth_Shader.use();
@@ -306,7 +307,7 @@ void Render::render(Game& game) {
         Steve_Shader.setMat4("projection", projection);
         Steve_Shader.setMat4("view", view);
         Steve_Shader.setVec3("sunlight.lightDirection", lightDirection);
-        Steve_Shader.setVec3("sunlight.ambient", glm::vec3(0.2f, 0.2f, 0.2f));
+        Steve_Shader.setVec3("sunlight.ambient", Ambient_light);
         Steve_Shader.setVec3("sunlight.lightambient", Sun_Moon_light);
         depth_steve_model = glm::mat4(1);
         depth_steve_model = glm::translate(depth_steve_model, game.steve_position);
@@ -413,8 +414,8 @@ float Render::calStarIntensity(float dayTime) {
 }
 
 glm::vec3 Render::calLight(float dayTime) {
-    glm::vec3 dayLight(0.3f);
-    glm::vec3 nightLight(0.0f);
+    glm::vec3 dayLight(0.9f);
+    glm::vec3 nightLight(0.1f);
     if (dayTime >=5.5 && dayTime <= 6.5) {
         float dayIntensity = sin((6.5-dayTime)*M_PI/2);
         return dayIntensity*nightLight + (1-dayIntensity)*dayLight;

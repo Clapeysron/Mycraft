@@ -9,7 +9,7 @@
 #ifndef game_settings_h
 #define game_settings_h
 
-#define SCREEN_WIDTH 2048
+#define SCREEN_WIDTH 2048                                                                    
 #define SCREEN_HEIGHT 1152
 
 #define QUAD_SIZE 48
@@ -116,7 +116,7 @@
 // Water offset with the aside block
 #define WATER_OFFSET 0.85
 // Tree Density
-#define TREE_DENSITY 400
+#define TREE_DENSITY 500
 // Sun rise time
 #define SUNRISE_TIME 6
 

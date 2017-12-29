@@ -6,6 +6,7 @@ uniform sampler2D skybox;
 uniform float DayPos;
 uniform float starIntensity;
 uniform float broken_texture_x;
+uniform float noFogRadius;
 in VS_OUT {
     vec3 FragPos;
     vec3 Normal;
@@ -75,7 +76,7 @@ void main()
     float ifFront = dot(cameraPos - fs_in.FragPos, norm) > 0 ? 1 : -1;
     lightDir = ifFront * lightDir;
     float diff = max(dot(lightDir, norm), 0.0);
-    vec3 diffuse = sunlight.lightambient * diff * 2.5;
+    vec3 diffuse = sunlight.lightambient * diff;
     float isChosen = isChosen(fs_in.FragPos);
     
     if (isChosen!= 1.0f && broken_texture_x!= 0.0f) {
@@ -111,7 +112,7 @@ void main()
     
     //fog
     
-    float dist = (length(fs_in.ViewPos)<100) ? 0 : length(fs_in.ViewPos)-100;
+    float dist = (length(fs_in.ViewPos)<noFogRadius) ? 0 : length(fs_in.ViewPos)-noFogRadius;
     float fogFactor = 1.0/exp((dist*fogDensity)*(dist*fogDensity));
     fogFactor = clamp(fogFactor, 0.0, 1.0);
     vec2 SkyTexCoords = vec2(DayPos, 0.5);
