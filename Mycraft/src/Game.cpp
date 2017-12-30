@@ -71,11 +71,11 @@ bool Game::if_in_block(int y, int x, int z, glm::vec3 position) {
 }
 
 bool Game::steve_in_water() {
-    return (visibleChunks.getBlockType(steve_position.y - STEVE_EYE_HEIGHT + 0.01, steve_position.x, steve_position.z) == (char)WATER);
+    return (visibleChunks.getBlockType(floor(steve_position.y - STEVE_EYE_HEIGHT), floor(steve_position.x), floor(steve_position.z)) == (char)WATER);
 }
 
 bool Game::steve_eye_in_water() {
-    return (visibleChunks.getBlockType(steve_position.y, steve_position.x, steve_position.z) == (char)WATER);
+    return (visibleChunks.getBlockType(floor(steve_position.y), floor(steve_position.x), floor(steve_position.z)) == (char)WATER);
 }
 
 bool Game::gravity_move(float deltaTime) {

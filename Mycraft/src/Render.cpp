@@ -184,6 +184,7 @@ void Render::render(Game& game) {
     printf("view x:%.2f y:%.2f z:%.2f\n", cameraFront.x, cameraFront.y, cameraFront.z);
     printf("pos x:%.2f y:%.2f z:%.2f\n", game.steve_position.x, game.steve_position.y, game.steve_position.z);
     printf("steve_in_water: %d\neye_in_water:%d\n", game.steve_in_water(), game.steve_eye_in_water());
+    std::cout << "now_block:" << BlockInfoMap[game.visibleChunks.getBlockType(game.steve_position.y, game.steve_position.x, game.steve_position.z)].block_name << endl;
     
     processInput(window, game);
     
