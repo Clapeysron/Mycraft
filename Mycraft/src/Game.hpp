@@ -37,8 +37,11 @@ public:
     float vertical_v;
     bool move(glm::vec3 new_postions);
     bool trymove(glm::vec3 new_postions);
+    bool steve_in_water();
+    bool steve_eye_in_water();
     bool gravity_move(float deltaTime);
 private:
+    bool prev_in_water;
     bool if_in_block(int x, int y, int z, glm::vec3 position);
 };
 #endif /* Game_hpp */

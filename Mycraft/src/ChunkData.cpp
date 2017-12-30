@@ -1305,7 +1305,7 @@ void VisibleChunks::clearPathHistory(){
 }
 
 //渲染物体
-void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, unsigned int skybox, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection, glm::vec3 chosen_block_pos, float broken_scale, glm::vec3 Sun_Moon_light, glm::vec3 Ambient_light, bool isDaylight, float dayTime, float starIntensity) {
+void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, unsigned int skybox, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection, glm::vec3 chosen_block_pos, float broken_scale, glm::vec3 Sun_Moon_light, glm::vec3 Ambient_light, bool isDaylight, float dayTime, float starIntensity, bool eye_in_water) {
     calcFrustumPlane(view, projection);
     cout<<"y:"<<(int)cameraPos.y<<" x:"<<(int)cameraPos.x<<" z:"<<(int)cameraPos.z<<endl;
     updataChunks((int)cameraPos.y, (int)cameraPos.x, (int)cameraPos.z);
@@ -1323,6 +1323,7 @@ void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projecti
     Block_Shader.setFloat("DayPos", dayTime/24);
     Block_Shader.setBool("isDaylight", isDaylight);
     Block_Shader.setFloat("starIntensity", starIntensity);
+    Block_Shader.setBool("eye_in_water", eye_in_water);
     Block_Shader.setFloat("noFogRadius", RADIUS*15);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_pic);

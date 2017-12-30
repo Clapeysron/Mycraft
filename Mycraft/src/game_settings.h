@@ -73,6 +73,8 @@
 //gravity
 #define GRAVITY 9.8
 #define JUMP_V 3.2
+#define MAX_WATER_V 3.2
+#define FLOAT_UP_V 2.5
 
 //steve radius
 #define STEVE_RADIUS 0.35

@@ -7,6 +7,7 @@ uniform float DayPos;
 uniform float starIntensity;
 uniform float broken_texture_x;
 uniform float noFogRadius;
+uniform bool eye_in_water;
 in VS_OUT {
     vec3 FragPos;
     vec3 Normal;
@@ -79,12 +80,23 @@ void main()
     vec3 diffuse = sunlight.lightambient * diff;
     float isChosen = isChosen(fs_in.FragPos);
     
+    //Chosen and Break
     if (isChosen!= 1.0f && broken_texture_x!= 0.0f) {
         float real_broken_texture_x = broken_texture_x + fs_in.TexCoord.x - floor(fs_in.TexCoord.x*10)/10;
         float real_broken_texture_y = fs_in.TexCoord.y - floor(fs_in.TexCoord.y*10)/10 + 0.9;
         vec4 broken_texture = texture(texture_pic, vec2(real_broken_texture_x, real_broken_texture_y));
         if (broken_texture.a>0.05f) {
             color = (broken_texture.r+0.1)*2 * color;
+        }
+    }
+    
+    //below water
+    if (eye_in_water) {
+        float real_water_texture_x = fs_in.TexCoord.x - floor(fs_in.TexCoord.x*10)/10 + 0.9;
+        float real_water_texture_y = fs_in.TexCoord.y - floor(fs_in.TexCoord.y*10)/10 + 0.1;
+        vec4 water_texture = texture(texture_pic, vec2(real_water_texture_x, real_water_texture_y));
+        if (fs_in.TexCoord.x<0.9 || fs_in.TexCoord.y<0.1 || fs_in.TexCoord.y>0.3) {
+            color = mix(water_texture.rgb, color, 0.8);
         }
     }
     

@@ -70,8 +70,26 @@ bool Game::if_in_block(int y, int x, int z, glm::vec3 position) {
     return true;
 }
 
+bool Game::steve_in_water() {
+    return (visibleChunks.getBlockType(steve_position.y - STEVE_EYE_HEIGHT + 0.01, steve_position.x, steve_position.z) == (char)WATER);
+}
+
+bool Game::steve_eye_in_water() {
+    return (visibleChunks.getBlockType(steve_position.y, steve_position.x, steve_position.z) == (char)WATER);
+}
+
 bool Game::gravity_move(float deltaTime) {
-    vertical_v -= deltaTime*GRAVITY*3;
+    bool now_in_water = steve_in_water();
+    if (now_in_water && !prev_in_water) {
+        vertical_v = vertical_v * 0.5;
+    } else if (prev_in_water && !now_in_water) {
+        vertical_v += JUMP_V * 1.5;
+    } else if (now_in_water) {
+        vertical_v -= (MAX_WATER_V + vertical_v)/15 * deltaTime*GRAVITY;
+    } else {
+        vertical_v -= deltaTime*GRAVITY*3;
+    }
+    prev_in_water = now_in_water;
     glm::vec3 new_position;
     new_position = steve_position + deltaTime * glm::vec3(0.0f, vertical_v, 0.0f);
     if ( !move(new_position) ) {
