@@ -227,7 +227,7 @@ void Render::render(Game& game) {
     
     prev_block_pos = chosen_block_pos;
     if(tryPlace){
-        bool ret = game.visibleChunks.placeBlock(game.steve_position, cameraFront, ROCK);
+        bool ret = game.visibleChunks.placeBlock(game.steve_position, cameraFront, TORCH);
         tryPlace = false;
     }
     
