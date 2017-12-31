@@ -14,11 +14,13 @@
 class Sky {
 public:
     ~Sky();
-    void draw(glm::vec3 position, glm::mat4 view, glm::mat4 projection);
+    void draw(glm::vec3 position, glm::mat4 view, glm::mat4 projection, float dayTime, float starIntensity);
     Shader Sky_Shader;
     void Sky_init();
+    void Star_init();
+    unsigned int Skybox_pic;
 private:
     unsigned int VBO, VAO;
-    unsigned int Skybox_pic;
+    unsigned int Star_pic;
 };
 #endif /* Sky_hpp */

@@ -11,6 +11,7 @@
 #include "opengl_header.h"
 #include "ChunkData.hpp"
 #include "Block.hpp"
+#include "BlockInfo.hpp"
 enum Game_mode {
     NORMAL_MODE,
     GOD_MODE
@@ -20,6 +21,8 @@ enum Game_perspective {
     FIRST_PERSON,
     THIRD_PERSON
 };
+
+
 
 class Game {
 public:
@@ -33,8 +36,12 @@ public:
     glm::vec3 steve_position;
     float vertical_v;
     bool move(glm::vec3 new_postions);
-    bool gravity_move();
+    bool trymove(glm::vec3 new_postions);
+    bool steve_in_water();
+    bool steve_eye_in_water();
+    bool gravity_move(float deltaTime);
 private:
+    bool prev_in_water;
     bool if_in_block(int x, int y, int z, glm::vec3 position);
 };
 #endif /* Game_hpp */

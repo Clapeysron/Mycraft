@@ -17,6 +17,7 @@ out VS_OUT {
     vec4 FragPosLightSpace;
     float shadow;
     float brightness;
+    vec4 ViewPos;
 } vs_out;
 
 void main()
@@ -27,5 +28,6 @@ void main()
     vs_out.FragPosLightSpace = lightSpaceMatrix * vec4(aPos, 1.0f);
     vs_out.shadow = shadow;
     vs_out.brightness = brightness;
-    gl_Position = projection * view * vec4(aPos, 1.0f);
+    vs_out.ViewPos = view * vec4(aPos, 1.0f);
+    gl_Position = projection * vs_out.ViewPos;
 }

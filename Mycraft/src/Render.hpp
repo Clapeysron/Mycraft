@@ -14,6 +14,7 @@
 #include "Game.hpp"
 #include "Sky.hpp"
 #include "Gui.hpp"
+#include "Sun_Moon.hpp"
 #include <math.h>
 
 #define SHADOW_WIDTH 16384
@@ -26,6 +27,8 @@ public:
     void initial(Game& game);
     void render(Game& game);
     Sky Sky;
+    Sun_Moon Sun;
+    Sun_Moon Moon;
     Gui Gui;
     GLFWwindow* window;
     Shader Block_Shader;
@@ -36,12 +39,16 @@ public:
 private:
     float dayTime;
     float randomSunDirection;
+    glm::vec3 Sun_Moon_light;
+    glm::vec3 Ambient_light;
     static int screen_width, screen_height;
     unsigned int texture_pic;
     unsigned int depthMap_fbo;
     unsigned int depthMap_pic;
     static float deltaTime;
     float lastFrame;
+    float removeCount;
+    glm::vec3 prev_block_pos;
     glm::mat4 view;
     glm::mat4 projection;
     static float frustumPlanes[6][4];
@@ -53,11 +60,14 @@ private:
     static float fov;
     static float lastX;
     static float lastY;
-    static bool tryRemove;
     static bool tryPlace;
+    static bool mouseHold;
     void texture_init();
     void depthMap_init();
-    float steve_turn_angle(glm::vec3 cameraFront);
+    glm::vec3 calLight(float dayTime);
+    glm::vec3 calAmbient(float dayTime);
+    float calStarIntensity(float dayTime);
+    float cal_angle(glm::vec3 cameraFront);
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
     static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);

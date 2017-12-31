@@ -8,13 +8,11 @@
 
 #include "ChunkData.hpp"
 
-
-
-inline void SubChunk::setPathHistory(int direction){
+inline void SubChunk::setPathHistory(int direction) {
     pathHistory |= direction;
 }
 
-inline int SubChunk::getPathHistory(){
+inline int SubChunk::getPathHistory() {
     return pathHistory;
 }
 
@@ -1246,7 +1244,7 @@ void Chunk::generateHerb() {
             int randy = glm::abs((y*(y*y*prime1[0]+prime2[0])+prime3[0])&0x7fffffff);
             if(y > SEA_LEVEL) {
                 if(glm::abs(randx*randy*randz)%64 == 1) {
-                    subChunks[(y+1)/16]->BlockType[(y+1)%16][i][j] = GRASS;
+                    subChunks[(y+1)/16]->BlockType[(y+1)%16][i][j] = (char)GRASS;
                 }
                 if(hasTree == false && glm::abs(randx*randy*randz)%512 > 500 &&
                    i > 5 && i < 10 && j > 5 && j < 10) {
@@ -1304,6 +1302,8 @@ bool Chunk::generateTree(int y, int x, int z) {
             return false;
         }
     }
+    if(subChunks[(y+7)/16]->isEmpty)
+        return false;
     //生成叶子
     for(int i = 0; i < 4; i++) {
         int tmpy = y+4+i;
@@ -1324,7 +1324,6 @@ bool Chunk::generateTree(int y, int x, int z) {
     }
     return true;
 }
-
 
 bool Chunk::readFile(string filePath){
     ifstream fin(filePath,ios::binary);
@@ -1555,13 +1554,12 @@ void Chunk::updateWater() {
     bufferObject.updateBuffer(true, &Water[0], Water.size());
 }
 
-
-
-
 VisibleChunks::VisibleChunks(float x, float y, float z){
     int ChunkX, ChunkZ;
     int SubChunkIndex;
     
+    initBlockInfo();
+
     ChunkX = (x >= 0)?((int)x)/16*16:(((int)x)/16-1)*16;
     ChunkZ = (z >= 0)?((int)z)/16*16:(((int)z)/16-1)*16;
     
@@ -2007,7 +2005,7 @@ void VisibleChunks::clearPathHistory(){
 }
 
 //渲染物体
-void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection, glm::vec3 chosen_block_pos){
+void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, unsigned int skybox, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection, glm::vec3 chosen_block_pos, float broken_scale, glm::vec3 Sun_Moon_light, glm::vec3 Ambient_light, bool isDaylight, float dayTime, float starIntensity, bool eye_in_water) {
     calcFrustumPlane(view, projection);
     cout<<"y:"<<(int)cameraPos.y<<" x:"<<(int)cameraPos.x<<" z:"<<(int)cameraPos.z<<endl;
     updataChunks((int)cameraPos.y, (int)cameraPos.x, (int)cameraPos.z);
@@ -2015,13 +2013,24 @@ void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projecti
     Block_Shader.setMat4("view", view);
     Block_Shader.setMat4("projection", projection);
     Block_Shader.setVec3("sunlight.lightDirection", lightDirection);
-    Block_Shader.setVec3("sunlight.ambient", glm::vec3(0.3f, 0.3f, 0.3f));
+    Block_Shader.setVec3("sunlight.ambient", Ambient_light);
+    Block_Shader.setVec3("sunlight.lightambient", Sun_Moon_light);
     Block_Shader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
     Block_Shader.setVec3("chosen_block_pos", chosen_block_pos);
+    float broken_texture_x = floor(broken_scale*10)/10;
+    Block_Shader.setFloat("broken_texture_x", broken_texture_x);
+    Block_Shader.setVec3("cameraPos", cameraPos);
+    Block_Shader.setFloat("DayPos", dayTime/24);
+    Block_Shader.setBool("isDaylight", isDaylight);
+    Block_Shader.setFloat("starIntensity", starIntensity);
+    Block_Shader.setBool("eye_in_water", eye_in_water);
+    Block_Shader.setFloat("noFogRadius", RADIUS*15);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_pic);
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, depthMap_pic);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, skybox);
     drawNormQuads(cameraPos, Block_Shader);
     drawTransQuads(cameraPos, Block_Shader);
 }
@@ -2059,49 +2068,30 @@ void VisibleChunks::calcFrustumPlane(glm::mat4 view, glm::mat4 projection){
 }
 
 void SubChunk::set_texture(float* tmp, char type, int dir) {
-    if (type == GRASSLAND) {
-        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE)
-        {
-            if (dir == YPOS) {
-                tmp[m+6] += GRASSLAND_TOP_X;
-                tmp[m+7] += GRASSLAND_TOP_Y;
-            } else if (dir == YNEG) {
-                tmp[m+6] += SOIL_X;
-                tmp[m+7] += SOIL_Y;
-            } else {
-                tmp[m+6] += GRASSLAND_SIDE_X;
-                tmp[m+7] += GRASSLAND_SIDE_Y;
-            }
-        }
-    } else if (type == ROCK) {
-        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
-            tmp[m+6] += ROCK_X;
-            tmp[m+7] += ROCK_Y;
-        }
-    } else if (type == SOIL) {
-        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
-            tmp[m+6] += SOIL_X;
-            tmp[m+7] += SOIL_Y;
-        }
-    } else if (type == (char)WATER) {
-        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
-            tmp[m+6] += WATER_X;
-            tmp[m+7] += WATER_Y;
-        }
-    } else if (type == DIAMAND_ORE) {
-        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
-            tmp[m+6] += DIAMAND_ORE_X;
-            tmp[m+7] += DIAMAND_ORE_Y;
-        }
-    } else if (type == (char)GRASS) {
-        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
-            tmp[m+6] += FLOWER_X;
-            tmp[m+7] += FLOWER_Y;
-        }
-    } else if (type == BASE_ROCK) {
-        for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE) {
-            tmp[m+6] += BASE_ROCK_X;
-            tmp[m+7] += BASE_ROCK_Y;
+    BlockInfo blockInfo = BlockInfoMap[type];
+    for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE)
+    {
+        if (dir == YPOS) {
+            tmp[m+6] += blockInfo.y_pos_x;
+            tmp[m+7] += blockInfo.y_pos_y;
+        } else if (dir == YNEG) {
+            tmp[m+6] += blockInfo.y_neg_x;
+            tmp[m+7] += blockInfo.y_neg_y;
+        } else if (dir == XPOS){
+            tmp[m+6] += blockInfo.x_pos_x;
+            tmp[m+7] += blockInfo.x_pos_y;
+        } else if (dir == XNEG){
+            tmp[m+6] += blockInfo.x_neg_x;
+            tmp[m+7] += blockInfo.x_neg_y;
+        } else if (dir == ZPOS){
+            tmp[m+6] += blockInfo.z_pos_x;
+            tmp[m+7] += blockInfo.z_pos_y;
+        } else if (dir == ZNEG){
+            tmp[m+6] += blockInfo.z_neg_x;
+            tmp[m+7] += blockInfo.z_neg_y;
+        } else {
+            tmp[m+6] += blockInfo.y_pos_x;
+            tmp[m+7] += blockInfo.y_pos_y;
         }
     }
 }
@@ -2255,7 +2245,6 @@ char VisibleChunks::removeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront) {
             prey = y;
             prez = z;
         }
-
         
         int yIndex = y/16;
         
@@ -2288,11 +2277,22 @@ glm::vec3 VisibleChunks::accessibleBlock(glm::vec3 cameraPos, glm::vec3 cameraFr
             prey = y;
             prez = z;
         }
-
-        
         char type = getBlockType(y, x, z);
         if(type != (char)AIR && type != (char)WATER)
             return glm::vec3(x, y, z);
     }
     return cameraPos;
+}
+
+void VisibleChunks::initBlockInfo() {
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)GRASS, BlockInfo("GRASS", 0.05, GRASS_X, GRASS_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)LEAF, BlockInfo("LEAF", 0.2, LEAF_X, LEAF_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)WATER, BlockInfo("WATER", 99999, WATER_X, WATER_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)ROCK, BlockInfo("ROCK", 7.5, ROCK_X, ROCK_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)SOIL, BlockInfo("SOIL", 0.75, SOIL_X, SOIL_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)GRASSLAND, BlockInfo("GRASSLAND", 0.9, GRASSLAND_TOP_X, GRASSLAND_TOP_Y, SOIL_X, SOIL_Y, GRASSLAND_SIDE_X, GRASSLAND_SIDE_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)DIAMAND_ORE, BlockInfo("DIAMAND_ORE", 99999, DIAMAND_ORE_X, DIAMAND_ORE_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)BASE_ROCK, BlockInfo("BASE_ROCK", 99999, BASE_ROCK_X, BASE_ROCK_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)LEAF, BlockInfo("LEAF", 0.35, LEAF_X, LEAF_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)TRUNK, BlockInfo("TRUNK", 3, TRUNK_TOP_X, TRUNK_TOP_Y, TRUNK_TOP_X, TRUNK_TOP_Y, TRUNK_SIDE_X, TRUNK_SIDE_Y)));
 }

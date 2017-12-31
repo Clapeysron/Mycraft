@@ -9,8 +9,8 @@
 #ifndef game_settings_h
 #define game_settings_h
 
-#define SCREEN_WIDTH 1280
-#define SCREEN_HEIGHT 720
+#define SCREEN_WIDTH 2048                                                                    
+#define SCREEN_HEIGHT 1152
 
 #define QUAD_SIZE 60
 #define QUAD_FACE_SIZE 8
@@ -33,7 +33,6 @@
 #define GLASS_RED 0xf2
 #define GLASS_GREEN 0xf3
 #define GLASS_BLUE 0xf4
-
 
 //non-trans and non-filled material (MSB = 0)
 #define BOUND 0x00
@@ -76,12 +75,20 @@
 //gravity
 #define GRAVITY 9.8
 #define JUMP_V 3.2
+#define MAX_WATER_V 3.2
+#define FLOAT_UP_V 2.5
 
 //steve radius
 #define STEVE_RADIUS 0.35
 #define STEVE_HEIGHT 1.8
 #define STEVE_EYE_HEIGHT 1.6
 #define STEVE_FETCH_RADIUS 8
+
+//texture offset
+#define TEXTURE_MIN 0.0001f
+#define TEXTURE_MAX 0.0999f
+#define GRASS_MIN 0.0f
+#define GRASS_MAX 1.0f
 
 //texture place
 #define ROCK_X 0.3f
@@ -96,11 +103,18 @@
 #define WATER_Y 0.1f
 #define DIAMAND_ORE_X 0.1f
 #define DIAMAND_ORE_Y 0.2f
-#define FLOWER_X 0.0f
-#define FLOWER_Y 0.4f
+#define GRASS_X 0.1f
+#define GRASS_Y 0.4f
 #define BASE_ROCK_X 0.4f
 #define BASE_ROCK_Y 0.0f
+#define LEAF_X 0.4f
+#define LEAF_Y 0.3f
+#define TRUNK_TOP_X 0.2f
+#define TRUNK_TOP_Y 0.1f
+#define TRUNK_SIDE_X 0.3f
+#define TRUNK_SIDE_Y 0.1f
 
+// SEA_LEVEL
 #define SEA_LEVEL 115
 
 #define WATER_OFFSET 0.9
@@ -114,6 +128,14 @@
 #define VERTEX7_OFFSET 2
 #define VERTEX8_OFFSET 0
 
+// Water offset with the aside block
+#define WATER_OFFSET 0.85
+// Tree Density
+#define TREE_DENSITY 500
+// Sun rise time
+#define SUNRISE_TIME 6
 
+#define CORNER_SHADOW 1.0f
+#define POINT_LIGHT 0.0625f
 
 #endif /* game_settings_h */
