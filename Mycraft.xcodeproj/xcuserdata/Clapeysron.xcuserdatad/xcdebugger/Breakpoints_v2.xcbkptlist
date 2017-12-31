@@ -138,12 +138,20 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/ChunkData.cpp"
+<<<<<<< HEAD
             timestampString = "535966658.12746"
+=======
+            timestampString = "535207415.306195"
+>>>>>>> parent of b73ace9... Merge branch 'master' of https://github.com/Clapeysron/Mycraft
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1043"
             endingLineNumber = "1043"
+<<<<<<< HEAD
             landmarkName = "VisibleChunks::updateQuads(int dir)"
+=======
+            landmarkName = "VisibleChunks::getRenderingSubChunks(int y, int x, int z)"
+>>>>>>> parent of b73ace9... Merge branch 'master' of https://github.com/Clapeysron/Mycraft
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -154,12 +162,20 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/ChunkData.cpp"
+<<<<<<< HEAD
             timestampString = "535966658.127519"
+=======
+            timestampString = "535207415.306344"
+>>>>>>> parent of b73ace9... Merge branch 'master' of https://github.com/Clapeysron/Mycraft
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1062"
             endingLineNumber = "1062"
+<<<<<<< HEAD
             landmarkName = "VisibleChunks::updateQuads(int dir)"
+=======
+            landmarkName = "VisibleChunks::getRenderingSubChunks(int y, int x, int z)"
+>>>>>>> parent of b73ace9... Merge branch 'master' of https://github.com/Clapeysron/Mycraft
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -170,7 +186,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/ChunkData.cpp"
+<<<<<<< HEAD
             timestampString = "535966658.127559"
+=======
+            timestampString = "535207415.306445"
+>>>>>>> parent of b73ace9... Merge branch 'master' of https://github.com/Clapeysron/Mycraft
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "4"
@@ -186,12 +206,20 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/ChunkData.cpp"
+<<<<<<< HEAD
             timestampString = "535966658.127596"
+=======
+            timestampString = "535207415.306519"
+>>>>>>> parent of b73ace9... Merge branch 'master' of https://github.com/Clapeysron/Mycraft
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1064"
             endingLineNumber = "1064"
+<<<<<<< HEAD
             landmarkName = "VisibleChunks::updateQuads(int dir)"
+=======
+            landmarkName = "VisibleChunks::getRenderingSubChunks(int y, int x, int z)"
+>>>>>>> parent of b73ace9... Merge branch 'master' of https://github.com/Clapeysron/Mycraft
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -202,11 +230,15 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/shader/Block.fs"
+<<<<<<< HEAD
             timestampString = "535967228.618654"
+=======
+            timestampString = "535210250.13861"
+>>>>>>> parent of b73ace9... Merge branch 'master' of https://github.com/Clapeysron/Mycraft
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "31"
-            endingLineNumber = "31"
+            startingLineNumber = "30"
+            endingLineNumber = "30"
             landmarkName = "ShadowCalculation"
             landmarkType = "9">
          </BreakpointContent>
@@ -227,6 +259,7 @@
             landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
+<<<<<<< HEAD
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
@@ -275,5 +308,7 @@
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
+=======
+>>>>>>> parent of b73ace9... Merge branch 'master' of https://github.com/Clapeysron/Mycraft
    </Breakpoints>
 </Bucket>

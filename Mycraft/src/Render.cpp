@@ -169,7 +169,7 @@ void Render::render(Game& game) {
         tryRemove = false;
     }
     if(tryPlace){
-        bool ret = game.visibleChunks.placeBlock(game.steve_position, cameraFront, DIAMAND_ORE);
+        bool ret = game.visibleChunks.placeBlock(game.steve_position, cameraFront, TORCH);
         tryPlace = false;
     }
     
@@ -203,9 +203,9 @@ void Render::render(Game& game) {
         depth_steve_model = glm::scale(depth_steve_model, glm::vec3(0.3f * STEVE_HEIGHT));
         Depth_Shader.setMat4("model", depth_steve_model);
         steve_model.Draw(Depth_Shader);
-    }*/
+    }
     glCullFace(GL_BACK);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);*/
 
     // Chunks render
     glViewport(0, 0, screen_width, screen_height);

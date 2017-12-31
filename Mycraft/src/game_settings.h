@@ -12,9 +12,9 @@
 #define SCREEN_WIDTH 1280
 #define SCREEN_HEIGHT 720
 
-#define QUAD_SIZE 48
+#define QUAD_SIZE 60
 #define QUAD_FACE_SIZE 8
-#define VERTEX_SIZE 8
+#define VERTEX_SIZE 10
 #define FACE_TYPE_NUM 8
 
 //transparent material or model (MSB = 1)
@@ -43,6 +43,8 @@
 #define TRUNK 0x04
 #define BASE_ROCK 0x05
 #define DIAMAND_ORE 0x10
+
+#define TORCH_BRIGHTNESS 0x0f
 
 //for hisrotyPath & adjVisibility
 #define UP 0x20
@@ -81,18 +83,14 @@
 #define STEVE_EYE_HEIGHT 1.6
 #define STEVE_FETCH_RADIUS 8
 
-//texture offset
-#define TEXTURE_MIN 0.0001f
-#define TEXTURE_MAX 0.0999f
-
 //texture place
 #define ROCK_X 0.3f
 #define ROCK_Y 0.0f
 #define SOIL_X 0.2f
 #define SOIL_Y 0.0f
-#define GRASSLAND_TOP_X 0.9f
+#define GRASSLAND_TOP_X 0.0f
 #define GRASSLAND_TOP_Y 0.0f
-#define GRASSLAND_SIDE_X 0.8f
+#define GRASSLAND_SIDE_X 0.1f
 #define GRASSLAND_SIDE_Y 0.0f
 #define WATER_X 0.9f
 #define WATER_Y 0.1f
@@ -105,15 +103,17 @@
 
 #define SEA_LEVEL 115
 
-#define WATER_OFFSET 0.8
+#define WATER_OFFSET 0.9
 
-#define QUADRANT1_OFFSET 14
-#define QUADRANT2_OFFSET 12
-#define QUADRANT3_OFFSET 10
-#define QUADRANT4_OFFSET 8
-#define QUADRANT5_OFFSET 6
-#define QUADRANT6_OFFSET 4
-#define QUADRANT7_OFFSET 2
-#define QUADRANT8_OFFSET 0
+#define VERTEX1_OFFSET 14
+#define VERTEX2_OFFSET 12
+#define VERTEX3_OFFSET 10
+#define VERTEX4_OFFSET 8
+#define VERTEX5_OFFSET 6
+#define VERTEX6_OFFSET 4
+#define VERTEX7_OFFSET 2
+#define VERTEX8_OFFSET 0
+
+
 
 #endif /* game_settings_h */

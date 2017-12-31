@@ -17,6 +17,7 @@
 #include <queue>
 #include <vector>
 #include <stack>
+#include <set>
 #include <map>
 #include "Block.hpp"
 #include "opengl_header.h"
@@ -40,7 +41,6 @@ static int unclickable[] = {WATER};
 
 static float frustumPlanes[6][4];
 
-
 class TransQuad{
 public:
     TransQuad(int y, int x, int z, int dir) {
@@ -61,9 +61,28 @@ public:
     //int dir;
     float vertices[QUAD_SIZE];
 };
-static vector<float> transQuads;
-
+//static vector<float> transQuads;
+class SubChunk;
 class Chunk;
+
+class LuminousObj {
+    friend class SubChunk;
+public:
+    LuminousObj(int y, int x, int z, char type, SubChunk *subChunk) {
+        this->y = y;
+        this->x = x;
+        this->z = z;
+        this->type = type;
+        this->subChunk = subChunk;
+    }
+private:
+    char type;
+    int y;
+    int x;
+    int z;
+    SubChunk *subChunk;
+    set<SubChunk *> inflenced;
+};
 
 class SubChunk {
     friend class Chunk;
@@ -79,11 +98,16 @@ public:
         this->y = y;
         this->x = x;
         this->z = z;
+        //初始化阴影
+        memset(vertexShadow, 0, 16*16*16*sizeof(unsigned short));
+        //初始化光照
+        memset(brightness, 0, 16*16*16*sizeof(char));
     }
     SubChunk* recycle(int y, int x, int z);
     void setPathHistory(int direction); //clear path history
     int getPathHistory(); //????????
     Block *getBufferObject();
+    void updateCount();
     void updateNeighbor(Chunk* parent, SubChunk* dir[6]); //for walking update
     void updateVisibility(); //for walking update
     void setVisibility(int dir); //for remove&place update
@@ -97,17 +121,24 @@ public:
     //设置为空气
     //如果在边界，邻接可见性置为true
     //直接update本块，邻接块只添加原来被遮挡的面
-    bool placeBlock(char type, int y, int x, int z);
+    bool placeBlock(char type, int dir, int y, int x, int z);
     //设置type
     //如果在边界，重新判断邻接可见性
     //直接update本块和所有邻接块
+    bool waterFilling(int y, int x, int z);
     void BlockClicked(char type, int y, int x, int z);
+    void calcBrightness(int y, int x, int z);
+    void updateBrightness();
+    LuminousObj* removeLuminousObj(int y, int x, int z);
+    LuminousObj* eraseLuminousObjs(int y, int x, int z, SubChunk *s);
+    LuminousObj* findLuminousObjs(int y, int x, int z, SubChunk *s);
 private:
     int x;
     int y;
     int z;
     char BlockType[16][16][16]; //yxz, 256-type of cubes
     unsigned short vertexShadow[16][16][16];
+    char brightness[16][16][16];
     int count;
     bool isEmpty;
     int pathHistory;
@@ -122,6 +153,7 @@ private:
     SubChunk *yPos;
     //Quads need rendering
     vector<float> Quads;
+    set<LuminousObj *> luminousObjs;
     Block bufferObject;
     bool inFrustum(int x, int y, int z);
     void set_texture(float* tmp, char type, int dir);
