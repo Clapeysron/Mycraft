@@ -25,6 +25,7 @@ struct Sunlight {
 };
 
 uniform Sunlight sunlight;
+uniform vec3 cameraPos;
 uniform vec3 chosen_block_pos;
 uniform bool isDaylight;
 
@@ -43,7 +44,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     // check whether current frag pos is in shadow
     vec3 normal = normalize(fs_in.Normal);
     vec3 lightDir = normalize(-sunlight.lightDirection);
-    float bias = max(0.0008 * (1.0 - dot(normal, lightDir)), 0.0008);
+    float bias = max(0.00055 * (1.0 - dot(normal, lightDir)), 0.000055);
 
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
@@ -66,7 +67,7 @@ float isChosen(vec3 FragPos) {
     if ( FragPos.x < chosen_block_pos.x || FragPos.x > chosen_block_pos.x + 1 ||
          FragPos.y < chosen_block_pos.y || FragPos.y > chosen_block_pos.y + 1 ||
          FragPos.z < chosen_block_pos.z || FragPos.z > chosen_block_pos.z + 1 ) return 1.0f;
-    return 1.4f;
+    return 1.3f;
 }
 
 void main()
@@ -75,6 +76,8 @@ void main()
     float alpha = texture(texture_pic, fs_in.TexCoord).a;
     vec3 norm = normalize(fs_in.Normal);
     vec3 lightDir = normalize(-sunlight.lightDirection);
+    float ifFront = dot(cameraPos - fs_in.FragPos, norm) > 0 ? 1 : -1;
+    lightDir = ifFront * lightDir;
     float diff = max(dot(lightDir, norm), 0.0);
     vec3 diffuse = sunlight.lightambient * diff;
     float isChosen = isChosen(fs_in.FragPos);
@@ -111,7 +114,7 @@ void main()
         // Without Shadow mapping
         //result = (sunlight.ambient + diffuse) * isChosen * color;
         // With Shadow mapping
-        result = (sunlight.ambient + (1.1f - shadow) * diffuse) * isChosen * color;
+        result = (1.0f + fs_in.brightness) * (sunlight.ambient + (1.1f - shadow) * diffuse) * isChosen * color;
     } else if (alpha == 0.0f) {
         discard;
     } else {
@@ -119,7 +122,7 @@ void main()
         //result = fs_in.brightness * fs_in.shadow * isChosen * color;
         //result = isChosen * color;
         // With Shadow mapping
-        result = fs_in.brightness * fs_in.shadow * (sunlight.ambient +(1.1f-shadow)*diffuse) * isChosen * color;
+        result = (1.0f + fs_in.brightness) * (sunlight.ambient +(1.1f-shadow)*diffuse) * isChosen * color;
     }
     
     //fog
