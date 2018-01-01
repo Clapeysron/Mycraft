@@ -462,7 +462,7 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
             int offsetLumin[8][3] = {0, 0, 0, 0, 0, -1, 0, -1, 0, 0, -1, -1,
                 -1, 0, 0, -1, 0, -1, -1, -1, 0, -1, -1, -1};
             for(int i = 0; i < QUAD_SIZE; i += VERTEX_SIZE) {
-                char brightness;
+                char brightness = 0;
                 int count = 0;
                 for(int j = 0; j < 8; j++) {
                     int tmpy = y+tmp[i+1]+offsetLumin[j][0];//x,y,z应该加上点的

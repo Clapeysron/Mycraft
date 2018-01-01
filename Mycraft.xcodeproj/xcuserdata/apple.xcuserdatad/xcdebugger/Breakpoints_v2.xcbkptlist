@@ -222,7 +222,9 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1392"
-            endingLineNumber = "1392">
+            endingLineNumber = "1392"
+            landmarkName = "Chunk::addVertices(int dir, int y, int x, int z)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -236,9 +238,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1390"
-            endingLineNumber = "1390"
-            landmarkName = "Chunk::updateNeighbor(Chunk* xNeg, Chunk* xPos, Chunk* zNeg, Chunk* zPos)"
-            landmarkType = "7">
+            endingLineNumber = "1390">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
