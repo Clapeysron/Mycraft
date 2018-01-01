@@ -110,19 +110,16 @@ void main()
         shadow = 1.0f;
     }
     vec3 result;
-    if (alpha == 1.0f) {
+    vec3 point_light_ambient = vec3(1.0, 0.9, 0.8);
+    if (alpha >= 0.05f) {
         // Without Shadow mapping
         //result = (sunlight.ambient + diffuse) * isChosen * color;
         // With Shadow mapping
-        result = fs_in.shadow * (sunlight.ambient + (1.1f - shadow) * diffuse) * isChosen * color;
-    } else if (alpha == 0.0f) {
-        discard;
+        vec3 sun_bright = (1.1f - shadow) * diffuse;
+        vec3 point_bright = point_light_ambient * fs_in.brightness;
+        result = fs_in.shadow * (sunlight.ambient + mix(sun_bright, point_bright, point_bright.r/(sunlight.lightambient.r+point_bright.r)) ) * isChosen * color;
     } else {
-        // Without Shadow mapping
-        //result = fs_in.brightness * fs_in.shadow * isChosen * color;
-        //result = isChosen * color;
-        // With Shadow mapping
-        result = fs_in.shadow * (sunlight.ambient +(1.1f-shadow)*diffuse) * isChosen * color;
+        discard;
     }
     
     //fog

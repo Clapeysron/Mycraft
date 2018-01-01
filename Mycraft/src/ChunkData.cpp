@@ -2045,6 +2045,8 @@ void VisibleChunks::drawDepth(Shader& Depth_Shader, unsigned int texture_pic) {
     SubChunk *tmp;
     glm::mat4 model(1);
     Depth_Shader.setMat4("model", model);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture_pic);
     for(int i = 0; i < renderQueue.size(); i++)
     {
         tmp = renderQueue.front();
@@ -2286,6 +2288,7 @@ glm::vec3 VisibleChunks::accessibleBlock(glm::vec3 cameraPos, glm::vec3 cameraFr
 
 void VisibleChunks::initBlockInfo() {
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)GRASS, BlockInfo("GRASS", 0.05, GRASS_X, GRASS_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)TORCH, BlockInfo("TORCH", 0.3, TORCH_X, TORCH_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)LEAF, BlockInfo("LEAF", 0.2, LEAF_X, LEAF_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)WATER, BlockInfo("WATER", 99999, WATER_X, WATER_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)ROCK, BlockInfo("ROCK", 7.5, ROCK_X, ROCK_Y)));
@@ -2295,4 +2298,5 @@ void VisibleChunks::initBlockInfo() {
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)BASE_ROCK, BlockInfo("BASE_ROCK", 99999, BASE_ROCK_X, BASE_ROCK_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)LEAF, BlockInfo("LEAF", 0.35, LEAF_X, LEAF_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)TRUNK, BlockInfo("TRUNK", 3, TRUNK_TOP_X, TRUNK_TOP_Y, TRUNK_TOP_X, TRUNK_TOP_Y, TRUNK_SIDE_X, TRUNK_SIDE_Y)));
+    
 }
