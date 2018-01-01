@@ -44,7 +44,7 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     // check whether current frag pos is in shadow
     vec3 normal = normalize(fs_in.Normal);
     vec3 lightDir = normalize(-sunlight.lightDirection);
-    float bias = max(0.00055 * (1.0 - dot(normal, lightDir)), 0.000055);
+    float bias = max(0.0006 * (1.0 - dot(normal, lightDir)), 0.00006);
 
     float shadow = 0.0;
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
@@ -83,7 +83,7 @@ void main()
     float isChosen = isChosen(fs_in.FragPos);
     
     //Chosen and Break
-    if (isChosen!= 1.0f && broken_texture_x!= 0.0f) {
+    if (isChosen == 1.3f && broken_texture_x!= 0.0f) {
         float real_broken_texture_x = broken_texture_x + fs_in.TexCoord.x - floor(fs_in.TexCoord.x*10)/10;
         float real_broken_texture_y = fs_in.TexCoord.y - floor(fs_in.TexCoord.y*10)/10 + 0.9;
         vec4 broken_texture = texture(texture_pic, vec2(real_broken_texture_x, real_broken_texture_y));
@@ -117,7 +117,7 @@ void main()
         // With Shadow mapping
         vec3 sun_bright = (1.1f - shadow) * diffuse;
         vec3 point_bright = point_light_ambient * fs_in.brightness;
-        result = fs_in.shadow * (sunlight.ambient + mix(sun_bright, point_bright, point_bright.r/(sunlight.lightambient.r+point_bright.r)) ) * isChosen * color;
+        result = (sunlight.ambient + mix(sun_bright, point_bright, point_bright.r/(sunlight.lightambient.r+point_bright.r)) ) * isChosen * color;
     } else {
         discard;
     }
@@ -127,7 +127,7 @@ void main()
     float dist = (length(fs_in.ViewPos)<noFogRadius) ? 0 : length(fs_in.ViewPos)-noFogRadius;
     float fogFactor = 1.0/exp((dist*fogDensity)*(dist*fogDensity));
     fogFactor = clamp(fogFactor, 0.0, 1.0);
-    vec2 SkyTexCoords = vec2(DayPos, 0.5);
+    vec2 SkyTexCoords = vec2(DayPos, 0.6);
     vec4 fogColor = (1-starIntensity) * texture(skybox, SkyTexCoords) + starIntensity * vec4(0.0f, 0.0f, 0.0f, 1.0f);
     FragColor = mix( fogColor, vec4(result, alpha), fogFactor);
 }

@@ -9,7 +9,7 @@
 #include "Render.hpp"
 #include "Stbi_load.hpp"
 //#define TIMETEST
-//#define DEPTHTEST
+#define DEPTHTEST
 #define SHADOW_MAPPING
 
 bool Render::firstMouse = true;
@@ -21,6 +21,7 @@ float Render::lastY =  600.0 / 2.0;
 float Render::deltaTime = 0.0f;
 bool Render::tryPlace = false;
 bool Render::mouseHold = false;
+int Render::nowPlaceBlock = 0;
 int Render::screen_width = (SCREEN_WIDTH > 4096) ? 4096 : SCREEN_WIDTH;
 int Render::screen_height = (SCREEN_HEIGHT > 2064) ? 2064: SCREEN_HEIGHT;
 glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -173,7 +174,7 @@ void Render::render(Game& game) {
     float currentFrame = glfwGetTime();
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
-    dayTime += deltaTime/10;
+    dayTime += deltaTime/30;
     dayTime = (dayTime>24) ? dayTime - 24 : dayTime;
     float starIntensity = calStarIntensity(dayTime);
     Sun_Moon_light = calLight(dayTime);
@@ -185,7 +186,7 @@ void Render::render(Game& game) {
     printf("pos x:%.2f y:%.2f z:%.2f\n", game.steve_position.x, game.steve_position.y, game.steve_position.z);
     printf("steve_in_water: %d\neye_in_water:%d\n", game.steve_in_water(), game.steve_eye_in_water());
     std::cout << "now_block:" << BlockInfoMap[game.visibleChunks.getBlockType(game.steve_position.y, game.steve_position.x, game.steve_position.z)].block_name << endl;
-    
+    char placeBlockList[]= {(char)TORCH};
     processInput(window, game);
     
 #ifdef TIMETEST
@@ -227,7 +228,7 @@ void Render::render(Game& game) {
     
     prev_block_pos = chosen_block_pos;
     if(tryPlace){
-        bool ret = game.visibleChunks.placeBlock(game.steve_position, cameraFront, TORCH);
+        bool ret = game.visibleChunks.placeBlock(game.steve_position, cameraFront, placeBlockList[nowPlaceBlock%sizeof(placeBlockList)]);
         tryPlace = false;
     }
     
@@ -235,8 +236,8 @@ void Render::render(Game& game) {
     printf("Remove / Place block: %f\n", timeMark - glfwGetTime());
     timeMark = glfwGetTime();
 #endif
-    bool isDaylight = (dayTime >= 5.5 && dayTime <= 18.5);
-    float shadowRadius = (RADIUS*2+1)*8;
+    bool isDaylight = (dayTime >= 5.5 && dayTime <= 18.2);
+    float shadowRadius = (RADIUS*2+1)*8*1.2;
     float dayTheta = (dayTime-SUNRISE_TIME)*M_PI/12;
     // depth scene
     glm::mat4 lightProjection, lightView, lightSpaceMatrix;
@@ -248,7 +249,7 @@ void Render::render(Game& game) {
     }
     glm::mat4 depth_steve_model(1);
     glm::vec3 lightPos = game.steve_position;
-    lightPos.y = 120.0f + shadowRadius*sin(dayTheta);
+    lightPos.y = 130.0f + shadowRadius*sin(dayTheta);
     lightPos.x += -shadowRadius*sin(randomSunDirection)*cos(dayTheta);
     lightPos.z += -shadowRadius*cos(randomSunDirection)*cos(dayTheta);
     glm::vec3 moonPos = game.steve_position;
@@ -257,8 +258,8 @@ void Render::render(Game& game) {
     moonPos.z += shadowRadius*cos(randomSunDirection)*cos(dayTheta);
     
 #ifdef SHADOW_MAPPING
-    GLfloat near_plane = 0.0f, far_plane = shadowRadius + 512.0f;
-    float orthoRatio = 1.2f;
+    GLfloat near_plane = 0.0f, far_plane = shadowRadius*2;
+    float orthoRatio = 1;
     if (isDaylight) {
         lightProjection = glm::ortho(-shadowRadius*orthoRatio, shadowRadius*orthoRatio, -shadowRadius*orthoRatio, shadowRadius*orthoRatio, near_plane, far_plane);
         lightView = glm::lookAt(lightPos, lightPos + lightDirection, glm::vec3(lightDirection.x, lightDirection.z, -lightDirection.y/(tan(dayTheta)*tan(dayTheta))));
@@ -612,5 +613,11 @@ void Render::processInput(GLFWwindow *window, Game &game)
     }
     if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) {
         game.game_perspective = THIRD_PERSON;
+    }
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE) {
+        nowPlaceBlock--;
+    }
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE) {
+        nowPlaceBlock++;
     }
 }

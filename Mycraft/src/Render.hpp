@@ -37,6 +37,7 @@ public:
     Shader Steve_Shader;
     Model steve_model;
 private:
+    static int nowPlaceBlock;
     float dayTime;
     float randomSunDirection;
     glm::vec3 Sun_Moon_light;

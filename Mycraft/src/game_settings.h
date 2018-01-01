@@ -9,7 +9,7 @@
 #ifndef game_settings_h
 #define game_settings_h
 
-#define SCREEN_WIDTH 2048                                                                    
+#define SCREEN_WIDTH 2048
 #define SCREEN_HEIGHT 1152
 
 #define QUAD_SIZE 60
@@ -41,9 +41,12 @@
 #define GRASSLAND 0x03
 #define TRUNK 0x04
 #define BASE_ROCK 0x05
+#define GLOWSTONE 0x06
+#define WOOD 0x07
 #define DIAMAND_ORE 0x10
 
-#define TORCH_BRIGHTNESS 0x0f
+
+#define POINT_BRIGHTNESS 0x0f
 
 //for hisrotyPath & adjVisibility
 #define UP 0x20
@@ -70,7 +73,7 @@
 #define VECTOR_OFFSET 24576
 
 //visible region radius
-#define RADIUS 7
+#define RADIUS 10
 
 //gravity
 #define GRAVITY 9.8
@@ -115,6 +118,10 @@
 #define TRUNK_SIDE_Y 0.1f
 #define TORCH_X 0.6f
 #define TORCH_Y 0.5f
+#define GLOWSTONE_X 0.7f
+#define GLOWSTONE_Y 0.0f
+#define WOOD_X 0.2f
+#define WOOD_Y 0.3f
 
 // SEA_LEVEL
 #define SEA_LEVEL 115

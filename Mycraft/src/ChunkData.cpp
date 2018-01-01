@@ -633,7 +633,7 @@ char SubChunk::removeBlock(int y, int x, int z){
         BlockType[y][x][z] = AIR;
     }
     //重新计算递归光照
-    if(type == (char)TORCH) {
+    if(type == (char)TORCH || type == (char)GLOWSTONE) {
         LuminousObj* tmpl = removeLuminousObj(y, x, z);
         set<SubChunk *>::iterator iter = tmpl->inflenced.begin();
         while(iter != tmpl->inflenced.end()) {
@@ -737,8 +737,8 @@ bool SubChunk::placeBlock(char type, int dir, int y, int x, int z){
     if(isEmpty == true)
         isEmpty = false;
     //重新计算光照
-    if(type == (char)TORCH) {
-        brightness[y][x][z] = TORCH_BRIGHTNESS;
+    if(type == (char)TORCH || type == (char)GLOWSTONE) {
+        brightness[y][x][z] = POINT_BRIGHTNESS;
         calcBrightness(y, x, z);
         LuminousObj* tmpl = findLuminousObjs(y, x, z, this);
         set<SubChunk *>::iterator iter = tmpl->inflenced.begin();
@@ -746,8 +746,7 @@ bool SubChunk::placeBlock(char type, int dir, int y, int x, int z){
             redrawChunk.insert((*iter));
             iter++;
         }
-    }
-    else if((type&0x80) == 0 || type == (char)LEAF){
+    } else if((type&0x80) == 0 || type == (char)LEAF){
         updateBrightness();
         set<LuminousObj *>::iterator iter = luminousObjs.begin();
         while(iter != luminousObjs.end()) {
@@ -969,7 +968,7 @@ void SubChunk::updateBrightness() {
         int y = (*iter)->y;
         int x = (*iter)->x;
         int z = (*iter)->z;
-        brightness[y][x][z] = TORCH_BRIGHTNESS;
+        brightness[y][x][z] = POINT_BRIGHTNESS;
         tmps->calcBrightness(y, x, z);
         iter++;
     }
@@ -998,7 +997,7 @@ LuminousObj* SubChunk::removeLuminousObj(int y, int x, int z) {
             int y = (*reCalcIter)->y;
             int x = (*reCalcIter)->x;
             int z = (*reCalcIter)->z;
-            tmps->brightness[y][x][z] = TORCH_BRIGHTNESS;
+            tmps->brightness[y][x][z] = POINT_BRIGHTNESS;
             tmps->calcBrightness(y, x, z);
             reCalcIter++;
         }
@@ -2288,7 +2287,8 @@ glm::vec3 VisibleChunks::accessibleBlock(glm::vec3 cameraPos, glm::vec3 cameraFr
 
 void VisibleChunks::initBlockInfo() {
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)GRASS, BlockInfo("GRASS", 0.05, GRASS_X, GRASS_Y)));
-    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)TORCH, BlockInfo("TORCH", 0.3, TORCH_X, TORCH_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)TORCH, BlockInfo("TORCH", 0.2, TORCH_X, TORCH_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)GLOWSTONE, BlockInfo("GLOWSTONE", 2, GLOWSTONE_X, GLOWSTONE_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)LEAF, BlockInfo("LEAF", 0.2, LEAF_X, LEAF_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)WATER, BlockInfo("WATER", 99999, WATER_X, WATER_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)ROCK, BlockInfo("ROCK", 7.5, ROCK_X, ROCK_Y)));
@@ -2298,5 +2298,6 @@ void VisibleChunks::initBlockInfo() {
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)BASE_ROCK, BlockInfo("BASE_ROCK", 99999, BASE_ROCK_X, BASE_ROCK_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)LEAF, BlockInfo("LEAF", 0.35, LEAF_X, LEAF_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)TRUNK, BlockInfo("TRUNK", 3, TRUNK_TOP_X, TRUNK_TOP_Y, TRUNK_TOP_X, TRUNK_TOP_Y, TRUNK_SIDE_X, TRUNK_SIDE_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)WOOD, BlockInfo("WOOD", 2, WOOD_X, WOOD_Y)));
     
 }
