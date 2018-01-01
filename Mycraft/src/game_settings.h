@@ -9,8 +9,8 @@
 #ifndef game_settings_h
 #define game_settings_h
 
-#define SCREEN_WIDTH 2048
-#define SCREEN_HEIGHT 1152
+#define SCREEN_WIDTH 4096
+#define SCREEN_HEIGHT 2064
 
 #define QUAD_SIZE 60
 #define QUAD_FACE_SIZE 8
@@ -73,9 +73,8 @@
 #define VECTOR_OFFSET 24576
 
 //visible region radius
-#define RADIUS 10
+#define RADIUS 7
 
-//gravity
 #define GRAVITY 9.8
 #define JUMP_V 3.2
 #define MAX_WATER_V 3.2

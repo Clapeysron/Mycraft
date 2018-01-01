@@ -98,7 +98,8 @@ void main()
         float real_water_texture_y = fs_in.TexCoord.y - floor(fs_in.TexCoord.y*10)/10 + 0.1;
         vec4 water_texture = texture(texture_pic, vec2(real_water_texture_x, real_water_texture_y));
         if (fs_in.TexCoord.x<0.9 || fs_in.TexCoord.y<0.1 || fs_in.TexCoord.y>0.3) {
-            color = mix(water_texture.rgb, color, 0.8);
+            color = mix(water_texture.rgb, color, 0.6);
+            
         }
     }
     
@@ -117,7 +118,7 @@ void main()
         // With Shadow mapping
         vec3 sun_bright = (1.1f - shadow) * diffuse;
         vec3 point_bright = point_light_ambient * fs_in.brightness;
-        result = (sunlight.ambient + mix(sun_bright, point_bright, point_bright.r/(sunlight.lightambient.r+point_bright.r)) ) * isChosen * color;
+        result = fs_in.shadow * (sunlight.ambient + mix(sun_bright, point_bright, point_bright.r/(sunlight.lightambient.r+point_bright.r)) ) * isChosen * color;
     } else {
         discard;
     }
@@ -127,7 +128,7 @@ void main()
     float dist = (length(fs_in.ViewPos)<noFogRadius) ? 0 : length(fs_in.ViewPos)-noFogRadius;
     float fogFactor = 1.0/exp((dist*fogDensity)*(dist*fogDensity));
     fogFactor = clamp(fogFactor, 0.0, 1.0);
-    vec2 SkyTexCoords = vec2(DayPos, 0.6);
+    vec2 SkyTexCoords = vec2(DayPos, 0.55);
     vec4 fogColor = (1-starIntensity) * texture(skybox, SkyTexCoords) + starIntensity * vec4(0.0f, 0.0f, 0.0f, 1.0f);
     FragColor = mix( fogColor, vec4(result, alpha), fogFactor);
 }

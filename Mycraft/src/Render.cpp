@@ -9,13 +9,13 @@
 #include "Render.hpp"
 #include "Stbi_load.hpp"
 //#define TIMETEST
-#define DEPTHTEST
+//#define DEPTHTEST
 #define SHADOW_MAPPING
 
 bool Render::firstMouse = true;
 float Render::yaw   =  -90.0f;
 float Render::pitch =  0.0f;
-float Render::fov   =  45.0f;
+float Render::fov   =  65.0f;
 float Render::lastX =  800.0f / 2.0;
 float Render::lastY =  600.0 / 2.0;
 float Render::deltaTime = 0.0f;
@@ -30,8 +30,8 @@ glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 Render::Render() {
     dayTime = 16.0f;
     removeCount = 0;
-    //srand(0);
-    srand((unsigned)time(NULL));
+    srand(0);
+    //srand((unsigned)time(NULL));
     randomSunDirection = fmod(rand(), 2*M_PI);
     //printf("randomSunDirection: %.2f\n",randomSunDirection)
     lastFrame = 0.0f;
