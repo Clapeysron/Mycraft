@@ -495,7 +495,7 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
                         count++;
                     }
                 }
-                tmp[i+9] = tmp[i+9]*brightness/count;
+                tmp[i+9] = (count != 0)? tmp[i+9]*brightness/count:0;
             }
         }
         
@@ -1421,7 +1421,7 @@ void Chunk::addVertices(int dir, int y, int x, int z) {
                 count++;
             }
         }
-        tmp[i+9] = tmp[i+9]*brightness/count;
+        tmp[i+9] = (count != 0)? tmp[i+9]*brightness/count:0;
     }
     for(int m = 0; m < QUAD_SIZE; m = m+VERTEX_SIZE)
     {
