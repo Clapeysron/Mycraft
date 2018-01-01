@@ -157,7 +157,7 @@ void SubChunk::updateQuads(){
                     if(xPosType & 0x80) //right
                     {
                         if(j == 15 && xPos->vertexShadow[i][0][k] == 0) {
-                            xPos->addVertexShadow(0, j, k);
+                            xPos->addVertexShadow(i, 0, k);
                         }
                         else if(j < 15 && vertexShadow[i][j+1][k] == 0) {
                             addVertexShadow(i, j+1, k);
@@ -167,7 +167,7 @@ void SubChunk::updateQuads(){
                     if(xNegType & 0x80) //left
                     {
                         if(j == 0 && xNeg->vertexShadow[i][15][k] == 0) {
-                            xNeg->addVertexShadow(15, j, k);
+                            xNeg->addVertexShadow(i, 15, k);
                         }
                         else if(j > 0 && vertexShadow[i][j-1][k] == 0) {
                             addVertexShadow(i, j-1, k);
@@ -222,6 +222,11 @@ void SubChunk::addVertexShadow(int y, int x, int z) {
     unsigned short zPos = ((zPosType&0x80) == 0)||(zPosType == (char)LEAF);
     
     unsigned short tmp;
+    
+    if(y == 8 && x == 15 && z == 7 && this->x == -32 && this->z == 0) {
+        int m;
+        m++;
+    }
     
     tmp = 0;
     tmp += yPos+xPos+zNeg;
@@ -420,7 +425,42 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
             if(tmpChunk) {
                 unsigned short shadow = tmpChunk->vertexShadow[tmpy%16][tmpx%16][tmpz%16];
                 for(int i = 0; i < 6; i++) {
-                    tmp[VERTEX_SIZE*i+8] -= 0.25f*((shadow>>faceShadow[dir][i])&0x0003);
+                    unsigned short tmpShadow = (shadow>>faceShadow[dir][i])&0x0003;
+                    if(tmpShadow == 2) {
+                        tmpy = y-1+2*(int)tmp[VERTEX_SIZE*i+1];
+                        tmpx = x-1+2*(int)tmp[VERTEX_SIZE*i];
+                        tmpz = z-1+2*(int)tmp[VERTEX_SIZE*i+2];
+                        tmpChunk = this;
+                        if(tmpy == 16) {
+                            tmpChunk = tmpChunk->yPos;
+                            tmpy -= 16;
+                        }
+                        else if(tmpy == -1) {
+                            tmpChunk = tmpChunk->yNeg;
+                            tmpy += 16;
+                        }
+                        if(tmpx == 16 && tmpChunk) {
+                            tmpChunk = tmpChunk->xPos;
+                            tmpx -= 16;
+                        }
+                        else if(tmpx == -1 && tmpChunk) {
+                            tmpChunk = tmpChunk->xNeg;
+                            tmpx += 16;
+                        }
+                        if(tmpz == 16 && tmpChunk) {
+                            tmpChunk = tmpChunk->zPos;
+                            tmpz -= 16;
+                        }
+                        else if(tmpz == -1 && tmpChunk) {
+                            tmpChunk = tmpChunk->zNeg;
+                            tmpz += 16;
+                        }
+                        if(tmpChunk && tmpChunk->BlockType[tmpy][tmpx][tmpz] & 0x80) {
+                            tmpShadow = 1;
+                        }
+                            
+                    }
+                    tmp[VERTEX_SIZE*i+8] -= 0.3f*tmpShadow;
                 }
             }
         }
@@ -2183,8 +2223,12 @@ bool VisibleChunks::placeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront, char 
             prez = z;
         }
         
-        if(getBlockType(y, x, z) == (char)AIR || getBlockType(y, x, z) == (char)WATER)
+        
+        char tmpType = getBlockType(y, x, z);
+        if(tmpType == (char)AIR || tmpType == (char)WATER)
             continue; //必须有相邻块
+        else if((tmpType&0xf0) == 0xc0)
+            return false;
         
         float shortest = 100.0f;
         int side = 0;
