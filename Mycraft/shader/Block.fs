@@ -114,7 +114,7 @@ void main()
         // Without Shadow mapping
         //result = (sunlight.ambient + diffuse) * isChosen * color;
         // With Shadow mapping
-        result = (1.0f + fs_in.brightness) * (sunlight.ambient + (1.1f - shadow) * diffuse) * isChosen * color;
+        result = fs_in.shadow * (sunlight.ambient + (1.1f - shadow) * diffuse) * isChosen * color;
     } else if (alpha == 0.0f) {
         discard;
     } else {
@@ -122,7 +122,7 @@ void main()
         //result = fs_in.brightness * fs_in.shadow * isChosen * color;
         //result = isChosen * color;
         // With Shadow mapping
-        result = (1.0f + fs_in.brightness) * (sunlight.ambient +(1.1f-shadow)*diffuse) * isChosen * color;
+        result = fs_in.shadow * (sunlight.ambient +(1.1f-shadow)*diffuse) * isChosen * color;
     }
     
     //fog
