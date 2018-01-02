@@ -2403,5 +2403,21 @@ void VisibleChunks::initBlockInfo() {
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)LEAF, BlockInfo("LEAF", 0.35, LEAF_X, LEAF_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)TRUNK, BlockInfo("TRUNK", 3, TRUNK_TOP_X, TRUNK_TOP_Y, TRUNK_TOP_X, TRUNK_TOP_Y, TRUNK_SIDE_X, TRUNK_SIDE_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)WOOD, BlockInfo("WOOD", 2, WOOD_X, WOOD_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)RED_WOOD, BlockInfo("RED_WOOD", 2, RED_WOOD_X, RED_WOOD_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)TINT_WOOD, BlockInfo("TINT_WOOD", 2, TINT_WOOD_X, TINT_WOOD_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)DARK_WOOD, BlockInfo("DARK_WOOD", 2, DARK_WOOD_X, DARK_WOOD_Y)));
+    
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)BRICK, BlockInfo("BRICK", 2, BRICK_X, BRICK_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)SAND, BlockInfo("SAND", 2, SAND_X, SAND_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)COAL_ORE, BlockInfo("COAL_ORE", 2, COAL_ORE_X, COAL_ORE_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)GOLD_ORE, BlockInfo("GOLD_ORE", 2, GOLD_ORE_X, GOLD_ORE_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)GOLD_ORE, BlockInfo("IRON_ORE", 2, IRON_ORE_X, IRON_ORE_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)EMERALD_ORE, BlockInfo("EMERALD_ORE", 2, EMERALD_ORE_X, EMERALD_ORE_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)REDSTONE_ORE, BlockInfo("REDSTONE_ORE", 2, REDSTONE_ORE_X, REDSTONE_ORE_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)TOOLBOX, BlockInfo("TOOLBOX", 2, TOOLBOX_TOP_X, TOOLBOX_TOP_Y, TOOLBOX_TOP_X, TOOLBOX_TOP_Y, TOOLBOX_SIDE1_X, TOOLBOX_SIDE1_Y, TOOLBOX_SIDE2_X, TOOLBOX_SIDE2_Y, TOOLBOX_SIDE1_X, TOOLBOX_SIDE1_Y, TOOLBOX_SIDE2_X, TOOLBOX_SIDE2_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)SMELTER, BlockInfo("SMELTER", 2, SMELTER_TOP_X, SMELTER_TOP_Y, SMELTER_TOP_X, SMELTER_TOP_Y, SMELTER_SIDE1_X, SMELTER_SIDE1_Y, SMELTER_SIDE2_X, SMELTER_SIDE2_Y, SMELTER_SIDE2_X, SMELTER_SIDE2_Y, SMELTER_SIDE2_X, SMELTER_SIDE2_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)WATERMELON, BlockInfo("WATERMELON", 2, WATERMELON_TOP_X, WATERMELON_TOP_Y, WATERMELON_TOP_X, WATERMELON_TOP_Y, WATERMELON_SIDE_X, WATERMELON_SIDE_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)PUMPKIN, BlockInfo("PUMPKIN", 2, PUMPKIN_TOP_X, PUMPKIN_TOP_Y, PUMPKIN_TOP_X, PUMPKIN_TOP_Y, PUMPKIN_SIDE_X, PUMPKIN_SIDE_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)WHITE_WOOL, BlockInfo("WHITE_WOOL", 2, WHITE_WOOL_X, WHITE_WOOL_Y)));
     
 }

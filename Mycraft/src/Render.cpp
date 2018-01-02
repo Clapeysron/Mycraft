@@ -30,7 +30,7 @@ glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
 Render::Render() {
-    dayTime = 18.0f;
+    dayTime = 5.5f;
     removeCount = 0;
     jitter = 0;
     srand(0);
@@ -191,7 +191,7 @@ void Render::render(Game& game) {
     printf("pos x:%.2f y:%.2f z:%.2f\n", game.steve_position.x, game.steve_position.y, game.steve_position.z);
     printf("steve_in_water: %d\neye_in_water:%d\n", game.steve_in_water(), game.steve_eye_in_water());
     std::cout << "now_block:" << BlockInfoMap[game.visibleChunks.getBlockType(game.steve_position.y, game.steve_position.x, game.steve_position.z)].block_name << endl;
-    char placeBlockList[]= {(char)TORCH, (char)GLASS, ROCK};
+    char placeBlockList[]= {ROCK, SOIL, GRASSLAND, TRUNK, GLOWSTONE, WOOD, RED_WOOD, TINT_WOOD, DARK_WOOD, BRICK, SAND, COAL_ORE, GOLD_ORE, IRON_ORE, DIAMAND_ORE, EMERALD_ORE, TOOLBOX, SMELTER, WATERMELON, PUMPKIN, WHITE_WOOL, (char)LEAF, (char)GLASS, (char)GRASS, (char)TORCH};
     glm::vec3 old_position = game.steve_position;
     processInput(window, game);
     float move_length = glm::length(game.steve_position - old_position);
