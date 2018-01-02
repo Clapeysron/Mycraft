@@ -33,6 +33,7 @@ public:
     GLFWwindow* window;
     Shader Block_Shader;
     Shader Depth_Shader;
+    Shader HoldBlock_Shader;
     Shader Depth_debug_Shader;
     Shader Steve_Shader;
     Model steve_model;
@@ -64,6 +65,8 @@ private:
     static float lastY;
     static bool tryPlace;
     static bool mouseHold;
+    static int oldLeftKey;
+    static int oldRightKey;
     void texture_init();
     void depthMap_init();
     glm::vec3 calLight(float dayTime);

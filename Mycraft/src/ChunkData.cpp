@@ -1633,6 +1633,7 @@ VisibleChunks::VisibleChunks(float x, float y, float z){
     int ChunkX, ChunkZ;
     int SubChunkIndex;
     
+    HoldBlock.newHoldBlock();
     initBlockInfo();
 
     ChunkX = (x >= 0)?((int)x)/16*16:(((int)x)/16-1)*16;

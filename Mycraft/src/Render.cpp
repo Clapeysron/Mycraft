@@ -22,6 +22,8 @@ float Render::deltaTime = 0.0f;
 bool Render::tryPlace = false;
 bool Render::mouseHold = false;
 int Render::nowPlaceBlock = 0;
+int Render::oldLeftKey = 0;
+int Render::oldRightKey = 0;
 int Render::screen_width = (SCREEN_WIDTH > 4096) ? 4096 : SCREEN_WIDTH;
 int Render::screen_height = (SCREEN_HEIGHT > 2064) ? 2064: SCREEN_HEIGHT;
 glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -96,6 +98,7 @@ void Render::initial(Game &game) {
     depthMap_init();
     Depth_debug_Shader = Shader("shader/Depth_debug.vs", "shader/Depth_debug.fs");
     Depth_debug_Shader.setInt("depthMap", 0);
+    HoldBlock_Shader = Shader("shader/HoldBlock.vs", "shader/HoldBlock.fs");
     steve_model = Model("model/alex.obj");
 }
 
@@ -188,7 +191,7 @@ void Render::render(Game& game) {
     printf("pos x:%.2f y:%.2f z:%.2f\n", game.steve_position.x, game.steve_position.y, game.steve_position.z);
     printf("steve_in_water: %d\neye_in_water:%d\n", game.steve_in_water(), game.steve_eye_in_water());
     std::cout << "now_block:" << BlockInfoMap[game.visibleChunks.getBlockType(game.steve_position.y, game.steve_position.x, game.steve_position.z)].block_name << endl;
-    char placeBlockList[]= {(char)TORCH, (char)GLASS};
+    char placeBlockList[]= {(char)TORCH, (char)GLASS, ROCK};
     glm::vec3 old_position = game.steve_position;
     processInput(window, game);
     float move_length = glm::length(game.steve_position - old_position);
@@ -384,8 +387,21 @@ void Render::render(Game& game) {
     timeMark = glfwGetTime();
 #endif
     
-    // Draw gui
-    // Gui.draw(screen_width, screen_height);
+    //Draw gui
+    Gui.draw(screen_width, screen_height);
+    game.visibleChunks.HoldBlock.updateBlock((char)placeBlockList[nowPlaceBlock%sizeof(placeBlockList)]);
+    
+    HoldBlock_Shader.use();
+    glm::mat4 model(1);
+    glCullFace(GL_BACK);
+    model = glm::translate(model, glm::vec3(-0.9, -0.8, 0.0f));
+    model = glm::scale(model, glm::vec3(0.2f * screen_height / screen_width, 0.2f, 0.0f));
+    model = glm::translate(model, glm::vec3(-0.5f, -0.5f, -0.5f));
+    HoldBlock_Shader.setMat4("model", model);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture_pic);
+    glBindVertexArray(game.visibleChunks.HoldBlock.getVAO());
+    glDrawArrays(GL_TRIANGLES, 0, 36);
     
 #ifdef TIMETEST
     printf("Gui scene draw: %f\n", timeMark - glfwGetTime());
@@ -560,30 +576,6 @@ void Render::processInput(GLFWwindow *window, Game &game)
         new_position = game.steve_position + cameraSpeed * glm::vec3(0.0, 0.0f, cameraRight_XZ.z);
         game.move(new_position);
     }
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-        new_position = game.steve_position + cameraSpeed/10 * glm::vec3(cameraFront_XZ.x, 0.0f, 0.0f);
-        game.move(new_position);
-        new_position = game.steve_position + cameraSpeed/10 * glm::vec3(0.0, 0.0f, cameraFront_XZ.z);
-        game.move(new_position);
-    }
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-        new_position = game.steve_position - cameraSpeed/10 * glm::vec3(cameraFront_XZ.x, 0.0f, 0.0f);
-        game.move(new_position);
-        new_position = game.steve_position - cameraSpeed/10 * glm::vec3(0.0, 0.0f, cameraFront_XZ.z);
-        game.move(new_position);
-    }
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-        new_position = game.steve_position - cameraSpeed/10 * glm::vec3(cameraRight_XZ.x, 0.0f, 0.0f);
-        game.move(new_position);
-        new_position = game.steve_position - cameraSpeed/10 * glm::vec3(0.0, 0.0f, cameraRight_XZ.z);
-        game.move(new_position);
-    }
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-        new_position = game.steve_position + cameraSpeed/10 * glm::vec3(cameraRight_XZ.x, 0.0f, 0.0f);
-        game.move(new_position);
-        new_position = game.steve_position + cameraSpeed/10 * glm::vec3(0.0, 0.0f, cameraRight_XZ.z);
-        game.move(new_position);
-    }
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
         if (game.game_mode == NORMAL_MODE) {
             if (game.steve_in_water()) {
@@ -624,10 +616,13 @@ void Render::processInput(GLFWwindow *window, Game &game)
     if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) {
         game.game_perspective = THIRD_PERSON;
     }
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE) {
+    
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE && oldLeftKey == GLFW_PRESS) {
         nowPlaceBlock--;
     }
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE) {
+    oldLeftKey = glfwGetKey(window, GLFW_KEY_LEFT);
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE && oldRightKey == GLFW_PRESS) {
         nowPlaceBlock++;
     }
+    oldRightKey = glfwGetKey(window, GLFW_KEY_RIGHT);
 }
