@@ -117,7 +117,10 @@ void main()
         // With Shadow mapping
         vec3 sun_bright = (1.1f - shadow) * diffuse;
         vec3 point_bright = point_light_ambient * fs_in.brightness;
-        result = fs_in.shadow * (sunlight.ambient + mix(sun_bright, point_bright, point_bright.r/(sunlight.lightambient.r+point_bright.r)) ) * isChosen * color;
+        float tmpShadow = fs_in.shadow;
+        if(tmpShadow > 1)
+            tmpShadow = 1;
+        result = tmpShadow * (sunlight.ambient + mix(sun_bright, point_bright, point_bright.r/(sunlight.lightambient.r+point_bright.r)) ) * isChosen * color;
     } else {
         discard;
     }

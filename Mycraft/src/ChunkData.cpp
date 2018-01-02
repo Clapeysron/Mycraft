@@ -52,7 +52,7 @@ void SubChunk::updateCount(){
 }
 
 //视锥体裁剪
-bool SubChunk::inFrustum(int x, int y, int z){
+bool SubChunk::inFrustum(int x, int y, int z) {
     int chunkCoordinate[8][3] =
     {0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 1,
         1, 0 ,0, 1, 0, 1, 1, 1, 0, 1, 1, 1};
@@ -420,12 +420,9 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
             }
             if(tmpChunk) {
                 unsigned short shadow = tmpChunk->vertexShadow[tmpy%16][tmpx%16][tmpz%16];
-                for(int i = 0; i < 6; i++) {
+                float vertices[4];
+                for(int i = 0; i < 4; i++) {
                     unsigned short tmpShadow = (shadow>>faceShadow[dir][i])&0x0003;
-                    /*if(this->x+x == -18 && this->y+y == 117 && this->z+z == 6 && dir == 5) {
-                        int m = 0;
-                        m++;
-                    }*/
                     if(tmpShadow == 2) {
                         tmpy = y-1+2*(int)tmp[VERTEX_SIZE*i+1];
                         tmpx = x-1+2*(int)tmp[VERTEX_SIZE*i];
@@ -461,8 +458,51 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
                             
                     }
                     tmpShadow--;
-                    tmp[VERTEX_SIZE*i+8] -= 0.25f*tmpShadow;
+                    if(this->x+x == -13 && this->y+y == 120 && this->z+z == 2 && dir == 5) {
+                        int m = 0;
+                        m++;
+                    }
+                    vertices[i] = 1.0f-0.5f*tmpShadow;
+                    //tmp[VERTEX_SIZE*i+8] -= 0.5f*tmpShadow;
                 }
+                if(vertices[0]+vertices[2]+vertices[1]+vertices[3] == 3.5f) {
+                    int i;
+                    for(i = 0; i < 4; i++) {
+                        if(vertices[i] == 0.5f) {
+                            break;
+                        }
+                    }
+                    vertices[(i+1)%4] = 1.5f;
+                    vertices[(i+2)%4] = 2.5f;
+                    vertices[(i+3)%4] = 1.5f;
+                }
+                else if(vertices[0]+vertices[2] < vertices[1]+vertices[3]) {
+                    if(vertices[0] < vertices[2]) {
+                        vertices[2] = vertices[1]+vertices[3]-vertices[0];
+                    }
+                    else {
+                        vertices[0] = vertices[1]+vertices[3]-vertices[2];
+                    }
+                }
+                else if(vertices[0]+vertices[2] > vertices[1]+vertices[3]) {
+                    if(vertices[1] < vertices[3]) {
+                        vertices[3] = vertices[0]+vertices[2]-vertices[1];
+                    }
+                    else {
+                        vertices[1] = vertices[0]+vertices[2]-vertices[3];
+                    }
+                }
+                else if(vertices[0]+vertices[2] == 1.5f) {
+                    for(int i = 0; i < 4; i++) {
+                        if(vertices[i] == 1.0f)
+                            vertices[i] = 1.5f;
+                    }
+                }
+                for(int i = 0; i < 4; i++) {
+                    tmp[VERTEX_SIZE*i+8] = vertices[i];
+                }
+                tmp[VERTEX_SIZE*4+8] = vertices[0];
+                tmp[VERTEX_SIZE*5+8] = vertices[2];
             }
         }
         //设置递归光照亮度
@@ -2237,7 +2277,7 @@ bool VisibleChunks::placeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront, char 
         int coefficient[6][3] = {{0, 1, 0}, {0, 1, 0}, {0, 0, 1}, {0, 0, 1}, {1, 0, 0}, {1, 0, 0}};
         float addition[6][3] = {{0, 0, 0}, {0, 1, 0}, {0, 0, 0}, {0, 0, 1}, {0, 0, 0}, {1, 0, 0}};
         int offset[6][3] = {{0, -1, 0}, {0, 1, 0}, {0, 0, -1}, {0, 0, 1}, {-1, 0, 0}, {1, 0, 0}};
-        for(int j = 0; j < 6; j++){
+        for(int j = 0; j < 6; j++) {
             float distance = coefficient[j][1]*glm::abs((addition[j][1]+x-cameraPos.x)/cameraFront.x) +
             coefficient[j][2]*glm::abs((addition[j][2]+z-cameraPos.z)/cameraFront.z) +
             coefficient[j][0]*glm::abs((addition[j][0]+y-cameraPos.y)/cameraFront.y);
@@ -2302,7 +2342,18 @@ char VisibleChunks::removeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront) {
         int zOffset = z-Chunks[0][0]->z;
         int zIndex = (zOffset)/16;
         char type = Chunks[xIndex][zIndex]->subChunks[yIndex]->removeBlock(y%16, xOffset%16, zOffset%16);
-        if(type != (char)AIR  && type != (char)WATER)
+        
+        
+        if((type&0xf0) != 0xf0 && (type&0xc0) == 0xc0) {
+            float distance = glm::abs((y-cameraPos.y)/cameraFront.y);
+            float xOffset = cameraPos.x+distance*cameraFront.x-x;
+            //float yOffset = cameraPos.y+distance*cameraFront.y-y;
+            float zOffset = cameraPos.z+distance*cameraFront.z-z;
+            if(0 <= xOffset && xOffset <= 1 && 0 <= zOffset && zOffset <= 1){
+                return type;
+            }
+        }
+        else if(type != (char)AIR  && type != (char)WATER)
             return type;
     }
     return (char)AIR;
@@ -2326,7 +2377,17 @@ glm::vec3 VisibleChunks::accessibleBlock(glm::vec3 cameraPos, glm::vec3 cameraFr
             prez = z;
         }
         char type = getBlockType(y, x, z);
-        if(type != (char)AIR && type != (char)WATER)
+        
+        if((type&0xf0) != 0xf0 && (type&0xc0) == 0xc0) {
+            float distance = glm::abs((y-cameraPos.y)/cameraFront.y);
+            float xOffset = cameraPos.x+distance*cameraFront.x-x;
+            //float yOffset = cameraPos.y+distance*cameraFront.y-y;
+            float zOffset = cameraPos.z+distance*cameraFront.z-z;
+            if(0 <= xOffset && xOffset <= 1 && 0 <= zOffset && zOffset <= 1){
+                return glm::vec3(x, y, z);
+            }
+        }
+        else if(type != (char)AIR && type != (char)WATER)
             return glm::vec3(x, y, z);
     }
     return cameraPos;
