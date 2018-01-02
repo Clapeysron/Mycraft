@@ -1633,6 +1633,7 @@ VisibleChunks::VisibleChunks(float x, float y, float z){
     int ChunkX, ChunkZ;
     int SubChunkIndex;
     
+    HoldBlock.newHoldBlock();
     initBlockInfo();
 
     ChunkX = (x >= 0)?((int)x)/16*16:(((int)x)/16-1)*16;
@@ -2081,7 +2082,7 @@ void VisibleChunks::clearPathHistory(){
 }
 
 //渲染物体
-void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, unsigned int skybox, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection, glm::vec3 chosen_block_pos, float broken_scale, glm::vec3 Sun_Moon_light, glm::vec3 Ambient_light, bool isDaylight, float dayTime, float starIntensity, bool eye_in_water) {
+void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, unsigned int skybox, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection, glm::vec3 chosen_block_pos, float broken_scale, glm::vec3 Sun_Moon_light, glm::vec3 Ambient_light, bool isDaylight, float dayTime, float starIntensity, bool eye_in_water, glm::mat4 Hold_Block_Model, bool isThirdPerson) {
     calcFrustumPlane(view, projection);
     cout<<"y:"<<(int)cameraPos.y<<" x:"<<(int)cameraPos.x<<" z:"<<(int)cameraPos.z<<endl;
     updataChunks((int)cameraPos.y, (int)cameraPos.x, (int)cameraPos.z);
@@ -2107,7 +2108,7 @@ void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projecti
     glBindTexture(GL_TEXTURE_2D, depthMap_pic);
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, skybox);
-    drawNormQuads(cameraPos, Block_Shader);
+    drawNormQuads(cameraPos, Block_Shader, Hold_Block_Model, isThirdPerson);
     drawTransQuads(cameraPos, Block_Shader);
 }
 
@@ -2174,9 +2175,19 @@ void SubChunk::set_texture(float* tmp, char type, int dir) {
     }
 }
 
-void VisibleChunks::drawNormQuads(glm::vec3 cameraPos, Shader& Block_Shader){
+void VisibleChunks::drawNormQuads(glm::vec3 cameraPos, Shader& Block_Shader, glm::mat4 Hold_Block_Model, bool isThirdPerson) {
     SubChunk *tmp;
     getRenderingSubChunks((int)cameraPos.y, (int)cameraPos.x, (int)cameraPos.z);//float为负数时候怎么rounding？？？？
+    
+    // Hold Block
+    if (isThirdPerson) {
+        Block_Shader.setMat4("model", Hold_Block_Model);
+        glBindVertexArray(HoldBlock.getVAO());
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+    }
+    // Norm Block
+    glm::mat4 model(1);
+    Block_Shader.setMat4("model", model);
     for(int i = 0; i < renderQueue.size(); i++)
     {
         tmp = renderQueue.front();

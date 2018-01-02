@@ -5,7 +5,7 @@ layout (location = 2) in vec2 aTexCoord;
 layout (location = 3) in float shadow;
 layout (location = 4) in float brightness;
 
-//uniform mat4 model;
+uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
 uniform mat4 lightSpaceMatrix;
@@ -28,6 +28,6 @@ void main()
     vs_out.FragPosLightSpace = lightSpaceMatrix * vec4(aPos, 1.0f);
     vs_out.shadow = shadow;
     vs_out.brightness = brightness;
-    vs_out.ViewPos = view * vec4(aPos, 1.0f);
+    vs_out.ViewPos = view * model * vec4(aPos, 1.0f);
     gl_Position = projection * vs_out.ViewPos;
 }
