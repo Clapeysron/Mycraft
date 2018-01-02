@@ -83,6 +83,8 @@ inline void SubChunk::updateNeighbor(Chunk* parent, SubChunk* dir[6]){
 }
 
 //更新整个子区块的可见面数据
+
+bool init = true;
 void SubChunk::updateQuads(){
     char xNegType;
     char xPosType;
@@ -100,12 +102,6 @@ void SubChunk::updateQuads(){
     
     if(isEmpty)
         return; //如果为空，Quads为空
-    
-    if(this->x == 0 && this ->z == 0 && this->y == 112)
-    {
-        int m = 0;
-        m++;
-    }
     
     for(int i = 0; i < 16; i++)
     {
@@ -426,6 +422,10 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
                 unsigned short shadow = tmpChunk->vertexShadow[tmpy%16][tmpx%16][tmpz%16];
                 for(int i = 0; i < 6; i++) {
                     unsigned short tmpShadow = (shadow>>faceShadow[dir][i])&0x0003;
+                    /*if(this->x+x == -18 && this->y+y == 117 && this->z+z == 6 && dir == 5) {
+                        int m = 0;
+                        m++;
+                    }*/
                     if(tmpShadow == 2) {
                         tmpy = y-1+2*(int)tmp[VERTEX_SIZE*i+1];
                         tmpx = x-1+2*(int)tmp[VERTEX_SIZE*i];
@@ -460,7 +460,8 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
                         }
                             
                     }
-                    tmp[VERTEX_SIZE*i+8] -= 0.3f*tmpShadow;
+                    tmpShadow--;
+                    tmp[VERTEX_SIZE*i+8] -= 0.25f*tmpShadow;
                 }
             }
         }
@@ -516,14 +517,14 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
                         tmpChunk = yNeg;
                         tmpy += 16;
                     }
-                    else if(tmpx == 16) {
+                    if(tmpx == 16) {
                         tmpChunk = xPos;
                     }
                     else if(tmpx == -1) {
                         tmpChunk = xNeg;
                         tmpx += 16;
                     }
-                    else if(tmpz == 16) {
+                    if(tmpz == 16) {
                         tmpChunk = zPos;
                     }
                     else if(tmpz == -1) {
@@ -1449,7 +1450,7 @@ void Chunk::addVertices(int dir, int y, int x, int z) {
                 tmpChunk = xNeg;
                 tmpx += 16;
             }
-            else if(tmpz == 16) {
+            if(tmpz == 16) {
                 tmpChunk = zPos;
             }
             else if(tmpz == -1) {
@@ -1617,6 +1618,7 @@ VisibleChunks::VisibleChunks(float x, float y, float z){
     curChunk = Chunks[RADIUS][RADIUS];
     curSubChunk = curChunk->subChunks[SubChunkIndex];
     initQuads(); //初始化所有子区块的可见面
+    init = false;
 }
 
 //初始化所有子区块的可见面
