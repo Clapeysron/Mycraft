@@ -28,7 +28,7 @@ glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
 Render::Render() {
-    dayTime = 16.0f;
+    dayTime = 18.0f;
     removeCount = 0;
     jitter = 0;
     srand(0);
