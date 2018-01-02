@@ -9,7 +9,6 @@
 #ifndef Gui_hpp
 #define Gui_hpp
 #include "opengl_header.h"
-#include "Block.hpp"
 
 class Gui {
 public:

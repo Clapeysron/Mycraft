@@ -138,27 +138,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/ChunkData.cpp"
-            timestampString = "536601002.056461"
+            timestampString = "536591826.958633"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1035"
             endingLineNumber = "1035"
-            landmarkName = "SubChunk::calcBrightness(int y, int x, int z)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Mycraft/src/ChunkData.cpp"
-            timestampString = "536601002.056545"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1054"
-            endingLineNumber = "1054"
             landmarkName = "SubChunk::removeLuminousObj(int y, int x, int z)"
             landmarkType = "7">
          </BreakpointContent>
@@ -170,7 +154,23 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/ChunkData.cpp"
-            timestampString = "536601002.056602"
+            timestampString = "536591826.958704"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1054"
+            endingLineNumber = "1054"
+            landmarkName = "SubChunk::findLuminousObjs(int y, int x, int z, SubChunk *s)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Mycraft/src/ChunkData.cpp"
+            timestampString = "536591826.958744"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "4"
@@ -186,12 +186,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/ChunkData.cpp"
-            timestampString = "536601002.056654"
+            timestampString = "536591826.958781"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1056"
             endingLineNumber = "1056"
-            landmarkName = "SubChunk::removeLuminousObj(int y, int x, int z)"
+            landmarkName = "SubChunk::findLuminousObjs(int y, int x, int z, SubChunk *s)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -202,7 +202,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/Render.hpp"
-            timestampString = "536601002.05671"
+            timestampString = "536591826.958819"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "48"
@@ -234,7 +234,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/Render.cpp"
-            timestampString = "536601002.056769"
+            timestampString = "536591826.958868"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "36"
@@ -250,7 +250,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/Render.cpp"
-            timestampString = "536601002.057264"
+            timestampString = "536591826.9592"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "264"
@@ -266,11 +266,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/Render.cpp"
-            timestampString = "536601002.057678"
+            timestampString = "536591826.959463"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "375"
-            endingLineNumber = "375"
+            startingLineNumber = "368"
+            endingLineNumber = "368"
             landmarkName = "Render::render(Game&amp; game)"
             landmarkType = "7">
          </BreakpointContent>
@@ -298,7 +298,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/Render.cpp"
-            timestampString = "536601002.058113"
+            timestampString = "536591826.959731"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "179"
@@ -314,11 +314,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/Render.cpp"
-            timestampString = "536601002.058629"
+            timestampString = "536591826.959976"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "450"
-            endingLineNumber = "450"
+            startingLineNumber = "439"
+            endingLineNumber = "439"
             landmarkName = "Render::calLight(float dayTime)"
             landmarkType = "7">
          </BreakpointContent>
@@ -330,7 +330,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/ChunkData.hpp"
-            timestampString = "536601002.059072"
+            timestampString = "536322933.52826"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "15"
@@ -346,7 +346,7 @@
                   moduleName = "Mycraft"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1/__split_buffer"
-                  timestampString = "536599298.557521"
+                  timestampString = "536174279.123005"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "320"
@@ -361,7 +361,7 @@
                   moduleName = "Mycraft"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1/__split_buffer"
-                  timestampString = "536599298.559938"
+                  timestampString = "536174279.124849"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "320"
@@ -376,7 +376,7 @@
                   moduleName = "Mycraft"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1/__split_buffer"
-                  timestampString = "536599298.561999"
+                  timestampString = "536174279.126509"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "320"
@@ -391,7 +391,7 @@
                   moduleName = "Mycraft"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1/__split_buffer"
-                  timestampString = "536599298.566132"
+                  timestampString = "536174279.128939"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "320"
@@ -408,7 +408,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/Render.cpp"
-            timestampString = "536601002.059125"
+            timestampString = "536591826.960245"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "278"
@@ -440,12 +440,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/ChunkData.cpp"
-            timestampString = "536601002.059562"
+            timestampString = "536591826.96052"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1367"
             endingLineNumber = "1367"
-            landmarkName = "Chunk::generateTree(int y, int x, int z)"
+            landmarkName = "Chunk::readFile(string filePath)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -456,13 +456,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/ChunkData.cpp"
-            timestampString = "536601002.059628"
+            timestampString = "536591826.960567"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1314"
             endingLineNumber = "1314"
-            landmarkName = "Chunk::generateHerb()"
-            landmarkType = "7">
+            landmarkName = "unknown"
+            landmarkType = "0">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -472,43 +472,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/Render.cpp"
-            timestampString = "536601002.059685"
+            timestampString = "536591826.960608"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "394"
-            endingLineNumber = "394"
-            landmarkName = "Render::render(Game&amp; game)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Mycraft/src/Render.cpp"
-            timestampString = "536601002.060091"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "426"
-            endingLineNumber = "426"
-            landmarkName = "Render::cal_up_angle()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Mycraft/src/Render.cpp"
-            timestampString = "536601002.060346"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "319"
-            endingLineNumber = "319"
+            startingLineNumber = "387"
+            endingLineNumber = "387"
             landmarkName = "Render::render(Game&amp; game)"
             landmarkType = "7">
          </BreakpointContent>

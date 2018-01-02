@@ -210,7 +210,7 @@ public:
     SubChunk *getCurSubChunk();
     queue<SubChunk*> getRenderQueue();
     void getRenderingSubChunks(int y, int x, int z); //called by render
-    void draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, unsigned int skybox, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection, glm::vec3 chosen_block_pos, float broken_scale, glm::vec3 Sun_Moon_light, glm::vec3 Ambient_light, bool isDaylight, float dayTime, float starIntensity, bool eye_in_water, glm::mat4 Hold_Block_Model, bool isThirdPerson);
+    void draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, unsigned int texture_pic, unsigned int depthMap_pic, unsigned int skybox, glm::mat4 lightSpaceMatrix, glm::vec3 lightDirection, glm::vec3 chosen_block_pos, float broken_scale, glm::vec3 Sun_Moon_light, glm::vec3 Ambient_light, bool isDaylight, float dayTime, float starIntensity, bool eye_in_water);
     void drawDepth(Shader& Depth_Shader, unsigned int texture_pic);
     char getBlockType(int y, int x, int z);
     bool placeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront, char type);
@@ -218,7 +218,6 @@ public:
     glm::vec3 accessibleBlock(glm::vec3 cameraPos, glm::vec3 cameraFront);
     static void addTransQuads(int dir, int x, int y, int z);
 private:
-    Block HoldBlock;
     Chunk *curChunk;
     SubChunk *curSubChunk;
     Chunk *Chunks[2*RADIUS+1][2*RADIUS+1];
@@ -231,6 +230,6 @@ private:
     bool floodFill(int y, int x, int z); //called by getRenderingSubChunks，TO-DO：face-wall culling
     void calcFrustumPlane(glm::mat4 view, glm::mat4 projection);
     void drawTransQuads(glm::vec3 cameraPos, Shader& Block_Shader);
-    void drawNormQuads(glm::vec3 cameraPos, Shader& Block_Shader, glm::mat4 Hold_Block_Model, bool isThirdPerson);
+    void drawNormQuads(glm::vec3 cameraPos, Shader& Block_Shader);
 };
 #endif /* ChunkData_hpp */

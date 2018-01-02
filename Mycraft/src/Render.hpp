@@ -70,7 +70,6 @@ private:
     glm::vec3 calAmbient(float dayTime);
     float calStarIntensity(float dayTime);
     float cal_angle(glm::vec3 cameraFront);
-    float cal_up_angle();
     static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
     static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);

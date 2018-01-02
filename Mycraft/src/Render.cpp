@@ -31,10 +31,10 @@ Render::Render() {
     dayTime = 18.0f;
     removeCount = 0;
     jitter = 0;
-    //srand(0);
-    srand((unsigned)time(NULL));
-    randomSunDirection = fmod(rand(), 2*M_PI);
-    //randomSunDirection = M_PI;
+    srand(0);
+    //srand((unsigned)time(NULL));
+    //randomSunDirection = fmod(rand(), 2*M_PI);
+    randomSunDirection = M_PI;
     //printf("randomSunDirection: %.2f\n",randomSunDirection)
     lastFrame = 0.0f;
     glfwInit();
@@ -297,7 +297,7 @@ void Render::render(Game& game) {
     // Chunks render
     glViewport(0, 0, screen_width, screen_height);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    projection = glm::perspective(glm::radians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.001f, 1000.0f);
+    projection = glm::perspective(glm::radians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
     jitter += move_length;
     glm::vec3 jitter_offset( 0.10*cos(jitter), abs(0.13*sin(jitter*1.6))-0.065, 0);
     if (game.game_perspective == FIRST_PERSON) {
@@ -311,16 +311,9 @@ void Render::render(Game& game) {
     }
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     if (game.game_perspective == THIRD_PERSON) {
-        glm::mat4 Hold_model(1);
-        game.visibleChunks.draw(game.steve_position - glm::vec3(5.0f)*cameraFront, view, projection, Block_Shader, texture_pic, depthMap_pic, Sky.Skybox_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, broken_scale, Sun_Moon_light, Ambient_light, isDaylight, dayTime, starIntensity, game.steve_eye_in_water(), Hold_model, false);
+        game.visibleChunks.draw(game.steve_position - glm::vec3(5.0f)*cameraFront, view, projection, Block_Shader, texture_pic, depthMap_pic, Sky.Skybox_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, broken_scale, Sun_Moon_light, Ambient_light, isDaylight, dayTime, starIntensity, game.steve_eye_in_water());
     } else {
-        glm::mat4 Hold_model(1);
-        Hold_model = glm::translate(Hold_model, game.steve_position + glm::vec3(0.08)*glm::normalize(glm::cross(cameraFront, cameraUp)) + glm::vec3(0.05)*glm::normalize(glm::cross(cameraFront, glm::cross(cameraFront, cameraUp))) + glm::vec3(0.1)*cameraFront);
-        Hold_model = glm::rotate(Hold_model, cal_up_angle()-glm::radians(0.f), glm::cross(cameraUp, cameraFront));
-        Hold_model = glm::rotate(Hold_model, cal_angle(cameraFront)+glm::radians(50.f), glm::vec3(0,1,0));
-        Hold_model = glm::scale(Hold_model, glm::vec3(0.03, 0.03, 0.03));
-        Hold_model = glm::translate(Hold_model, glm::vec3(-0.5, -0.5, -0.5));
-        game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, Sky.Skybox_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, broken_scale, Sun_Moon_light, Ambient_light, isDaylight, dayTime, starIntensity, game.steve_eye_in_water(), Hold_model, true);
+        game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, Sky.Skybox_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, broken_scale, Sun_Moon_light, Ambient_light, isDaylight, dayTime, starIntensity, game.steve_eye_in_water());
     }
     // steve render
     if (game.game_perspective == THIRD_PERSON) {
@@ -420,10 +413,6 @@ float Render::cal_angle(glm::vec3 cameraFront) {
     } else {
         return atan(cameraFront.x/cameraFront.z);
     }
-}
-
-float Render::cal_up_angle() {
-        return -atan(cameraFront.y/glm::length(glm::vec2(cameraFront.x,cameraFront.z)));
 }
 
 float Render::calStarIntensity(float dayTime) {

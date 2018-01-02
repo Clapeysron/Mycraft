@@ -17,7 +17,8 @@ class Block {
 public:
     Block();
     void updateBuffer(bool isNew, float *vertices, unsigned long size);
-    void newHoldBlock();
+    void draw(glm::vec3 position, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, char type);
+    void test(glm::mat4 view, glm::mat4 projection, Shader& Block_Shader);
     ~Block();
     unsigned int getVAO();
 private:
