@@ -222,12 +222,7 @@ void SubChunk::addVertexShadow(int y, int x, int z) {
     unsigned short zPos = ((zPosType&0x80) == 0)||(zPosType == (char)LEAF);
     
     unsigned short tmp;
-    
-    if(y == 8 && x == 15 && z == 7 && this->x == -32 && this->z == 0) {
-        int m;
-        m++;
-    }
-    
+
     tmp = 0;
     tmp += yPos+xPos+zNeg;
     if(tmp == 0)
@@ -2332,6 +2327,7 @@ glm::vec3 VisibleChunks::accessibleBlock(glm::vec3 cameraPos, glm::vec3 cameraFr
 void VisibleChunks::initBlockInfo() {
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)GRASS, BlockInfo("GRASS", 0.05, GRASS_X, GRASS_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)TORCH, BlockInfo("TORCH", 0.2, TORCH_X, TORCH_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)GLASS, BlockInfo("GLASS", 1.5, GLASS_X, GLASS_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)GLOWSTONE, BlockInfo("GLOWSTONE", 2, GLOWSTONE_X, GLOWSTONE_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)LEAF, BlockInfo("LEAF", 0.2, LEAF_X, LEAF_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)WATER, BlockInfo("WATER", 99999, WATER_X, WATER_Y)));

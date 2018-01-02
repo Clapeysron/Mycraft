@@ -49,6 +49,7 @@ private:
     static float deltaTime;
     float lastFrame;
     float removeCount;
+    float jitter;
     glm::vec3 prev_block_pos;
     glm::mat4 view;
     glm::mat4 projection;

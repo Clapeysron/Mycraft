@@ -30,9 +30,11 @@ glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 Render::Render() {
     dayTime = 16.0f;
     removeCount = 0;
+    jitter = 0;
     srand(0);
     //srand((unsigned)time(NULL));
-    randomSunDirection = fmod(rand(), 2*M_PI);
+    //randomSunDirection = fmod(rand(), 2*M_PI);
+    randomSunDirection = M_PI;
     //printf("randomSunDirection: %.2f\n",randomSunDirection)
     lastFrame = 0.0f;
     glfwInit();
@@ -186,8 +188,10 @@ void Render::render(Game& game) {
     printf("pos x:%.2f y:%.2f z:%.2f\n", game.steve_position.x, game.steve_position.y, game.steve_position.z);
     printf("steve_in_water: %d\neye_in_water:%d\n", game.steve_in_water(), game.steve_eye_in_water());
     std::cout << "now_block:" << BlockInfoMap[game.visibleChunks.getBlockType(game.steve_position.y, game.steve_position.x, game.steve_position.z)].block_name << endl;
-    char placeBlockList[]= {(char)TORCH};
+    char placeBlockList[]= {(char)TORCH, (char)GLASS};
+    glm::vec3 old_position = game.steve_position;
     processInput(window, game);
+    float move_length = glm::length(game.steve_position - old_position);
     
 #ifdef TIMETEST
     printf("Process Input draw: %f\n", timeMark - glfwGetTime());
@@ -294,8 +298,14 @@ void Render::render(Game& game) {
     glViewport(0, 0, screen_width, screen_height);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     projection = glm::perspective(glm::radians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
+    jitter += move_length;
+    glm::vec3 jitter_offset( 0.10*cos(jitter), abs(0.13*sin(jitter*1.6))-0.065, 0);
     if (game.game_perspective == FIRST_PERSON) {
-        view = glm::lookAt(game.steve_position, game.steve_position + cameraFront, cameraUp);
+        if (!game.steve_in_water()) {
+            view = glm::lookAt(game.steve_position - jitter_offset, game.steve_position + cameraFront - jitter_offset, cameraUp);
+        } else {
+            view = glm::lookAt(game.steve_position, game.steve_position + cameraFront, cameraUp);
+        }
     } else {
         view = glm::lookAt(game.steve_position - glm::vec3(5.0f)*cameraFront, game.steve_position + cameraFront, cameraUp);
     }
@@ -375,7 +385,7 @@ void Render::render(Game& game) {
 #endif
     
     // Draw gui
-    Gui.draw(screen_width, screen_height);
+    // Gui.draw(screen_width, screen_height);
     
 #ifdef TIMETEST
     printf("Gui scene draw: %f\n", timeMark - glfwGetTime());

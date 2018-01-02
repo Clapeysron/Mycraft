@@ -121,6 +121,8 @@
 #define GLOWSTONE_Y 0.0f
 #define WOOD_X 0.2f
 #define WOOD_Y 0.3f
+#define GLASS_X 0.0f
+#define GLASS_Y 0.7f
 
 // SEA_LEVEL
 #define SEA_LEVEL 115
