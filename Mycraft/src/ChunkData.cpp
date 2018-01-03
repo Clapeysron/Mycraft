@@ -2460,7 +2460,7 @@ void VisibleChunks::initBlockInfo() {
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)SAND, BlockInfo("SAND", 2, SAND_X, SAND_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)COAL_ORE, BlockInfo("COAL_ORE", 2, COAL_ORE_X, COAL_ORE_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)GOLD_ORE, BlockInfo("GOLD_ORE", 2, GOLD_ORE_X, GOLD_ORE_Y)));
-    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)GOLD_ORE, BlockInfo("IRON_ORE", 2, IRON_ORE_X, IRON_ORE_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)IRON_ORE, BlockInfo("IRON_ORE", 2, IRON_ORE_X, IRON_ORE_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)EMERALD_ORE, BlockInfo("EMERALD_ORE", 2, EMERALD_ORE_X, EMERALD_ORE_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)REDSTONE_ORE, BlockInfo("REDSTONE_ORE", 2, REDSTONE_ORE_X, REDSTONE_ORE_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)TOOLBOX, BlockInfo("TOOLBOX", 2, TOOLBOX_TOP_X, TOOLBOX_TOP_Y, TOOLBOX_TOP_X, TOOLBOX_TOP_Y, TOOLBOX_SIDE1_X, TOOLBOX_SIDE1_Y, TOOLBOX_SIDE2_X, TOOLBOX_SIDE2_Y, TOOLBOX_SIDE1_X, TOOLBOX_SIDE1_Y, TOOLBOX_SIDE2_X, TOOLBOX_SIDE2_Y)));
@@ -2474,4 +2474,5 @@ void VisibleChunks::initBlockInfo() {
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)STONE_BRICK, BlockInfo("STONE_BRICK", 2, STONE_BRICK_X, STONE_BRICK_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)QUARTZ, BlockInfo("QUARTZ", 2, QUARTZ_TOP_X, QUARTZ_TOP_Y, QUARTZ_TOP_X, QUARTZ_TOP_Y, QUARTZ_SIDE_X, QUARTZ_SIDE_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)GOLD, BlockInfo("GOLD", 2, GOLD_X, GOLD_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)CLOUD, BlockInfo("CLOUD", 99999, CLOUD_X, CLOUD_Y)));
 }
