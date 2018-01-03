@@ -35,6 +35,7 @@ class SubChunk;
 static queue<SubChunk*> scanQueue;
 
 extern float vertex[FACE_TYPE_NUM][QUAD_SIZE];
+extern float alternative[FACE_TYPE_NUM][QUAD_SIZE];
 extern float vertices[6][48];
 extern float waterVertices[QUAD_SIZE];
 
@@ -94,7 +95,7 @@ public:
         isEmpty = true;
         count = 0;
         pathHistory = 0;
-        adjVisibility = 0;
+        adjVisibility = ALL_DIR;
         xNeg = xPos = zNeg = zPos = yNeg = yPos = NULL;
         this->y = y;
         this->x = x;
@@ -169,6 +170,7 @@ public:
     Chunk*recycle(int x, int z);
     bool generateMap(); //called by initChunks
     void generateHerb();
+    void generateCloud();
     bool generateTree(int y, int x, int z);
     bool readFile(string filePath); //TO-DO, called by initChunks or updateChunks
     bool writeFile(string filePath); //TO-DO, called by updateChunks
