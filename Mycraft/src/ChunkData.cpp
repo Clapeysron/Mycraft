@@ -84,7 +84,6 @@ inline void SubChunk::updateNeighbor(Chunk* parent, SubChunk* dir[6]){
 
 //更新整个子区块的可见面数据
 
-bool init = true;
 void SubChunk::updateQuads(){
     char xNegType;
     char xPosType;
@@ -102,6 +101,11 @@ void SubChunk::updateQuads(){
     
     if(isEmpty)
         return; //如果为空，Quads为空
+    
+    if(this->y > 150) {
+        int m = 0;
+        m++;
+    }
     
     for(int i = 0; i < 16; i++)
     {
@@ -219,10 +223,10 @@ void SubChunk::addVertexShadow(int y, int x, int z) {
     
     unsigned short tmp;
     
-    if(y == 8 && x == 15 && z == 7 && this->x == -32 && this->z == 0) {
+    /*if(y == 8 && x == 15 && z == 7 && this->x == -32 && this->z == 0) {
         int m;
         m++;
-    }
+    }*/
     
     tmp = 0;
     tmp += yPos+xPos+zNeg;
@@ -387,9 +391,6 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
         float tmp[QUAD_SIZE];
         memcpy(tmp, vertex[dir], QUAD_SIZE*sizeof(float));
         
-        //设置贴图坐标
-        set_texture(tmp, SubChunk::BlockType[y][x][z], dir);
-        
         //设置阴影信息
         int offset[6][3] = {0, -1, 0, 0, 1, 0, 0, 0, -1, 0, 0, 1, -1, 0, 0, 1, 0, 0};
         if((BlockType[y][x][z]&0x80) == 0 || BlockType[y][x][z] == (char)LEAF) {
@@ -458,14 +459,14 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
                             
                     }
                     tmpShadow--;
-                    if(this->x+x == -13 && this->y+y == 120 && this->z+z == 2 && dir == 5) {
+                    /*if(this->x+x == -13 && this->y+y == 120 && this->z+z == 2 && dir == 5) {
                         int m = 0;
                         m++;
-                    }
-                    vertices[i] = 1.0f-0.5f*tmpShadow;
+                    }*/
+                    vertices[i] = 1.0f-0.4f*tmpShadow;
                     //tmp[VERTEX_SIZE*i+8] -= 0.5f*tmpShadow;
                 }
-                if(vertices[0]+vertices[2]+vertices[1]+vertices[3] == 3.5f) {
+                /*if(vertices[0]+vertices[2]+vertices[1]+vertices[3] == 3.5f) {
                     int i;
                     for(i = 0; i < 4; i++) {
                         if(vertices[i] == 0.5f) {
@@ -492,19 +493,37 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
                         vertices[1] = vertices[0]+vertices[2]-vertices[3];
                     }
                 }
-                else if(vertices[0]+vertices[2] == 1.5f) {
+                else if(vertices[0]+vertices[2] == 1.5f ||
+                        (vertices[0]+vertices[2] == 1.0f && (vertices[0] == 0.5f || vertices[1] == 0.5f))) {
                     for(int i = 0; i < 4; i++) {
                         if(vertices[i] == 1.0f)
                             vertices[i] = 1.5f;
                     }
+                }*/
+                if((vertices[1] == vertices[3]) &&
+                   ((vertices[0] != 1.0f && vertices[0] < vertices[1] && vertices[2] == 1.0f) ||
+                    (vertices[0] == 1.0f && vertices[2] < vertices[1] && vertices[2] != 1.0f))) {
+                       memcpy(tmp, alternative[dir], QUAD_SIZE*sizeof(float));
+                       tmp[VERTEX_SIZE*0+8] = vertices[1];
+                       tmp[VERTEX_SIZE*1+8] = vertices[2];
+                       tmp[VERTEX_SIZE*2+8] = vertices[3];
+                       tmp[VERTEX_SIZE*3+8] = vertices[3];
+                       tmp[VERTEX_SIZE*4+8] = vertices[0];
+                       tmp[VERTEX_SIZE*5+8] = vertices[1];
+                   }
+                else {
+                    for(int i = 0; i < 4; i++) {
+                        tmp[VERTEX_SIZE*i+8] = vertices[i];
+                    }
+                    tmp[VERTEX_SIZE*4+8] = vertices[0];
+                    tmp[VERTEX_SIZE*5+8] = vertices[2];
                 }
-                for(int i = 0; i < 4; i++) {
-                    tmp[VERTEX_SIZE*i+8] = vertices[i];
-                }
-                tmp[VERTEX_SIZE*4+8] = vertices[0];
-                tmp[VERTEX_SIZE*5+8] = vertices[2];
             }
         }
+        
+        //设置贴图坐标
+        set_texture(tmp, SubChunk::BlockType[y][x][z], dir);
+        
         //设置递归光照亮度
         if((BlockType[y][x][z]|0xf0) != (char)0xf0 && (BlockType[y][x][z]|0xc0) == (char)0xc0) {
             int tmpy = y+offset[dir][0];
@@ -721,7 +740,7 @@ char SubChunk::removeBlock(int y, int x, int z){
             redrawChunk.insert((*iter));
             iter++;
         }
-        delete tmpl;
+        //delete tmpl;
     }
     else {
         updateBrightness();
@@ -1115,12 +1134,16 @@ int prime2[OCTAVES*2] = {789221, 789101, 789137, 789169, 789227,
 int prime3[OCTAVES*2] = {1376312589, 1376312017, 1376312087, 1376312783, 1376312857,
                         1376312589, 1376312017, 1376312087, 1376312783, 1376312689};
 
+
+#define GEN_HEIGHT 0
+#define GEN_CLOUD 1
+int gen_choice = 0;
 float Noise(int x, int y){
     static int i = 0;
     int n = x+y*57;
     i = (i+1)%(OCTAVES);
     n = (n<<13)^n;
-    return (1.0-((n*(n*n*prime1[0]+prime2[0])+prime3[0])&0x7fffffff)/1073741824.0);
+    return (1.0-((n*(n*n*prime1[gen_choice]+prime2[gen_choice])+prime3[gen_choice])&0x7fffffff)/1073741824.0);
 }
 
 float SmoothedNoise(int x, int y)
@@ -1196,7 +1219,7 @@ Chunk::Chunk(int x, int z){
 Chunk::~Chunk(){
     for(int i = 0; i < 16; i++)
     {
-        delete subChunks[i];
+        //delete subChunks[i];
     }
 }
 
@@ -1227,6 +1250,7 @@ Chunk* Chunk::recycle(int x, int z){
 bool Chunk::generateMap()
 {
     int max = 0;
+    gen_choice = GEN_HEIGHT;
     for(int i = 0; i < 16; i++)
     {
         for(int j = 0; j < 16; j++)
@@ -1239,7 +1263,7 @@ bool Chunk::generateMap()
     maxHeight = max;
     
     
-    int heightRock[16][16];
+    /*int heightRock[16][16];
     for(int i = 0; i < 16; i++)
     {
         for(int j = 0; j < 16; j++)
@@ -1250,7 +1274,7 @@ bool Chunk::generateMap()
             else
                 heightRock[i][j] = tmpHeight;
         }
-    } //the height of rock layer
+    }*/
     
     for(int j = 0; j < 16; j++) {
      for(int k = 0; k < 16; k++) {
@@ -1285,7 +1309,7 @@ bool Chunk::generateMap()
                 for(int k = 0; k < 16; k++)
                 {
                     int tmpHeight = i+m*16;
-                    if(tmpHeight <= heightRock[j][k]) {
+                    if(tmpHeight <= height[j][k]-SOIL_THICKNESS) {
                         subChunks[m]->BlockType[i][j][k] = ROCK;
                         subChunks[m]->count++;
                     }
@@ -1306,10 +1330,29 @@ bool Chunk::generateMap()
                 }
             }
         }
-        generateHerb();
     }
+    generateHerb();
+    generateCloud();
     //writeFile(to_string(xPos)+"_"+to_string(zPos));
     return true;
+}
+
+void Chunk::generateCloud() {
+    for(int i = 0; i < 16; i++)
+    {
+        for(int j = 0; j < 16; j++)
+        {
+            gen_choice = GEN_CLOUD;
+            int tmp = (int)(PerlinNoise(x+i, z+j)*10-4);
+            if(tmp >= 0) {
+                int thickness1 = (tmp > 0)? 1:0;
+                for(int k = 8-thickness1; k <= 8; k++) {
+                    subChunks[10]->BlockType[k][i][j] = CLOUD;
+                }
+                subChunks[10]->isEmpty = false;
+            }
+        }
+    } //the height of soil layer
 }
 
 void Chunk::generateHerb() {
@@ -1657,7 +1700,6 @@ VisibleChunks::VisibleChunks(float x, float y, float z){
     curChunk = Chunks[RADIUS][RADIUS];
     curSubChunk = curChunk->subChunks[SubChunkIndex];
     initQuads(); //初始化所有子区块的可见面
-    init = false;
 }
 
 //初始化所有子区块的可见面
@@ -1696,7 +1738,7 @@ VisibleChunks::~VisibleChunks(){
     for(int i = 0; i < 2*RADIUS+1; i++){
         for(int j = 0; j < 2*RADIUS+1; j++){
             //Chunks[i][j]->writeFile(to_string(Chunks[i][j]->x)+"_"+to_string(Chunks[i][j]->z));
-            delete Chunks[i][j];
+            //delete Chunks[i][j];
         }
     }
 }
@@ -1996,8 +2038,13 @@ void VisibleChunks::getRenderingSubChunks(int y, int x, int z){
             //cout<<scanQueue.size()<<endl;
             tmp = scanQueue.front();
             tmp->adjBlocksEnqueue();
-            if(tmp->Quads.size())
+            if(tmp->Quads.size()){
                 renderQueue.push(tmp);
+                if(tmp->y == 240) {
+                    int m = 0;
+                    m++;
+                }
+            }
             scanQueue.pop();
         }
     } //洪水填充，区块非封闭且非面壁时，周围六个方块无条件入队。
@@ -2340,20 +2387,22 @@ char VisibleChunks::removeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront) {
         
         int zOffset = z-Chunks[0][0]->z;
         int zIndex = (zOffset)/16;
-        char type = Chunks[xIndex][zIndex]->subChunks[yIndex]->removeBlock(y%16, xOffset%16, zOffset%16);
-        
+        char type = Chunks[xIndex][zIndex]->subChunks[yIndex]->BlockType[y%16][xOffset%16][zOffset%16];
         
         if((type&0xf0) != 0xf0 && (type&0xc0) == 0xc0) {
             float distance = glm::abs((y-cameraPos.y)/cameraFront.y);
-            float xOffset = cameraPos.x+distance*cameraFront.x-x;
+            float tmpx = cameraPos.x+distance*cameraFront.x-x;
             //float yOffset = cameraPos.y+distance*cameraFront.y-y;
-            float zOffset = cameraPos.z+distance*cameraFront.z-z;
-            if(0 <= xOffset && xOffset <= 1 && 0 <= zOffset && zOffset <= 1){
+            float tmpz = cameraPos.z+distance*cameraFront.z-z;
+            if(0 <= tmpx && tmpx <= 1 && 0 <= tmpz && tmpz <= 1){
+                Chunks[xIndex][zIndex]->subChunks[yIndex]->removeBlock(y%16, xOffset%16, zOffset%16);
                 return type;
             }
         }
-        else if(type != (char)AIR  && type != (char)WATER)
+        else if(type != (char)AIR  && type != (char)WATER) {
+            Chunks[xIndex][zIndex]->subChunks[yIndex]->removeBlock(y%16, xOffset%16, zOffset%16);
             return type;
+        }
     }
     return (char)AIR;
 }

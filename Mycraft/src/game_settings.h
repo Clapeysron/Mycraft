@@ -9,8 +9,8 @@
 #ifndef game_settings_h
 #define game_settings_h
 
-#define SCREEN_WIDTH 4096
-#define SCREEN_HEIGHT 2064
+#define SCREEN_WIDTH 2560
+#define SCREEN_HEIGHT 1440
 
 #define QUAD_SIZE 60
 #define QUAD_FACE_SIZE 8
@@ -43,7 +43,9 @@
 #define BASE_ROCK 0x05
 #define GLOWSTONE 0x06
 #define WOOD 0x07
+#define CLOUD 0x08
 #define DIAMAND_ORE 0x10
+
 
 
 #define POINT_BRIGHTNESS 0x0f
