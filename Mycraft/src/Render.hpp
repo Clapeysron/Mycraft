@@ -51,6 +51,7 @@ private:
     float lastFrame;
     float removeCount;
     float jitter;
+    static float zoom_len;
     glm::vec3 prev_block_pos;
     glm::mat4 view;
     glm::mat4 projection;
@@ -67,6 +68,8 @@ private:
     static bool mouseHold;
     static int oldLeftKey;
     static int oldRightKey;
+    static int oldUpKey;
+    static int oldDownKey;
     void texture_init();
     void depthMap_init();
     glm::vec3 calLight(float dayTime);

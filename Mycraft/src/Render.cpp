@@ -22,8 +22,11 @@ float Render::deltaTime = 0.0f;
 bool Render::tryPlace = false;
 bool Render::mouseHold = false;
 int Render::nowPlaceBlock = 0;
+float Render::zoom_len = 5.0f;
 int Render::oldLeftKey = 0;
 int Render::oldRightKey = 0;
+int Render::oldUpKey = 0;
+int Render::oldDownKey = 0;
 int Render::screen_width = (SCREEN_WIDTH > 4096) ? 4096 : SCREEN_WIDTH;
 int Render::screen_height = (SCREEN_HEIGHT > 2064) ? 2064: SCREEN_HEIGHT;
 glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -304,17 +307,17 @@ void Render::render(Game& game) {
     jitter += move_length;
     glm::vec3 jitter_offset( 0.10*cos(jitter), abs(0.13*sin(jitter*1.6))-0.065, 0);
     if (game.game_perspective == FIRST_PERSON) {
-        if (!game.steve_in_water()) {
+        if (!game.steve_in_water() && (game.game_mode == NORMAL_MODE)) {
             view = glm::lookAt(game.steve_position - jitter_offset, game.steve_position + cameraFront - jitter_offset, cameraUp);
         } else {
             view = glm::lookAt(game.steve_position, game.steve_position + cameraFront, cameraUp);
         }
     } else {
-        view = glm::lookAt(game.steve_position - glm::vec3(5.0f)*cameraFront, game.steve_position + cameraFront, cameraUp);
+        view = glm::lookAt(game.steve_position - glm::vec3(zoom_len)*cameraFront, game.steve_position + cameraFront, cameraUp);
     }
     glClearColor(0.05f, 0.05f, 0.05f, 1.0f);
     if (game.game_perspective == THIRD_PERSON) {
-        game.visibleChunks.draw(game.steve_position - glm::vec3(5.0f)*cameraFront, view, projection, Block_Shader, texture_pic, depthMap_pic, Sky.Skybox_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, broken_scale, Sun_Moon_light, Ambient_light, isDaylight, dayTime, starIntensity, game.steve_eye_in_water());
+        game.visibleChunks.draw(game.steve_position - glm::vec3(zoom_len)*cameraFront, view, projection, Block_Shader, texture_pic, depthMap_pic, Sky.Skybox_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, broken_scale, Sun_Moon_light, Ambient_light, isDaylight, dayTime, starIntensity, game.steve_eye_in_water());
     } else {
         game.visibleChunks.draw(game.steve_position, view, projection, Block_Shader, texture_pic, depthMap_pic, Sky.Skybox_pic, lightSpaceMatrix, lightDirection, chosen_block_pos, broken_scale, Sun_Moon_light, Ambient_light, isDaylight, dayTime, starIntensity, game.steve_eye_in_water());
     }
@@ -388,7 +391,9 @@ void Render::render(Game& game) {
 #endif
     
     //Draw gui
-    Gui.draw(screen_width, screen_height);
+    if (game.game_perspective == FIRST_PERSON) {
+        Gui.draw(screen_width, screen_height);
+    }
     game.visibleChunks.HoldBlock.updateBlock((char)placeBlockList[nowPlaceBlock%sizeof(placeBlockList)]);
     
     HoldBlock_Shader.use();
@@ -592,31 +597,78 @@ void Render::processInput(GLFWwindow *window, Game &game)
         new_position = game.steve_position - cameraSpeed * cameraFront_Y;
         game.move(new_position);
     }
-    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-        fov -= cameraSpeed*10;
-    }
+
+    
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        game.game_options = FOV;
     }
     if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        game.game_options = CURSOR;
     }
-    if (glfwGetKey(window, GLFW_KEY_0) == GLFW_PRESS) {
-        game.game_mode = GOD_MODE;
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) {
+        game.game_options = GAME_MODE;
     }
-    if (glfwGetKey(window, GLFW_KEY_9) == GLFW_PRESS) {
-        game.game_mode = NORMAL_MODE;
+    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS) {
+        game.game_options = GAME_PERSPECTIVE;
     }
-    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-        fov += cameraSpeed*10;
-    }
-    if (glfwGetKey(window, GLFW_KEY_8) == GLFW_PRESS) {
-        game.game_perspective = FIRST_PERSON;
-    }
-    if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) {
-        game.game_perspective = THIRD_PERSON;
+    if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS) {
+        game.game_options = ZOOM;
     }
     
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
+        cameraFront = glm::rotate(cameraFront, cameraSpeed/60, cameraUp);
+    }
+    
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
+        cameraFront = glm::rotate(cameraFront, -cameraSpeed/60, cameraUp);
+    }
+    
+    
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+        if (game.game_options == FOV) {
+            fov = (fov<5.0f) ? fov : fov - cameraSpeed*10;
+        } else if (game.game_options == ZOOM) {
+            if (game.game_perspective == THIRD_PERSON) {
+                zoom_len = (zoom_len>100.0f) ? zoom_len : zoom_len-cameraSpeed*5;
+            }
+        }
+    }
+    
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_RELEASE && oldUpKey == GLFW_PRESS) {
+        if (game.game_options == CURSOR) {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+        } else if (game.game_options == GAME_MODE) {
+            game.game_mode = GOD_MODE;
+        } else if (game.game_options == GAME_PERSPECTIVE) {
+            game.game_perspective = FIRST_PERSON;
+        }
+    }
+    oldUpKey = glfwGetKey(window, GLFW_KEY_UP);
+    
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+        if (game.game_options == FOV) {
+            fov = (fov>120.0f) ? fov : fov + cameraSpeed*10;
+        } else if (game.game_options == ZOOM) {
+            if (game.game_perspective == THIRD_PERSON) {
+                zoom_len = (zoom_len<3.0f) ? zoom_len : zoom_len+cameraSpeed*5;
+            }
+        }
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_RELEASE && oldDownKey == GLFW_PRESS) {
+        if (game.game_options == CURSOR) {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        } else if (game.game_options == GAME_MODE) {
+            game.game_mode = NORMAL_MODE;
+        } else if (game.game_options == GAME_PERSPECTIVE) {
+            game.game_perspective = THIRD_PERSON;
+        }
+    }
+    oldDownKey = glfwGetKey(window, GLFW_KEY_DOWN);
+    
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE && oldRightKey == GLFW_PRESS) {
+        nowPlaceBlock++;
+    }
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE && oldLeftKey == GLFW_PRESS) {
         nowPlaceBlock--;
     }
