@@ -28,9 +28,10 @@ int Render::screen_width = (SCREEN_WIDTH > 4096) ? 4096 : SCREEN_WIDTH;
 int Render::screen_height = (SCREEN_HEIGHT > 2064) ? 2064: SCREEN_HEIGHT;
 glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
+char placeBlockList[]= {COBBLESTONE, MOSSY_COBBLESTONE, STONE_BRICK, QUARTZ, GOLD, TNT, ROCK, SOIL, GRASSLAND, TRUNK, GLOWSTONE, WOOD, RED_WOOD, TINT_WOOD, DARK_WOOD, BRICK, SAND, COAL_ORE, GOLD_ORE, IRON_ORE, DIAMAND_ORE, EMERALD_ORE, TOOLBOX, SMELTER, WATERMELON, PUMPKIN, WHITE_WOOL, (char)LEAF, (char)GLASS, (char)GRASS, (char)TORCH};
 
 Render::Render() {
-    dayTime = 5.5f;
+    dayTime = 18.5f;
     removeCount = 0;
     jitter = 0;
     srand(0);
@@ -191,7 +192,6 @@ void Render::render(Game& game) {
     printf("pos x:%.2f y:%.2f z:%.2f\n", game.steve_position.x, game.steve_position.y, game.steve_position.z);
     printf("steve_in_water: %d\neye_in_water:%d\n", game.steve_in_water(), game.steve_eye_in_water());
     std::cout << "now_block:" << BlockInfoMap[game.visibleChunks.getBlockType(game.steve_position.y, game.steve_position.x, game.steve_position.z)].block_name << endl;
-    char placeBlockList[]= {ROCK, SOIL, GRASSLAND, TRUNK, GLOWSTONE, WOOD, RED_WOOD, TINT_WOOD, DARK_WOOD, BRICK, SAND, COAL_ORE, GOLD_ORE, IRON_ORE, DIAMAND_ORE, EMERALD_ORE, TOOLBOX, SMELTER, WATERMELON, PUMPKIN, WHITE_WOOL, (char)LEAF, (char)GLASS, (char)GRASS, (char)TORCH};
     glm::vec3 old_position = game.steve_position;
     processInput(window, game);
     float move_length = glm::length(game.steve_position - old_position);
@@ -394,8 +394,9 @@ void Render::render(Game& game) {
     HoldBlock_Shader.use();
     glm::mat4 model(1);
     glCullFace(GL_BACK);
-    model = glm::translate(model, glm::vec3(-0.9, -0.8, 0.0f));
+    model = glm::translate(model, glm::vec3(-0.9, -0.8, 0.f));
     model = glm::scale(model, glm::vec3(0.2f * screen_height / screen_width, 0.2f, 0.0f));
+    model = glm::rotate(model, (float)M_PI, glm::vec3(0,1,0));
     model = glm::translate(model, glm::vec3(-0.5f, -0.5f, -0.5f));
     HoldBlock_Shader.setMat4("model", model);
     glActiveTexture(GL_TEXTURE0);

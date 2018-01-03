@@ -2419,5 +2419,10 @@ void VisibleChunks::initBlockInfo() {
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)WATERMELON, BlockInfo("WATERMELON", 2, WATERMELON_TOP_X, WATERMELON_TOP_Y, WATERMELON_TOP_X, WATERMELON_TOP_Y, WATERMELON_SIDE_X, WATERMELON_SIDE_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)PUMPKIN, BlockInfo("PUMPKIN", 2, PUMPKIN_TOP_X, PUMPKIN_TOP_Y, PUMPKIN_TOP_X, PUMPKIN_TOP_Y, PUMPKIN_SIDE_X, PUMPKIN_SIDE_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)WHITE_WOOL, BlockInfo("WHITE_WOOL", 2, WHITE_WOOL_X, WHITE_WOOL_Y)));
-    
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)TNT, BlockInfo("TNT", 2, TNT_TOP_X, TNT_TOP_Y, TNT_BOTTOM_X, TNT_BOTTOM_Y, TNT_SIDE_X, TNT_SIDE_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)COBBLESTONE, BlockInfo("COBBLESTONE", 2, COBBLESTONE_X, COBBLESTONE_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)MOSSY_COBBLESTONE, BlockInfo("MOSSY_COBBLESTONE", 2, MOSSY_COBBLESTONE_X, MOSSY_COBBLESTONE_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)STONE_BRICK, BlockInfo("STONE_BRICK", 2, STONE_BRICK_X, STONE_BRICK_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)QUARTZ, BlockInfo("QUARTZ", 2, QUARTZ_TOP_X, QUARTZ_TOP_Y, QUARTZ_TOP_X, QUARTZ_TOP_Y, QUARTZ_SIDE_X, QUARTZ_SIDE_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)GOLD, BlockInfo("GOLD", 2, GOLD_X, GOLD_Y)));
 }

@@ -9,8 +9,8 @@
 #ifndef game_settings_h
 #define game_settings_h
 
-#define SCREEN_WIDTH 4096
-#define SCREEN_HEIGHT 2064
+#define SCREEN_WIDTH 2048
+#define SCREEN_HEIGHT 1152
 
 #define QUAD_SIZE 60
 #define QUAD_FACE_SIZE 8
@@ -59,6 +59,12 @@
 #define WATERMELON 0x15
 #define PUMPKIN 0x16
 #define WHITE_WOOL 0x17
+#define TNT 0x18
+#define COBBLESTONE 0x19
+#define MOSSY_COBBLESTONE 0x1A
+#define STONE_BRICK 0x1B
+#define QUARTZ 0x1C
+#define GOLD 0x1D
 
 
 #define POINT_BRIGHTNESS 0x0f
@@ -102,8 +108,8 @@
 #define STEVE_FETCH_RADIUS 8
 
 //texture offset
-#define TEXTURE_MIN 0.0001f
-#define TEXTURE_MAX 0.0999f
+#define TEXTURE_MIN 0.0002f
+#define TEXTURE_MAX 0.0998f
 #define GRASS_MIN 0.0f
 #define GRASS_MAX 1.0f
 
@@ -181,7 +187,24 @@
 #define PUMPKIN_SIDE_Y 0.6f
 #define WHITE_WOOL_X 0.0f
 #define WHITE_WOOL_Y 0.8f
-
+#define TNT_TOP_X 0.7f
+#define TNT_TOP_Y 0.3f
+#define TNT_BOTTOM_X 0.5f
+#define TNT_BOTTOM_Y 0.3f
+#define TNT_SIDE_X 0.6f
+#define TNT_SIDE_Y 0.3f
+#define COBBLESTONE_X 0.6f
+#define COBBLESTONE_Y 0.2f
+#define MOSSY_COBBLESTONE_X 0.7f
+#define MOSSY_COBBLESTONE_Y 0.2f
+#define STONE_BRICK_X 0.8f
+#define STONE_BRICK_Y 0.2f
+#define QUARTZ_TOP_X 0.8f
+#define QUARTZ_TOP_Y 0.3f
+#define QUARTZ_SIDE_X 0.9f
+#define QUARTZ_SIDE_Y 0.3f
+#define GOLD_X 0.9f
+#define GOLD_Y 0.2f
 
 // SEA_LEVEL
 #define SEA_LEVEL 115
