@@ -698,6 +698,8 @@
 		3717FF091FDD65A4008DC3F7 /* Sun_Moon.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Sun_Moon.fs; sourceTree = "<group>"; };
 		371A875F1FF511C900316A5D /* BlockInfo.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BlockInfo.cpp; sourceTree = "<group>"; };
 		371A87601FF511C900316A5D /* BlockInfo.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = BlockInfo.hpp; sourceTree = "<group>"; };
+		37259E141FFBE54300B733E8 /* HoldBlock.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = HoldBlock.vs; sourceTree = "<group>"; };
+		37259E151FFBE54300B733E8 /* HoldBlock.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = HoldBlock.fs; sourceTree = "<group>"; };
 		373C3C921FDA37A200BE4921 /* Skybox.vs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Skybox.vs; sourceTree = "<group>"; };
 		373C3C931FDA37A200BE4921 /* Skybox.fs */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.glsl; path = Skybox.fs; sourceTree = "<group>"; };
 		373C3C941FDA39C300BE4921 /* Sky.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Sky.cpp; sourceTree = "<group>"; };
@@ -774,6 +776,8 @@
 			children = (
 				37DEA6F21FBAF4B900E6BABC /* Block.fs */,
 				37DEA6F11FBAF4B900E6BABC /* Block.vs */,
+				37259E151FFBE54300B733E8 /* HoldBlock.fs */,
+				37259E141FFBE54300B733E8 /* HoldBlock.vs */,
 				370A40DC1FE0278700D7F9DF /* Depth_debug.fs */,
 				370A40DB1FE0278700D7F9DF /* Depth_debug.vs */,
 				370A40DA1FDFE6AB00D7F9DF /* Depth.fs */,

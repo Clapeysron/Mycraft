@@ -22,17 +22,22 @@ float Render::deltaTime = 0.0f;
 bool Render::tryPlace = false;
 bool Render::mouseHold = false;
 int Render::nowPlaceBlock = 0;
+int Render::oldLeftKey = 0;
+int Render::oldRightKey = 0;
 int Render::screen_width = (SCREEN_WIDTH > 4096) ? 4096 : SCREEN_WIDTH;
 int Render::screen_height = (SCREEN_HEIGHT > 2064) ? 2064: SCREEN_HEIGHT;
 glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
+char placeBlockList[]= {COBBLESTONE, MOSSY_COBBLESTONE, STONE_BRICK, QUARTZ, GOLD, TNT, ROCK, SOIL, GRASSLAND, TRUNK, GLOWSTONE, WOOD, RED_WOOD, TINT_WOOD, DARK_WOOD, BRICK, SAND, COAL_ORE, GOLD_ORE, IRON_ORE, DIAMAND_ORE, EMERALD_ORE, TOOLBOX, SMELTER, WATERMELON, PUMPKIN, WHITE_WOOL, (char)LEAF, (char)GLASS, (char)GRASS, (char)TORCH};
 
 Render::Render() {
-    dayTime = 18.0f;
+    dayTime = 18.5f;
     removeCount = 0;
+    jitter = 0;
     srand(0);
     //srand((unsigned)time(NULL));
-    randomSunDirection = fmod(rand(), 2*M_PI);
+    //randomSunDirection = fmod(rand(), 2*M_PI);
+    randomSunDirection = M_PI;
     //printf("randomSunDirection: %.2f\n",randomSunDirection)
     lastFrame = 0.0f;
     glfwInit();
@@ -94,6 +99,7 @@ void Render::initial(Game &game) {
     depthMap_init();
     Depth_debug_Shader = Shader("shader/Depth_debug.vs", "shader/Depth_debug.fs");
     Depth_debug_Shader.setInt("depthMap", 0);
+    HoldBlock_Shader = Shader("shader/HoldBlock.vs", "shader/HoldBlock.fs");
     steve_model = Model("model/alex.obj");
 }
 
@@ -186,8 +192,9 @@ void Render::render(Game& game) {
     printf("pos x:%.2f y:%.2f z:%.2f\n", game.steve_position.x, game.steve_position.y, game.steve_position.z);
     printf("steve_in_water: %d\neye_in_water:%d\n", game.steve_in_water(), game.steve_eye_in_water());
     std::cout << "now_block:" << BlockInfoMap[game.visibleChunks.getBlockType(game.steve_position.y, game.steve_position.x, game.steve_position.z)].block_name << endl;
-    char placeBlockList[]= {(char)TORCH};
+    glm::vec3 old_position = game.steve_position;
     processInput(window, game);
+    float move_length = glm::length(game.steve_position - old_position);
     
 #ifdef TIMETEST
     printf("Process Input draw: %f\n", timeMark - glfwGetTime());
@@ -294,8 +301,14 @@ void Render::render(Game& game) {
     glViewport(0, 0, screen_width, screen_height);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     projection = glm::perspective(glm::radians(fov), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 1000.0f);
+    jitter += move_length;
+    glm::vec3 jitter_offset( 0.10*cos(jitter), abs(0.13*sin(jitter*1.6))-0.065, 0);
     if (game.game_perspective == FIRST_PERSON) {
-        view = glm::lookAt(game.steve_position, game.steve_position + cameraFront, cameraUp);
+        if (!game.steve_in_water()) {
+            view = glm::lookAt(game.steve_position - jitter_offset, game.steve_position + cameraFront - jitter_offset, cameraUp);
+        } else {
+            view = glm::lookAt(game.steve_position, game.steve_position + cameraFront, cameraUp);
+        }
     } else {
         view = glm::lookAt(game.steve_position - glm::vec3(5.0f)*cameraFront, game.steve_position + cameraFront, cameraUp);
     }
@@ -374,8 +387,22 @@ void Render::render(Game& game) {
     timeMark = glfwGetTime();
 #endif
     
-    // Draw gui
+    //Draw gui
     Gui.draw(screen_width, screen_height);
+    game.visibleChunks.HoldBlock.updateBlock((char)placeBlockList[nowPlaceBlock%sizeof(placeBlockList)]);
+    
+    HoldBlock_Shader.use();
+    glm::mat4 model(1);
+    glCullFace(GL_BACK);
+    model = glm::translate(model, glm::vec3(-0.9, -0.8, 0.f));
+    model = glm::scale(model, glm::vec3(0.2f * screen_height / screen_width, 0.2f, 0.0f));
+    model = glm::rotate(model, (float)M_PI, glm::vec3(0,1,0));
+    model = glm::translate(model, glm::vec3(-0.5f, -0.5f, -0.5f));
+    HoldBlock_Shader.setMat4("model", model);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture_pic);
+    glBindVertexArray(game.visibleChunks.HoldBlock.getVAO());
+    glDrawArrays(GL_TRIANGLES, 0, 36);
     
 #ifdef TIMETEST
     printf("Gui scene draw: %f\n", timeMark - glfwGetTime());
@@ -550,30 +577,6 @@ void Render::processInput(GLFWwindow *window, Game &game)
         new_position = game.steve_position + cameraSpeed * glm::vec3(0.0, 0.0f, cameraRight_XZ.z);
         game.move(new_position);
     }
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-        new_position = game.steve_position + cameraSpeed/10 * glm::vec3(cameraFront_XZ.x, 0.0f, 0.0f);
-        game.move(new_position);
-        new_position = game.steve_position + cameraSpeed/10 * glm::vec3(0.0, 0.0f, cameraFront_XZ.z);
-        game.move(new_position);
-    }
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-        new_position = game.steve_position - cameraSpeed/10 * glm::vec3(cameraFront_XZ.x, 0.0f, 0.0f);
-        game.move(new_position);
-        new_position = game.steve_position - cameraSpeed/10 * glm::vec3(0.0, 0.0f, cameraFront_XZ.z);
-        game.move(new_position);
-    }
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-        new_position = game.steve_position - cameraSpeed/10 * glm::vec3(cameraRight_XZ.x, 0.0f, 0.0f);
-        game.move(new_position);
-        new_position = game.steve_position - cameraSpeed/10 * glm::vec3(0.0, 0.0f, cameraRight_XZ.z);
-        game.move(new_position);
-    }
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-        new_position = game.steve_position + cameraSpeed/10 * glm::vec3(cameraRight_XZ.x, 0.0f, 0.0f);
-        game.move(new_position);
-        new_position = game.steve_position + cameraSpeed/10 * glm::vec3(0.0, 0.0f, cameraRight_XZ.z);
-        game.move(new_position);
-    }
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
         if (game.game_mode == NORMAL_MODE) {
             if (game.steve_in_water()) {
@@ -614,10 +617,13 @@ void Render::processInput(GLFWwindow *window, Game &game)
     if (glfwGetKey(window, GLFW_KEY_7) == GLFW_PRESS) {
         game.game_perspective = THIRD_PERSON;
     }
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE) {
+    
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE && oldLeftKey == GLFW_PRESS) {
         nowPlaceBlock--;
     }
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE) {
+    oldLeftKey = glfwGetKey(window, GLFW_KEY_LEFT);
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE && oldRightKey == GLFW_PRESS) {
         nowPlaceBlock++;
     }
+    oldRightKey = glfwGetKey(window, GLFW_KEY_RIGHT);
 }

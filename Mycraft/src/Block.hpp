@@ -11,14 +11,16 @@
 
 #include "opengl_header.h"
 #include "game_settings.h"
+#include "BlockInfo.hpp"
 #include <vector>
 
 class Block {
 public:
+    float *tempVertex;
     Block();
     void updateBuffer(bool isNew, float *vertices, unsigned long size);
-    void draw(glm::vec3 position, glm::mat4 view, glm::mat4 projection, Shader& Block_Shader, char type);
-    void test(glm::mat4 view, glm::mat4 projection, Shader& Block_Shader);
+    void newHoldBlock();
+    void updateBlock(char type);
     ~Block();
     unsigned int getVAO();
 private:

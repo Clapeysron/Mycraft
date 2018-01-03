@@ -8,6 +8,7 @@ uniform float starIntensity;
 uniform float broken_texture_x;
 uniform float noFogRadius;
 uniform bool eye_in_water;
+uniform bool isTrans;
 in VS_OUT {
     vec3 FragPos;
     vec3 Normal;
@@ -64,9 +65,15 @@ float ShadowCalculation(vec4 fragPosLightSpace)
 }
 
 float isChosen(vec3 FragPos) {
-    if ( FragPos.x < chosen_block_pos.x || FragPos.x > chosen_block_pos.x + 1 ||
-         FragPos.y < chosen_block_pos.y || FragPos.y > chosen_block_pos.y + 1 ||
-         FragPos.z < chosen_block_pos.z || FragPos.z > chosen_block_pos.z + 1 ) return 1.0f;
+    if (isTrans) {
+        if ( FragPos.x < chosen_block_pos.x + 0.0001 || FragPos.x > chosen_block_pos.x + 0.9999 ||
+            FragPos.y < chosen_block_pos.y + 0.0001 || FragPos.y > chosen_block_pos.y + 0.9999 ||
+            FragPos.z < chosen_block_pos.z + 0.0001 || FragPos.z > chosen_block_pos.z + 0.9999 ) return 1.0f;
+    } else {
+        if ( FragPos.x < chosen_block_pos.x || FragPos.x > chosen_block_pos.x + 1 ||
+            FragPos.y < chosen_block_pos.y || FragPos.y > chosen_block_pos.y + 1 ||
+            FragPos.z < chosen_block_pos.z || FragPos.z > chosen_block_pos.z + 1 ) return 1.0f;
+    }
     return 1.3f;
 }
 
@@ -118,7 +125,7 @@ void main()
         // With Shadow mapping
         vec3 sun_bright = (1.1f - shadow) * diffuse;
         vec3 point_bright = point_light_ambient * fs_in.brightness;
-        float tmpShadow = fs_in.shadow;
+        float tmpShadow = fs_in.shadow + 0.2f;
         if(tmpShadow > 1)
             tmpShadow = 1;
         result = tmpShadow * (sunlight.ambient + mix(sun_bright, point_bright, point_bright.r/(sunlight.lightambient.r+point_bright.r)) ) * isChosen * color;

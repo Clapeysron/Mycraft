@@ -43,8 +43,29 @@
 #define BASE_ROCK 0x05
 #define GLOWSTONE 0x06
 #define WOOD 0x07
-#define CLOUD 0x08
+#define RED_WOOD 0x08
+#define TINT_WOOD 0x09
+#define DARK_WOOD 0x0A
+#define BRICK 0x0B
+#define SAND 0x0C
+#define COAL_ORE 0x0D
+#define GOLD_ORE 0x0E
+#define IRON_ORE 0x0F
 #define DIAMAND_ORE 0x10
+#define EMERALD_ORE 0x11
+#define REDSTONE_ORE 0x12
+#define TOOLBOX 0x13
+#define SMELTER 0x14
+#define WATERMELON 0x15
+#define PUMPKIN 0x16
+#define WHITE_WOOL 0x17
+#define TNT 0x18
+#define COBBLESTONE 0x19
+#define MOSSY_COBBLESTONE 0x1A
+#define STONE_BRICK 0x1B
+#define QUARTZ 0x1C
+#define GOLD 0x1D
+#define CLOUD 0x1E
 
 
 
@@ -89,8 +110,8 @@
 #define STEVE_FETCH_RADIUS 8
 
 //texture offset
-#define TEXTURE_MIN 0.0001f
-#define TEXTURE_MAX 0.0999f
+#define TEXTURE_MIN 0.0002f
+#define TEXTURE_MAX 0.0998f
 #define GRASS_MIN 0.0f
 #define GRASS_MAX 1.0f
 
@@ -121,8 +142,71 @@
 #define TORCH_Y 0.5f
 #define GLOWSTONE_X 0.7f
 #define GLOWSTONE_Y 0.0f
-#define WOOD_X 0.2f
+#define WOOD_X 0.1f
 #define WOOD_Y 0.3f
+#define RED_WOOD_X 0.0f
+#define RED_WOOD_Y 0.3f
+#define TINT_WOOD_X 0.3f
+#define TINT_WOOD_Y 0.3f
+#define DARK_WOOD_X 0.4f
+#define DARK_WOOD_Y 0.3f
+#define GLASS_X 0.0f
+#define GLASS_Y 0.7f
+
+#define BRICK_X 0.5f
+#define BRICK_Y 0.0f
+#define SAND_X 0.6f
+#define SAND_Y 0.0f
+#define COAL_ORE_X 0.0f
+#define COAL_ORE_Y 0.2f
+#define GOLD_ORE_X 0.2f
+#define GOLD_ORE_Y 0.2f
+#define IRON_ORE_X 0.2f
+#define IRON_ORE_Y 0.3f
+#define EMERALD_ORE_X 0.4f
+#define EMERALD_ORE_Y 0.2f
+#define REDSTONE_ORE_X 0.5f
+#define REDSTONE_ORE_Y 0.2f
+#define TOOLBOX_TOP_X 0.2f
+#define TOOLBOX_TOP_Y 0.5f
+#define TOOLBOX_SIDE1_X 0.1f
+#define TOOLBOX_SIDE1_Y 0.5f
+#define TOOLBOX_SIDE2_X 0.0f
+#define TOOLBOX_SIDE2_Y 0.5f
+#define SMELTER_TOP_X 0.5f
+#define SMELTER_TOP_Y 0.5f
+#define SMELTER_SIDE1_X 0.3f
+#define SMELTER_SIDE1_Y 0.5f
+#define SMELTER_SIDE2_X 0.4f
+#define SMELTER_SIDE2_Y 0.5f
+#define WATERMELON_TOP_X 0.4f
+#define WATERMELON_TOP_Y 0.6f
+#define WATERMELON_SIDE_X 0.3f
+#define WATERMELON_SIDE_Y 0.6f
+#define PUMPKIN_TOP_X 0.6f
+#define PUMPKIN_TOP_Y 0.6f
+#define PUMPKIN_SIDE_X 0.5f
+#define PUMPKIN_SIDE_Y 0.6f
+#define WHITE_WOOL_X 0.0f
+#define WHITE_WOOL_Y 0.8f
+#define TNT_TOP_X 0.7f
+#define TNT_TOP_Y 0.3f
+#define TNT_BOTTOM_X 0.5f
+#define TNT_BOTTOM_Y 0.3f
+#define TNT_SIDE_X 0.6f
+#define TNT_SIDE_Y 0.3f
+#define COBBLESTONE_X 0.6f
+#define COBBLESTONE_Y 0.2f
+#define MOSSY_COBBLESTONE_X 0.7f
+#define MOSSY_COBBLESTONE_Y 0.2f
+#define STONE_BRICK_X 0.8f
+#define STONE_BRICK_Y 0.2f
+#define QUARTZ_TOP_X 0.8f
+#define QUARTZ_TOP_Y 0.3f
+#define QUARTZ_SIDE_X 0.9f
+#define QUARTZ_SIDE_Y 0.3f
+#define GOLD_X 0.9f
+#define GOLD_Y 0.2f
 
 // SEA_LEVEL
 #define SEA_LEVEL 115
