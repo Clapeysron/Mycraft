@@ -34,7 +34,7 @@ glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 char placeBlockList[]= {COBBLESTONE, MOSSY_COBBLESTONE, STONE_BRICK, QUARTZ, GOLD, TNT, ROCK, SOIL, GRASSLAND, TRUNK, GLOWSTONE, WOOD, RED_WOOD, TINT_WOOD, DARK_WOOD, BRICK, SAND, COAL_ORE, GOLD_ORE, IRON_ORE, DIAMAND_ORE, EMERALD_ORE, TOOLBOX, SMELTER, WATERMELON, PUMPKIN, WHITE_WOOL, (char)GLASS, (char)TORCH};
 
 Render::Render() {
-    dayTime = 6.5f;
+    dayTime = 18.5f;
     removeCount = 0;
     jitter = 0;
     srand(0);
@@ -238,7 +238,7 @@ void Render::render(Game& game) {
     
     prev_block_pos = chosen_block_pos;
     if(tryPlace){
-        bool ret = game.visibleChunks.placeBlock(game.steve_position, cameraFront, placeBlockList[nowPlaceBlock%sizeof(placeBlockList)]);
+        bool ret = game.visibleChunks.placeBlock(game.steve_position, cameraFront, placeBlockList[nowPlaceBlock]);
         tryPlace = false;
     }
     
@@ -669,11 +669,13 @@ void Render::processInput(GLFWwindow *window, Game &game)
 
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE && oldLeftKey == GLFW_PRESS) {
         nowPlaceBlock--;
+        nowPlaceBlock = (nowPlaceBlock<0) ? nowPlaceBlock+(int)sizeof(placeBlockList) : nowPlaceBlock;
     }
     oldLeftKey = glfwGetKey(window, GLFW_KEY_LEFT);
     
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE && oldRightKey == GLFW_PRESS) {
         nowPlaceBlock++;
+        nowPlaceBlock = (nowPlaceBlock>=(int)sizeof(placeBlockList)) ? nowPlaceBlock-(int)sizeof(placeBlockList) : nowPlaceBlock;
     }
     oldRightKey = glfwGetKey(window, GLFW_KEY_RIGHT);
 }
