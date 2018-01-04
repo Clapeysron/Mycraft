@@ -214,12 +214,12 @@ void SubChunk::addVertexShadow(int y, int x, int z) {
     char yNegType = (y == 0)? ((yNeg)?yNeg->BlockType[15][x][z]: BOUND) : BlockType[y-1][x][z];
     char yPosType = (y == 15)? ((yPos)?yPos->BlockType[0][x][z]: BOUND) : BlockType[y+1][x][z];
     //添加点阴影数据
-    unsigned short yNeg = ((yNegType&0x80) == 0)||(yNegType == (char)LEAF);
-    unsigned short yPos = ((yPosType&0x80) == 0)||(yPosType == (char)LEAF);
-    unsigned short xNeg = ((xNegType&0x80) == 0)||(xNegType == (char)LEAF);
-    unsigned short xPos = ((xPosType&0x80) == 0)||(xPosType == (char)LEAF);
-    unsigned short zNeg = ((zNegType&0x80) == 0)||(zNegType == (char)LEAF);
-    unsigned short zPos = ((zPosType&0x80) == 0)||(zPosType == (char)LEAF);
+    unsigned short yNeg = ((yNegType&0x80) == 0 && yNegType != BOUND)||(yNegType == (char)LEAF);
+    unsigned short yPos = ((yPosType&0x80) == 0 && yPosType != BOUND)||(yPosType == (char)LEAF);
+    unsigned short xNeg = ((xNegType&0x80) == 0 && xNegType != BOUND)||(xNegType == (char)LEAF);
+    unsigned short xPos = ((xPosType&0x80) == 0 && xPosType != BOUND)||(xPosType == (char)LEAF);
+    unsigned short zNeg = ((zNegType&0x80) == 0 && zNegType != BOUND)||(zNegType == (char)LEAF);
+    unsigned short zPos = ((zPosType&0x80) == 0 && zPosType != BOUND)||(zPosType == (char)LEAF);
     
     unsigned short tmp;
 
@@ -458,7 +458,7 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
                         int m = 0;
                         m++;
                     }*/
-                    vertices[i] = 1.0f-0.4f*tmpShadow;
+                    vertices[i] = 1.0f-0.5f*tmpShadow;
                     //tmp[VERTEX_SIZE*i+8] -= 0.5f*tmpShadow;
                 }
                 /*if(vertices[0]+vertices[2]+vertices[1]+vertices[3] == 3.5f) {
@@ -495,9 +495,12 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
                             vertices[i] = 1.5f;
                     }
                 }*/
-                if((vertices[1] == vertices[3]) &&
-                   ((vertices[0] != 1.0f && vertices[0] < vertices[1] && vertices[2] == 1.0f) ||
-                    (vertices[0] == 1.0f && vertices[2] < vertices[1] && vertices[2] != 1.0f))) {
+                /*if(this->x+x == 0 && this->y+y == 118 && this->z+z == -93) {
+                    int m = 0;
+                    m++;
+                }*/
+                if((vertices[0] != 1.0f && vertices[0] < vertices[1] && vertices[0] < vertices[3] && vertices[2] == 1.0f) ||
+                    (vertices[0] == 1.0f && vertices[2] < vertices[1] && vertices[2] < vertices[3] && vertices[2] != 1.0f)) {
                        memcpy(tmp, alternative[dir], QUAD_SIZE*sizeof(float));
                        tmp[VERTEX_SIZE*0+8] = vertices[1];
                        tmp[VERTEX_SIZE*1+8] = vertices[2];
@@ -824,7 +827,8 @@ char SubChunk::removeBlock(int y, int x, int z){
 //放置方块(放置或移除方块后，需要更新被改变的子区块的VAO数据)
 bool SubChunk::placeBlock(char type, int dir, int y, int x, int z){
     set<SubChunk *> redrawChunk;
-    if(type == (char)AIR || !(BlockType[y][x][z] == (char)AIR || BlockType[y][x][z] == (char)WATER))
+    if(type == (char)AIR || !(BlockType[y][x][z] == (char)AIR || BlockType[y][x][z] == (char)WATER) ||
+       (dir != YPOS && (type&0xf0) != 0xf0 && (type&0xc0) == 0xc0))
     {
         return false;
     } //如果人物手中什么都没有，不放置方块
@@ -2309,30 +2313,41 @@ bool VisibleChunks::placeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront, char 
         
         
         char tmpType = getBlockType(y, x, z);
+        int side = 0;
         if(tmpType == (char)AIR || tmpType == (char)WATER)
             continue; //必须有相邻块
-        else if((tmpType&0xf0) == 0xc0)
-            return false;
-        
-        float shortest = 100.0f;
-        int side = 0;
-        int coefficient[6][3] = {{0, 1, 0}, {0, 1, 0}, {0, 0, 1}, {0, 0, 1}, {1, 0, 0}, {1, 0, 0}};
-        float addition[6][3] = {{0, 0, 0}, {0, 1, 0}, {0, 0, 0}, {0, 0, 1}, {0, 0, 0}, {1, 0, 0}};
-        int offset[6][3] = {{0, -1, 0}, {0, 1, 0}, {0, 0, -1}, {0, 0, 1}, {-1, 0, 0}, {1, 0, 0}};
-        for(int j = 0; j < 6; j++) {
-            float distance = coefficient[j][1]*glm::abs((addition[j][1]+x-cameraPos.x)/cameraFront.x) +
-            coefficient[j][2]*glm::abs((addition[j][2]+z-cameraPos.z)/cameraFront.z) +
-            coefficient[j][0]*glm::abs((addition[j][0]+y-cameraPos.y)/cameraFront.y);
-            float xOffset = cameraPos.x+distance*cameraFront.x-x;
-            float yOffset = cameraPos.y+distance*cameraFront.y-y;
-            float zOffset = cameraPos.z+distance*cameraFront.z-z;
-            if(distance < shortest && 0 <= xOffset && xOffset <= 1 &&
-               0 <= yOffset && yOffset <= 1 &&
-               0 <= zOffset && zOffset <= 1){
-                shortest = distance;
-                side = j;
+        else if((tmpType&0xf0) != 0xf0 && (tmpType&0xc0) == 0xc0) {
+            float distance = glm::abs((y-cameraPos.y)/cameraFront.y);
+            float tmpx = cameraPos.x+distance*cameraFront.x-x;
+            //float yOffset = cameraPos.y+distance*cameraFront.y-y;
+            float tmpz = cameraPos.z+distance*cameraFront.z-z;
+            if(0 > tmpx || tmpx > 1 || 0 > tmpz || tmpz > 1){
+                continue;
+            }
+            else {
+                return false;
             }
         }
+        else {
+            float shortest = 100.0f;
+            int coefficient[6][3] = {{0, 1, 0}, {0, 1, 0}, {0, 0, 1}, {0, 0, 1}, {1, 0, 0}, {1, 0, 0}};
+            float addition[6][3] = {{0, 0, 0}, {0, 1, 0}, {0, 0, 0}, {0, 0, 1}, {0, 0, 0}, {1, 0, 0}};
+            for(int j = 0; j < 6; j++) {
+                float distance = coefficient[j][1]*glm::abs((addition[j][1]+x-cameraPos.x)/cameraFront.x) +
+                coefficient[j][2]*glm::abs((addition[j][2]+z-cameraPos.z)/cameraFront.z) +
+                coefficient[j][0]*glm::abs((addition[j][0]+y-cameraPos.y)/cameraFront.y);
+                float xOffset = cameraPos.x+distance*cameraFront.x-x;
+                float yOffset = cameraPos.y+distance*cameraFront.y-y;
+                float zOffset = cameraPos.z+distance*cameraFront.z-z;
+                if(distance < shortest && 0 <= xOffset && xOffset <= 1 &&
+                   0 <= yOffset && yOffset <= 1 &&
+                   0 <= zOffset && zOffset <= 1){
+                    shortest = distance;
+                    side = j;
+                }
+            }
+        }
+        int offset[6][3] = {{0, -1, 0}, {0, 1, 0}, {0, 0, -1}, {0, 0, 1}, {-1, 0, 0}, {1, 0, 0}};
         x += offset[side][1];
         z += offset[side][2];
         y += offset[side][0];
@@ -2351,7 +2366,7 @@ bool VisibleChunks::placeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront, char 
         int zOffset = z-Chunks[0][0]->z;
         int zIndex = (zOffset)/16;
         
-
+        
         if(Chunks[xIndex][zIndex]->subChunks[yIndex]->placeBlock(type, side, y%16, xOffset%16, zOffset%16))
             return true;
     }

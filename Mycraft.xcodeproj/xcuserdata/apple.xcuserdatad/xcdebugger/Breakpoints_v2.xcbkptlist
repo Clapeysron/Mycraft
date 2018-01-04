@@ -184,43 +184,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/ChunkData.cpp"
-            timestampString = "536668785.244157"
+            timestampString = "536724969.263799"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1328"
-            endingLineNumber = "1328"
-            landmarkName = "Chunk::generateMap()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Mycraft/src/ChunkData.cpp"
-            timestampString = "536668785.244157"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1326"
-            endingLineNumber = "1326"
-            landmarkName = "Chunk::generateMap()"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Mycraft/src/ChunkData.cpp"
-            timestampString = "536668785.244157"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2036"
-            endingLineNumber = "2036"
+            startingLineNumber = "2040"
+            endingLineNumber = "2040"
             landmarkName = "VisibleChunks::getRenderingSubChunks(int y, int x, int z)"
             landmarkType = "7">
          </BreakpointContent>
@@ -232,12 +200,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/ChunkData.cpp"
-            timestampString = "536668785.244157"
+            timestampString = "536724969.263799"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "585"
-            endingLineNumber = "585"
+            startingLineNumber = "588"
+            endingLineNumber = "588"
             landmarkName = "SubChunk::addVertices(int dir, int y, int x, int z)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Mycraft/src/ChunkData.cpp"
+            timestampString = "536724969.263799"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "2325"
+            endingLineNumber = "2325"
+            landmarkName = "VisibleChunks::placeBlock(glm::vec3 cameraPos, glm::vec3 cameraFront, char type)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
