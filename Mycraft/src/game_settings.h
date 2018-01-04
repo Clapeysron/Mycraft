@@ -21,6 +21,7 @@
 //trans cube 0x1000xxxx
 #define LEAF 0x80
 #define GLASS 0x81
+#define CLOUD 0x82
 
 //non-trans crossing faces 0x11xx xxxx
 #define GRASS 0xc0
@@ -65,9 +66,6 @@
 #define STONE_BRICK 0x1B
 #define QUARTZ 0x1C
 #define GOLD 0x1D
-#define CLOUD 0x1E
-
-
 
 #define POINT_BRIGHTNESS 0x0f
 
@@ -110,8 +108,8 @@
 #define STEVE_FETCH_RADIUS 8
 
 //texture offset
-#define TEXTURE_MIN 0.0002f
-#define TEXTURE_MAX 0.0998f
+#define TEXTURE_MIN 0.001f
+#define TEXTURE_MAX 0.099f
 #define GRASS_MIN 0.0f
 #define GRASS_MAX 1.0f
 
@@ -128,7 +126,7 @@
 #define WATER_Y 0.1f
 #define DIAMAND_ORE_X 0.1f
 #define DIAMAND_ORE_Y 0.2f
-#define GRASS_X 0.1f
+#define GRASS_X 0.0f
 #define GRASS_Y 0.4f
 #define BASE_ROCK_X 0.4f
 #define BASE_ROCK_Y 0.0f
@@ -146,9 +144,9 @@
 #define WOOD_Y 0.3f
 #define RED_WOOD_X 0.0f
 #define RED_WOOD_Y 0.3f
-#define TINT_WOOD_X 0.3f
+#define TINT_WOOD_X 0.2f
 #define TINT_WOOD_Y 0.3f
-#define DARK_WOOD_X 0.4f
+#define DARK_WOOD_X 0.3f
 #define DARK_WOOD_Y 0.3f
 #define GLASS_X 0.0f
 #define GLASS_Y 0.7f
@@ -161,8 +159,8 @@
 #define COAL_ORE_Y 0.2f
 #define GOLD_ORE_X 0.2f
 #define GOLD_ORE_Y 0.2f
-#define IRON_ORE_X 0.2f
-#define IRON_ORE_Y 0.3f
+#define IRON_ORE_X 0.3f
+#define IRON_ORE_Y 0.2f
 #define EMERALD_ORE_X 0.4f
 #define EMERALD_ORE_Y 0.2f
 #define REDSTONE_ORE_X 0.5f
@@ -207,6 +205,8 @@
 #define QUARTZ_SIDE_Y 0.3f
 #define GOLD_X 0.9f
 #define GOLD_Y 0.2f
+#define CLOUD_X 0.9f
+#define CLOUD_Y 0.6f
 
 // SEA_LEVEL
 #define SEA_LEVEL 115

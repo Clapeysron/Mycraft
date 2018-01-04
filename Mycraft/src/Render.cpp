@@ -31,10 +31,10 @@ int Render::screen_width = (SCREEN_WIDTH > 4096) ? 4096 : SCREEN_WIDTH;
 int Render::screen_height = (SCREEN_HEIGHT > 2064) ? 2064: SCREEN_HEIGHT;
 glm::vec3 Render::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
-char placeBlockList[]= {COBBLESTONE, MOSSY_COBBLESTONE, STONE_BRICK, QUARTZ, GOLD, TNT, ROCK, SOIL, GRASSLAND, TRUNK, GLOWSTONE, WOOD, RED_WOOD, TINT_WOOD, DARK_WOOD, BRICK, SAND, COAL_ORE, GOLD_ORE, IRON_ORE, DIAMAND_ORE, EMERALD_ORE, TOOLBOX, SMELTER, WATERMELON, PUMPKIN, WHITE_WOOL, (char)LEAF, (char)GLASS, (char)GRASS, (char)TORCH};
+char placeBlockList[]= {COBBLESTONE, MOSSY_COBBLESTONE, STONE_BRICK, QUARTZ, GOLD, TNT, ROCK, SOIL, GRASSLAND, TRUNK, GLOWSTONE, WOOD, RED_WOOD, TINT_WOOD, DARK_WOOD, BRICK, SAND, COAL_ORE, GOLD_ORE, IRON_ORE, DIAMAND_ORE, EMERALD_ORE, TOOLBOX, SMELTER, WATERMELON, PUMPKIN, WHITE_WOOL, (char)GLASS, (char)TORCH};
 
 Render::Render() {
-    dayTime = 18.5f;
+    dayTime = 6.5f;
     removeCount = 0;
     jitter = 0;
     srand(0);
@@ -223,7 +223,7 @@ void Render::render(Game& game) {
         } else {
             broke_time = BlockInfoMap[chosen_block_type].broke_time;
         }
-        broken_scale = removeCount/broke_time;
+        broken_scale = (chosen_block_type == (char)GRASS || chosen_block_type == (char)TORCH) ? 0 : removeCount/broke_time;
         if (removeCount < broke_time) {
         } else {
             game.visibleChunks.removeBlock(game.steve_position, cameraFront);
@@ -450,7 +450,7 @@ float Render::calStarIntensity(float dayTime) {
 }
 
 glm::vec3 Render::calLight(float dayTime) {
-    glm::vec3 dayLight(0.9f);
+    glm::vec3 dayLight(0.6f);
     glm::vec3 nightLight(0.1f);
     if (dayTime >=5.5 && dayTime <= 6.5) {
         float dayIntensity = sin((6.5-dayTime)*M_PI/2);
@@ -666,14 +666,12 @@ void Render::processInput(GLFWwindow *window, Game &game)
         }
     }
     oldDownKey = glfwGetKey(window, GLFW_KEY_DOWN);
-    
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE && oldRightKey == GLFW_PRESS) {
-        nowPlaceBlock++;
-    }
+
     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE && oldLeftKey == GLFW_PRESS) {
         nowPlaceBlock--;
     }
     oldLeftKey = glfwGetKey(window, GLFW_KEY_LEFT);
+    
     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE && oldRightKey == GLFW_PRESS) {
         nowPlaceBlock++;
     }
