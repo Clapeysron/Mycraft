@@ -23,9 +23,12 @@
 #define GLASS 0x81
 
 //non-trans crossing faces 0x11xx xxxx
-#define GRASS 0xc0
-#define FLOWER 0xc1
-#define TORCH 0xc2
+#define TORCH 0xc0
+#define GRASS 0xc1
+#define FLOWER1 0xc2
+#define FLOWER2 0xc3
+#define FLOWER3 0xc4
+#define FLOWER4 0xc5
 
 //trans cube 0x1111xxxx
 #define AIR 0xf0

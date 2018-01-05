@@ -214,12 +214,12 @@ void SubChunk::addVertexShadow(int y, int x, int z) {
     char yNegType = (y == 0)? ((yNeg)?yNeg->BlockType[15][x][z]: BOUND) : BlockType[y-1][x][z];
     char yPosType = (y == 15)? ((yPos)?yPos->BlockType[0][x][z]: BOUND) : BlockType[y+1][x][z];
     //添加点阴影数据
-    unsigned short yNeg = ((yNegType&0x80) == 0 && yNegType != BOUND)||(yNegType == (char)LEAF);
-    unsigned short yPos = ((yPosType&0x80) == 0 && yPosType != BOUND)||(yPosType == (char)LEAF);
-    unsigned short xNeg = ((xNegType&0x80) == 0 && xNegType != BOUND)||(xNegType == (char)LEAF);
-    unsigned short xPos = ((xPosType&0x80) == 0 && xPosType != BOUND)||(xPosType == (char)LEAF);
-    unsigned short zNeg = ((zNegType&0x80) == 0 && zNegType != BOUND)||(zNegType == (char)LEAF);
-    unsigned short zPos = ((zPosType&0x80) == 0 && zPosType != BOUND)||(zPosType == (char)LEAF);
+    unsigned short yNeg = ((yNegType&0x80) == 0 && yNegType != BOUND);
+    unsigned short yPos = ((yPosType&0x80) == 0 && yPosType != BOUND);
+    unsigned short xNeg = ((xNegType&0x80) == 0 && xNegType != BOUND);
+    unsigned short xPos = ((xPosType&0x80) == 0 && xPosType != BOUND);
+    unsigned short zNeg = ((zNegType&0x80) == 0 && zNegType != BOUND);
+    unsigned short zPos = ((zPosType&0x80) == 0 && zPosType != BOUND);
     
     unsigned short tmp;
 
@@ -1375,7 +1375,7 @@ void Chunk::generateHerb() {
             int randy = glm::abs((y*(y*y*prime1[0]+prime2[0])+prime3[0])&0x7fffffff);
             if(y > SEA_LEVEL) {
                 if(glm::abs(randx*randy*randz)%64 == 1) {
-                    subChunks[(y+1)/16]->BlockType[(y+1)%16][i][j] = (char)GRASS;
+                    subChunks[(y+1)/16]->BlockType[(y+1)%16][i][j] = (char)GRASS+glm::abs(randx*randy*randz)%5;
                 }
                 if(hasTree == false && glm::abs(randx*randy*randz)%512 > 500 &&
                    i > 5 && i < 10 && j > 5 && j < 10) {
@@ -1433,8 +1433,6 @@ bool Chunk::generateTree(int y, int x, int z) {
             return false;
         }
     }
-    if(subChunks[(y+7)/16]->isEmpty)
-        return false;
     //生成叶子
     for(int i = 0; i < 4; i++) {
         int tmpy = y+4+i;
