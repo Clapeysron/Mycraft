@@ -10,7 +10,7 @@
 #include "Stbi_load.hpp"
 //#define TIMETEST
 //#define DEPTHTEST
-//#define SHADOW_MAPPING
+#define SHADOW_MAPPING
 
 bool Render::firstMouse = true;
 float Render::yaw   =  -90.0f;
@@ -34,7 +34,7 @@ glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 char placeBlockList[]= {COBBLESTONE, MOSSY_COBBLESTONE, STONE_BRICK, QUARTZ, GOLD, TNT, ROCK, SOIL, GRASSLAND, TRUNK, GLOWSTONE, WOOD, RED_WOOD, TINT_WOOD, DARK_WOOD, BRICK, SAND, COAL_ORE, GOLD_ORE, IRON_ORE, DIAMAND_ORE, EMERALD_ORE, TOOLBOX, SMELTER, WATERMELON, PUMPKIN, WHITE_WOOL, (char)GLASS, (char)TORCH};
 
 Render::Render() {
-    dayTime = 14.5f;
+    dayTime = 16.5f;
     removeCount = 0;
     jitter = 0;
     srand(0);
@@ -246,7 +246,7 @@ void Render::render(Game& game) {
     printf("Remove / Place block: %f\n", timeMark - glfwGetTime());
     timeMark = glfwGetTime();
 #endif
-    bool isDaylight = (dayTime >= 5.5 && dayTime <= 18.2);
+    bool isDaylight = (dayTime >= 5.5 && dayTime <= 18.3);
     float shadowRadius = (RADIUS*2+1)*8*1.2;
     float dayTheta = (dayTime-SUNRISE_TIME)*M_PI/12;
     // depth scene
@@ -259,7 +259,7 @@ void Render::render(Game& game) {
     }
     glm::mat4 depth_steve_model(1);
     glm::vec3 lightPos = game.steve_position;
-    lightPos.y = 130.0f + shadowRadius*sin(dayTheta);
+    lightPos.y = 120.0f + shadowRadius*sin(dayTheta);
     lightPos.x += -shadowRadius*sin(randomSunDirection)*cos(dayTheta);
     lightPos.z += -shadowRadius*cos(randomSunDirection)*cos(dayTheta);
     glm::vec3 moonPos = game.steve_position;
