@@ -94,7 +94,7 @@
 #define VECTOR_OFFSET 24576
 
 //visible region radius
-#define RADIUS 7
+#define RADIUS 10
 
 #define GRAVITY 9.8
 #define JUMP_V 3.2
