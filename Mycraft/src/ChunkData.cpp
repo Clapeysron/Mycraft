@@ -1378,7 +1378,7 @@ void Chunk::generateHerb() {
                     subChunks[(y+1)/16]->BlockType[(y+1)%16][i][j] = (char)GRASS;
                 }
                 else if(glm::abs(randx*randy*randz)%256 == 3) {
-                    subChunks[(y+1)/16]->BlockType[(y+1)%16][i][j] = (char)FLOWER1+glm::abs(randx*randy*randz)%4;
+                    subChunks[(y+1)/16]->BlockType[(y+1)%16][i][j] = (char)FLOWER1+glm::abs(x*y*z)%4;
                 }
                 if(hasTree == false && glm::abs(randx*randy*randz)%512 > 500 &&
                    i > 5 && i < 10 && j > 5 && j < 10) {
