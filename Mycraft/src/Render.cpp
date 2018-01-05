@@ -10,7 +10,7 @@
 #include "Stbi_load.hpp"
 //#define TIMETEST
 //#define DEPTHTEST
-#define SHADOW_MAPPING
+//#define SHADOW_MAPPING
 
 bool Render::firstMouse = true;
 float Render::yaw   =  -90.0f;
@@ -34,7 +34,7 @@ glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 char placeBlockList[]= {COBBLESTONE, MOSSY_COBBLESTONE, STONE_BRICK, QUARTZ, GOLD, TNT, ROCK, SOIL, GRASSLAND, TRUNK, GLOWSTONE, WOOD, RED_WOOD, TINT_WOOD, DARK_WOOD, BRICK, SAND, COAL_ORE, GOLD_ORE, IRON_ORE, DIAMAND_ORE, EMERALD_ORE, TOOLBOX, SMELTER, WATERMELON, PUMPKIN, WHITE_WOOL, (char)GLASS, (char)TORCH};
 
 Render::Render() {
-    dayTime = 18.5f;
+    dayTime = 14.5f;
     removeCount = 0;
     jitter = 0;
     srand(0);

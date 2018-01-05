@@ -1317,7 +1317,11 @@ bool Chunk::generateMap()
                         subChunks[m]->count++; //只统计非透明砖块
                     }
                     else if(tmpHeight == height[j][k]) {
-                        subChunks[m]->BlockType[i][j][k] = GRASSLAND;
+                        if (tmpHeight >= SEA_LEVEL-1) {
+                            subChunks[m]->BlockType[i][j][k] = GRASSLAND;
+                        } else {
+                            subChunks[m]->BlockType[i][j][k] = SOIL;
+                        }
                         subChunks[m]->count++;
                     }
                     else if(tmpHeight < SEA_LEVEL) {
