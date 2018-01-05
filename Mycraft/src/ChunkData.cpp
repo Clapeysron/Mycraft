@@ -2156,7 +2156,7 @@ void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projecti
     Block_Shader.setBool("isDaylight", isDaylight);
     Block_Shader.setFloat("starIntensity", starIntensity);
     Block_Shader.setBool("eye_in_water", eye_in_water);
-    Block_Shader.setFloat("noFogRadius", RADIUS*15);
+    Block_Shader.setFloat("noFogRadius", RADIUS*11);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_pic);
     glActiveTexture(GL_TEXTURE1);
