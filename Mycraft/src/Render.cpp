@@ -34,7 +34,7 @@ glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 char placeBlockList[]= {COBBLESTONE, MOSSY_COBBLESTONE, STONE_BRICK, QUARTZ, GOLD, TNT, ROCK, SOIL, GRASSLAND, TRUNK, GLOWSTONE, WOOD, RED_WOOD, TINT_WOOD, DARK_WOOD, BRICK, SAND, COAL_ORE, GOLD_ORE, IRON_ORE, DIAMAND_ORE, EMERALD_ORE, TOOLBOX, SMELTER, WATERMELON, PUMPKIN, WHITE_WOOL, (char)GLASS, (char)TORCH};
 
 Render::Render() {
-    dayTime = 14.5f;
+    dayTime = 7.5f;
     removeCount = 0;
     jitter = 0;
     srand(0);
@@ -223,7 +223,7 @@ void Render::render(Game& game) {
         } else {
             broke_time = BlockInfoMap[chosen_block_type].broke_time;
         }
-        broken_scale = (chosen_block_type == (char)GRASS || chosen_block_type == (char)TORCH) ? 0 : removeCount/broke_time;
+        broken_scale = (chosen_block_type>>4 == -4) ? 0 : removeCount/broke_time;
         if (removeCount < broke_time) {
         } else {
             game.visibleChunks.removeBlock(game.steve_position, cameraFront);

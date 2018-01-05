@@ -2500,4 +2500,8 @@ void VisibleChunks::initBlockInfo() {
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)QUARTZ, BlockInfo("QUARTZ", 2, QUARTZ_TOP_X, QUARTZ_TOP_Y, QUARTZ_TOP_X, QUARTZ_TOP_Y, QUARTZ_SIDE_X, QUARTZ_SIDE_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)GOLD, BlockInfo("GOLD", 2, GOLD_X, GOLD_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)CLOUD, BlockInfo("CLOUD", 99999, CLOUD_X, CLOUD_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)FLOWER1, BlockInfo("FLOWER1", 0.05, FLOWER1_X, FLOWER1_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)FLOWER2, BlockInfo("FLOWER2", 0.05, FLOWER2_X, FLOWER2_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)FLOWER3, BlockInfo("FLOWER3", 0.05, FLOWER3_X, FLOWER3_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)FLOWER4, BlockInfo("FLOWER4", 0.05, FLOWER4_X, FLOWER4_Y)));
 }
