@@ -1375,7 +1375,10 @@ void Chunk::generateHerb() {
             int randy = glm::abs((y*(y*y*prime1[0]+prime2[0])+prime3[0])&0x7fffffff);
             if(y > SEA_LEVEL) {
                 if(glm::abs(randx*randy*randz)%64 == 1) {
-                    subChunks[(y+1)/16]->BlockType[(y+1)%16][i][j] = (char)GRASS+glm::abs(randx*randy*randz)%5;
+                    subChunks[(y+1)/16]->BlockType[(y+1)%16][i][j] = (char)GRASS;
+                }
+                else if(glm::abs(randx*randy*randz)%256 == 3) {
+                    subChunks[(y+1)/16]->BlockType[(y+1)%16][i][j] = (char)FLOWER1+glm::abs(randx*randy*randz)%4;
                 }
                 if(hasTree == false && glm::abs(randx*randy*randz)%512 > 500 &&
                    i > 5 && i < 10 && j > 5 && j < 10) {
