@@ -214,12 +214,12 @@ void SubChunk::addVertexShadow(int y, int x, int z) {
     char yNegType = (y == 0)? ((yNeg)?yNeg->BlockType[15][x][z]: BOUND) : BlockType[y-1][x][z];
     char yPosType = (y == 15)? ((yPos)?yPos->BlockType[0][x][z]: BOUND) : BlockType[y+1][x][z];
     //添加点阴影数据
-    unsigned short yNeg = ((yNegType&0x80) == 0 && yNegType != BOUND)||(yNegType == (char)LEAF);
-    unsigned short yPos = ((yPosType&0x80) == 0 && yPosType != BOUND)||(yPosType == (char)LEAF);
-    unsigned short xNeg = ((xNegType&0x80) == 0 && xNegType != BOUND)||(xNegType == (char)LEAF);
-    unsigned short xPos = ((xPosType&0x80) == 0 && xPosType != BOUND)||(xPosType == (char)LEAF);
-    unsigned short zNeg = ((zNegType&0x80) == 0 && zNegType != BOUND)||(zNegType == (char)LEAF);
-    unsigned short zPos = ((zPosType&0x80) == 0 && zPosType != BOUND)||(zPosType == (char)LEAF);
+    unsigned short yNeg = ((yNegType&0x80) == 0 && yNegType != BOUND);
+    unsigned short yPos = ((yPosType&0x80) == 0 && yPosType != BOUND);
+    unsigned short xNeg = ((xNegType&0x80) == 0 && xNegType != BOUND);
+    unsigned short xPos = ((xPosType&0x80) == 0 && xPosType != BOUND);
+    unsigned short zNeg = ((zNegType&0x80) == 0 && zNegType != BOUND);
+    unsigned short zPos = ((zPosType&0x80) == 0 && zPosType != BOUND);
     
     unsigned short tmp;
 
@@ -388,7 +388,7 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
         
         //设置阴影信息
         int offset[6][3] = {0, -1, 0, 0, 1, 0, 0, 0, -1, 0, 0, 1, -1, 0, 0, 1, 0, 0};
-        if((BlockType[y][x][z]&0x80) == 0 || BlockType[y][x][z] == (char)LEAF) {
+        if(((BlockType[y][x][z]&0x80) == 0 && BlockType[y][x][z] != CLOUD) || BlockType[y][x][z] == (char)LEAF) {
             int tmpy = y+offset[dir][0];
             int tmpx = x+offset[dir][1];
             int tmpz = z+offset[dir][2];
@@ -516,6 +516,11 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
                     tmp[VERTEX_SIZE*4+8] = vertices[0];
                     tmp[VERTEX_SIZE*5+8] = vertices[2];
                 }
+            }
+        }
+        else if(BlockType[y][x][z] == (char)CLOUD) {
+            for(int i = 0; i < 6; i++) {
+                tmp[VERTEX_SIZE*i+8] = -1.0f;
             }
         }
         
@@ -1372,6 +1377,9 @@ void Chunk::generateHerb() {
                 if(glm::abs(randx*randy*randz)%64 == 1) {
                     subChunks[(y+1)/16]->BlockType[(y+1)%16][i][j] = (char)GRASS;
                 }
+                else if(glm::abs(randx*randy*randz)%256 == 3) {
+                    subChunks[(y+1)/16]->BlockType[(y+1)%16][i][j] = (char)FLOWER1+glm::abs(x*y*z)%4;
+                }
                 if(hasTree == false && glm::abs(randx*randy*randz)%512 > 500 &&
                    i > 5 && i < 10 && j > 5 && j < 10) {
                     hasTree = generateTree(y, i, j);
@@ -1428,8 +1436,6 @@ bool Chunk::generateTree(int y, int x, int z) {
             return false;
         }
     }
-    if(subChunks[(y+7)/16]->isEmpty)
-        return false;
     //生成叶子
     for(int i = 0; i < 4; i++) {
         int tmpy = y+4+i;
@@ -2494,4 +2500,8 @@ void VisibleChunks::initBlockInfo() {
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)QUARTZ, BlockInfo("QUARTZ", 2, QUARTZ_TOP_X, QUARTZ_TOP_Y, QUARTZ_TOP_X, QUARTZ_TOP_Y, QUARTZ_SIDE_X, QUARTZ_SIDE_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)GOLD, BlockInfo("GOLD", 2, GOLD_X, GOLD_Y)));
     BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)CLOUD, BlockInfo("CLOUD", 99999, CLOUD_X, CLOUD_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)FLOWER1, BlockInfo("FLOWER1", 0.05, FLOWER1_X, FLOWER1_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)FLOWER2, BlockInfo("FLOWER2", 0.05, FLOWER2_X, FLOWER2_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)FLOWER3, BlockInfo("FLOWER3", 0.05, FLOWER3_X, FLOWER3_Y)));
+    BlockInfoMap.insert(std::map<char, BlockInfo> :: value_type((char)FLOWER4, BlockInfo("FLOWER4", 0.05, FLOWER4_X, FLOWER4_Y)));
 }

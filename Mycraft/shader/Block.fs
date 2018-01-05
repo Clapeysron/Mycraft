@@ -86,7 +86,12 @@ void main()
     float ifFront = dot(cameraPos - fs_in.FragPos, norm) > 0 ? 1 : -1;
     lightDir = ifFront * lightDir;
     float diff = max(dot(lightDir, norm), 0.0);
-    vec3 diffuse = sunlight.lightambient * diff;
+    vec3 diffuse;
+    if (fs_in.shadow == -1) {
+        diffuse = (sunlight.lightambient-vec3(0.095f))*10;
+    } else {
+        diffuse = sunlight.lightambient * diff;
+    }
     float isChosen = isChosen(fs_in.FragPos);
     
     //Chosen and Break
@@ -111,7 +116,9 @@ void main()
     
     float shadow;
     // With Shadow mapping
-    if (isDaylight) {
+    if (fs_in.shadow == -1.0f) {
+        shadow = 1.0f;
+    } else if (isDaylight) {
         //shadow = 0.0f;
         shadow = ShadowCalculation(fs_in.FragPosLightSpace);
     } else {
@@ -126,19 +133,25 @@ void main()
         vec3 sun_bright = (1.1f - shadow) * diffuse;
         vec3 point_bright = point_light_ambient * fs_in.brightness;
         float tmpShadow = fs_in.shadow;
-        if(tmpShadow > 1) tmpShadow = 1.0f;
-        else tmpShadow = tmpShadow*0.7f + 0.3f;
+        if(tmpShadow == -1) tmpShadow = 1;
+        else if(tmpShadow > 1) tmpShadow = 1;
+        else tmpShadow = 0.7*tmpShadow + 0.3;
         result = tmpShadow * (sunlight.ambient + mix(sun_bright, point_bright, point_bright.r/(sunlight.lightambient.r+point_bright.r)) ) * isChosen * color;
     } else {
         discard;
     }
     
     //fog
-    
     float dist = (length(fs_in.ViewPos)<noFogRadius) ? 0 : length(fs_in.ViewPos)-noFogRadius;
     float fogFactor = 1.0/exp((dist*fogDensity)*(dist*fogDensity));
     fogFactor = clamp(fogFactor, 0.0, 1.0);
-    vec2 SkyTexCoords = vec2(DayPos, 0.55);
+    vec2 SkyTexCoords;
+    if (fs_in.shadow == -1) {
+        SkyTexCoords = vec2(DayPos, 0.42);
+    } else {
+        SkyTexCoords = vec2(DayPos, 0.55);
+    }
+    
     vec4 fogColor = (1-starIntensity) * texture(skybox, SkyTexCoords) + starIntensity * vec4(0.0f, 0.0f, 0.0f, 1.0f);
     FragColor = mix( fogColor, vec4(result, alpha), fogFactor);
 }

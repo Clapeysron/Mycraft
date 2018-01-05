@@ -234,11 +234,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/Render.cpp"
-            timestampString = "536817606.037097"
+            timestampString = "536854261.383909"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "268"
-            endingLineNumber = "268"
+            startingLineNumber = "264"
+            endingLineNumber = "264"
             landmarkName = "Render::render(Game&amp; game)"
             landmarkType = "7">
          </BreakpointContent>
@@ -250,11 +250,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/Render.cpp"
-            timestampString = "536817606.037385"
+            timestampString = "536854261.384315"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "379"
-            endingLineNumber = "379"
+            startingLineNumber = "375"
+            endingLineNumber = "375"
             landmarkName = "Render::render(Game&amp; game)"
             landmarkType = "7">
          </BreakpointContent>
@@ -282,11 +282,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/Render.cpp"
-            timestampString = "536817606.037587"
+            timestampString = "536854261.384533"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "183"
-            endingLineNumber = "183"
+            startingLineNumber = "179"
+            endingLineNumber = "179"
             landmarkName = "Render::render(Game&amp; game)"
             landmarkType = "7">
          </BreakpointContent>
@@ -298,12 +298,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/Render.cpp"
-            timestampString = "536817606.037776"
+            timestampString = "536854261.384722"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "469"
-            endingLineNumber = "469"
-            landmarkName = "Render::calAmbient(float dayTime)"
+            startingLineNumber = "465"
+            endingLineNumber = "465"
+            landmarkName = "Render::calLight(float dayTime)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -392,11 +392,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/Render.cpp"
-            timestampString = "536817606.037972"
+            timestampString = "536854261.38493"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "282"
-            endingLineNumber = "282"
+            startingLineNumber = "278"
+            endingLineNumber = "278"
             landmarkName = "Render::render(Game&amp; game)"
             landmarkType = "7">
          </BreakpointContent>
@@ -456,11 +456,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/Render.cpp"
-            timestampString = "536817606.038182"
+            timestampString = "536854261.385131"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "413"
-            endingLineNumber = "413"
+            startingLineNumber = "409"
+            endingLineNumber = "409"
             landmarkName = "Render::render(Game&amp; game)"
             landmarkType = "7">
          </BreakpointContent>
@@ -472,11 +472,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/Render.cpp"
-            timestampString = "536817606.038358"
+            timestampString = "536854261.385305"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "323"
-            endingLineNumber = "323"
+            startingLineNumber = "319"
+            endingLineNumber = "319"
             landmarkName = "Render::render(Game&amp; game)"
             landmarkType = "7">
          </BreakpointContent>
@@ -536,11 +536,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/Render.cpp"
-            timestampString = "536817606.038561"
+            timestampString = "536854261.38552"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "241"
-            endingLineNumber = "241"
+            startingLineNumber = "237"
+            endingLineNumber = "237"
             landmarkName = "Render::render(Game&amp; game)"
             landmarkType = "7">
          </BreakpointContent>
@@ -552,11 +552,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Mycraft/src/Render.cpp"
-            timestampString = "536817606.038744"
+            timestampString = "536854261.385712"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "240"
-            endingLineNumber = "240"
+            startingLineNumber = "236"
+            endingLineNumber = "236"
             landmarkName = "Render::render(Game&amp; game)"
             landmarkType = "7">
          </BreakpointContent>

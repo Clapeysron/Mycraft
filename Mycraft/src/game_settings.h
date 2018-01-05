@@ -21,12 +21,14 @@
 //trans cube 0x1000xxxx
 #define LEAF 0x80
 #define GLASS 0x81
-#define CLOUD 0x82
 
-//non-trans crossing faces 0x11xx xxxx
-#define GRASS 0xc0
-#define FLOWER 0xc1
-#define TORCH 0xc2
+//non-trans crossing faces 0x1100 xxxx
+#define TORCH 0xc0
+#define GRASS 0xc1
+#define FLOWER1 0xc2
+#define FLOWER2 0xc3
+#define FLOWER3 0xc4
+#define FLOWER4 0xc5
 
 //trans cube 0x1111xxxx
 #define AIR 0xf0
@@ -66,6 +68,7 @@
 #define STONE_BRICK 0x1B
 #define QUARTZ 0x1C
 #define GOLD 0x1D
+#define CLOUD 0x1E
 
 #define POINT_BRIGHTNESS 0x0f
 
@@ -94,7 +97,7 @@
 #define VECTOR_OFFSET 24576
 
 //visible region radius
-#define RADIUS 7
+#define RADIUS 10
 
 #define GRAVITY 9.8
 #define JUMP_V 3.2
@@ -207,6 +210,14 @@
 #define GOLD_Y 0.2f
 #define CLOUD_X 0.9f
 #define CLOUD_Y 0.6f
+#define FLOWER1_X 0.2f
+#define FLOWER1_Y 0.4f
+#define FLOWER2_X 0.6f
+#define FLOWER2_Y 0.4f
+#define FLOWER3_X 0.7f
+#define FLOWER3_Y 0.4f
+#define FLOWER4_X 0.8f
+#define FLOWER4_Y 0.4f
 
 // SEA_LEVEL
 #define SEA_LEVEL 115

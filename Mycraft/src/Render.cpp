@@ -223,7 +223,7 @@ void Render::render(Game& game) {
         } else {
             broke_time = BlockInfoMap[chosen_block_type].broke_time;
         }
-        broken_scale = (chosen_block_type == (char)GRASS || chosen_block_type == (char)TORCH) ? 0 : removeCount/broke_time;
+        broken_scale = (chosen_block_type>>4 == -4) ? 0 : removeCount/broke_time;
         if (removeCount < broke_time) {
         } else {
             game.visibleChunks.removeBlock(game.steve_position, cameraFront);
