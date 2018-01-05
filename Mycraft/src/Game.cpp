@@ -66,6 +66,12 @@ bool Game::if_in_block(int y, int x, int z, glm::vec3 position) {
     if ( (x-position.x) > STEVE_RADIUS ) return false;
     if ( (position.z-(z+1)) > STEVE_RADIUS ) return false;
     if ( (z-position.z) > STEVE_RADIUS ) return false;
+    if ( position.x>(x+1) && position.z>(z+1) && glm::length(glm::vec2(position.x-(x+1), position.z-(z+1))) > STEVE_RADIUS) return false;
+    if ( position.x>(x+1) && position.z<z && glm::length(glm::vec2(position.x-(x+1), z-position.z)) > STEVE_RADIUS) return false;
+    if ( position.x<x && position.z>(z+1) && glm::length(glm::vec2(x-position.x, position.z-(z+1))) > STEVE_RADIUS) return false;
+    if ( position.x<x && position.z<z && glm::length(glm::vec2(x-position.x, z-position.z)) > STEVE_RADIUS) return false;
+    if ( (position.z-(z+1)) > STEVE_RADIUS ) return false;
+    if ( (z-position.z) > STEVE_RADIUS ) return false;
     if ( (position.y-(y+1)) > (STEVE_EYE_HEIGHT))  return false;
     if ( (y-position.y) > (STEVE_HEIGHT - STEVE_EYE_HEIGHT)) return false;
     return true;

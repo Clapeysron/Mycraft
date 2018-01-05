@@ -105,14 +105,14 @@ void main()
         float real_water_texture_y = fs_in.TexCoord.y - floor(fs_in.TexCoord.y*10)/10 + 0.1;
         vec4 water_texture = texture(texture_pic, vec2(real_water_texture_x, real_water_texture_y));
         if (fs_in.TexCoord.x<0.9 || fs_in.TexCoord.y<0.1 || fs_in.TexCoord.y>0.3) {
-            color = mix(water_texture.rgb, color, 0.6);
-            
+            color = 0.5 * mix(water_texture.rgb, color, 0.6);
         }
     }
     
     float shadow;
     // With Shadow mapping
     if (isDaylight) {
+        //shadow = 0.0f;
         shadow = ShadowCalculation(fs_in.FragPosLightSpace);
     } else {
         shadow = 1.0f;

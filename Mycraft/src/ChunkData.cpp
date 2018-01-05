@@ -1322,7 +1322,11 @@ bool Chunk::generateMap()
                         subChunks[m]->count++; //只统计非透明砖块
                     }
                     else if(tmpHeight == height[j][k]) {
-                        subChunks[m]->BlockType[i][j][k] = GRASSLAND;
+                        if (tmpHeight >= SEA_LEVEL-1) {
+                            subChunks[m]->BlockType[i][j][k] = GRASSLAND;
+                        } else {
+                            subChunks[m]->BlockType[i][j][k] = SOIL;
+                        }
                         subChunks[m]->count++;
                     }
                     else if(tmpHeight < SEA_LEVEL) {
@@ -2157,7 +2161,7 @@ void VisibleChunks::draw(glm::vec3 cameraPos, glm::mat4 view, glm::mat4 projecti
     Block_Shader.setBool("isDaylight", isDaylight);
     Block_Shader.setFloat("starIntensity", starIntensity);
     Block_Shader.setBool("eye_in_water", eye_in_water);
-    Block_Shader.setFloat("noFogRadius", RADIUS*15);
+    Block_Shader.setFloat("noFogRadius", RADIUS*11);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture_pic);
     glActiveTexture(GL_TEXTURE1);
