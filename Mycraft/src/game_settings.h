@@ -22,7 +22,7 @@
 #define LEAF 0x80
 #define GLASS 0x81
 
-//non-trans crossing faces 0x11xx xxxx
+//non-trans crossing faces 0x1100 xxxx
 #define TORCH 0xc0
 #define GRASS 0xc1
 #define FLOWER1 0xc2
@@ -210,6 +210,14 @@
 #define GOLD_Y 0.2f
 #define CLOUD_X 0.9f
 #define CLOUD_Y 0.6f
+#define FLOWER1_X 0.2f
+#define FLOWER1_Y 0.4f
+#define FLOWER2_X 0.6f
+#define FLOWER2_Y 0.4f
+#define FLOWER3_X 0.7f
+#define FLOWER3_Y 0.4f
+#define FLOWER4_X 0.8f
+#define FLOWER4_Y 0.4f
 
 // SEA_LEVEL
 #define SEA_LEVEL 115
