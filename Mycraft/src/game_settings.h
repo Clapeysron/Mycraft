@@ -21,7 +21,6 @@
 //trans cube 0x1000xxxx
 #define LEAF 0x80
 #define GLASS 0x81
-#define CLOUD 0x82
 
 //non-trans crossing faces 0x11xx xxxx
 #define GRASS 0xc0
@@ -66,6 +65,7 @@
 #define STONE_BRICK 0x1B
 #define QUARTZ 0x1C
 #define GOLD 0x1D
+#define CLOUD 0x1E
 
 #define POINT_BRIGHTNESS 0x0f
 
@@ -94,7 +94,7 @@
 #define VECTOR_OFFSET 24576
 
 //visible region radius
-#define RADIUS 7
+#define RADIUS 10
 
 #define GRAVITY 9.8
 #define JUMP_V 3.2

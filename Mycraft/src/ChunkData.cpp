@@ -388,7 +388,7 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
         
         //设置阴影信息
         int offset[6][3] = {0, -1, 0, 0, 1, 0, 0, 0, -1, 0, 0, 1, -1, 0, 0, 1, 0, 0};
-        if((BlockType[y][x][z]&0x80) == 0 || BlockType[y][x][z] == (char)LEAF) {
+        if(((BlockType[y][x][z]&0x80) == 0 && BlockType[y][x][z] != CLOUD) || BlockType[y][x][z] == (char)LEAF) {
             int tmpy = y+offset[dir][0];
             int tmpx = x+offset[dir][1];
             int tmpz = z+offset[dir][2];
@@ -516,6 +516,11 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
                     tmp[VERTEX_SIZE*4+8] = vertices[0];
                     tmp[VERTEX_SIZE*5+8] = vertices[2];
                 }
+            }
+        }
+        else if(BlockType[y][x][z] == (char)CLOUD) {
+            for(int i = 0; i < 6; i++) {
+                tmp[VERTEX_SIZE*i+8] = -1.0f;
             }
         }
         
