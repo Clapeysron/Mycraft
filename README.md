@@ -42,7 +42,7 @@ Thanks to [learnopengl](https://learnopengl.com) for example codes , [learnopeng
 
 Use [Homebrew](http://brew.sh/) to install glfw.
 
-​	brew install glfw
+	brew install glfw
 
 ### Install glad
 
@@ -50,13 +50,13 @@ Install [glad](https://github.com/Dav1dde/glad) form its [online-pack](http://gl
 
 ### Set XCode working directory
 
-Set your working directory to project folder in XCode-Product-Scheme-Edit Scheme-Run-Working Directory-Use ``{Where Your Place}/Mycraft/Mycraft`
+Set your working directory to project folder in XCode-Product-Scheme-Edit Scheme-Run-Working Directory-Use `{Where Your Place}/Mycraft/Mycraft`
 
 ### Close shadow mapping if without independent graphics
 
 If you use Macbook without independent graphics, the shadow mapping is too heavy for the integrated graphics just comment out the line 13 in `/src/Render.cpp`
 
-​	//#define SHADOW_MAPPING
+        //#define SHADOW_MAPPING
 
 ### Run
 
