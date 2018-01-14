@@ -56,7 +56,7 @@ Set your working directory to project folder in XCode-Product-Scheme-Edit Scheme
 
 If you use Macbook without independent graphics, the shadow mapping is too heavy for the integrated graphics just comment out the line 13 in `/src/Render.cpp`
 
-        //#define SHADOW_MAPPING
+    //#define SHADOW_MAPPING
 
 ### Run
 
