@@ -1,1 +1,133 @@
-# Minecraft
+# Mycraft
+
+![mycraft](md_pic/mycraft.png)
+
+Mycraft is a learning-OpenGL project completed in ZJU computer graphics course.
+
+It's a Minecraft clone with lighting effects based on modern OpengGL on MacOS use C++ and build with XCode.
+
+Thanks to [learnopengl](https://learnopengl.com) for example codes , [learnopengl-cn](https://learnopengl-cn.github.io) for very good translations, inspiration and some texture/model sources from [Craft](https://github.com/fogleman/Craft).
+
+![1](md_pic/1.png)
+
+## Features
+
+#### Render
+
+-   Original block textures from Minecraft
+-   Simple realtime shadow mapping
+-   Corner shadow to simulate SSAO effect
+-   Point light with smooth diffusion from Torch / Glowstone
+-   Time pass effect with Sunrise / Sunset / Moon & Starry sky
+-   Animation when break a block / Highlight when choose a block
+-   Transparent / translucent block like water / glass
+-   Simple gravity engine for on-the-ground and below-water
+-   Jitter perspective to simulate running effect
+-   Underwater visual effects
+-   Fog effect for blocks far away
+
+#### Data
+
+-   Infinite random map generation use perlin noise
+-   Trees / Flowers / Grass / Cloud / Lake random generation
+-   Visible face culling and frustum culling for faster rendering
+-   Closed space testing and neighboring visible chunks culling
+-   Corner shadow / Point light effect generate and update
+-   Adjustable game settings in `src/game_settings.h`
+-   Map storage not done yet :(
+
+## Build
+
+#### Install glfw
+
+Use [Homebrew](http://brew.sh/) to install glfw.
+
+​	brew install glfw
+
+#### Install glad
+
+Install [glad](https://github.com/Dav1dde/glad) form its [online-pack](http://glad.dav1d.de/) follow tutorial from [learnopengl - Creating a window](https://learnopengl.com/#!Getting-started/Creating-a-window).
+
+#### Set XCode working directory
+
+Set your working directory to project folder in XCode-Product-Scheme-Edit Scheme-Run-Working Directory-Use ``{Where Your Place}/Mycraft/Mycraft`
+
+#### Close shadow mapping if without independent graphics
+
+If you use Macbook without independent graphics, the shadow mapping is too heavy for the integrated graphics just comment out the line 13 in `/src/Render.cpp`
+
+​	//#define SHADOW_MAPPING
+
+#### Run
+
+Just click run to get the game started
+
+## Game Controls
+
+-   WASD to move and Space to jump
+-   Press mouse left to break and click mouse right to place block
+-   Use space to fly and F to fall in god mode
+-   ← & → to switch blocks for placing
+-   ↑ & ↓ to switch options now choose (default is fov(1) )
+-   1-5 to switch options. 
+    -   1 fov  (↑- ↓+)
+    -   2 cursor escape (↑disabled ↓escaped)
+    -   3 game mode (↑god mode ↓normal mode)
+    -   4 perspective (↑first person ↓third person)
+    -   5 zoom in thid-person perspective (↑zoom in ↓zoom out)
+-   Change all game settings in `src/game_settings.h`
+
+## Architecture Design
+
+![mycraft_design](md_pic/mycraft_design.png)
+
+## Screenshots
+
+#### Steve & Alex object
+
+![2](md_pic/2.png)
+
+#### Original Textures
+
+![3](/Users/Clapeysron/Desktop/Mycraft/md_pic/3.png)
+
+#### Sunset
+
+![4](/Users/Clapeysron/Desktop/Mycraft/md_pic/4.png)
+
+#### Point Light
+
+![6](/Users/Clapeysron/Desktop/Mycraft/md_pic/6.png)
+
+#### In-water Point Light
+
+![7](/Users/Clapeysron/Desktop/Mycraft/md_pic/7.png)
+
+#### Realtime Shadow Mapping
+
+![8](/Users/Clapeysron/Desktop/Mycraft/md_pic/8.png)
+
+#### Underwater Visual Effects
+
+![9](/Users/Clapeysron/Desktop/Mycraft/md_pic/9.png)
+
+#### Fog
+
+![10](/Users/Clapeysron/Desktop/Mycraft/md_pic/10.png)
+
+#### Moon
+
+![11](/Users/Clapeysron/Desktop/Mycraft/md_pic/11.png)
+
+#### Breaking Animation
+
+![12](/Users/Clapeysron/Desktop/Mycraft/md_pic/12.png)
+
+#### Ugly House by Author
+
+![14](/Users/Clapeysron/Desktop/Mycraft/md_pic/14.jpg)
+
+#### iOS MobileCraft Screenshot
+
+![16](/Users/Clapeysron/Desktop/Mycraft/md_pic/16.png)
+

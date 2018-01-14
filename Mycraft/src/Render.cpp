@@ -34,7 +34,7 @@ glm::vec3 Render::cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 char placeBlockList[]= {COBBLESTONE, MOSSY_COBBLESTONE, STONE_BRICK, QUARTZ, GOLD, TNT, ROCK, SOIL, GRASSLAND, TRUNK, GLOWSTONE, WOOD, RED_WOOD, TINT_WOOD, DARK_WOOD, BRICK, SAND, COAL_ORE, GOLD_ORE, IRON_ORE, DIAMAND_ORE, EMERALD_ORE, TOOLBOX, SMELTER, WATERMELON, PUMPKIN, WHITE_WOOL, (char)GLASS, (char)TORCH};
 
 Render::Render() {
-    dayTime = 16.5f;
+    dayTime = 8.5f;
     removeCount = 0;
     jitter = 0;
     srand(0);
@@ -68,11 +68,9 @@ Render::Render() {
     }
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
+    //glEnable(GL_FRAMEBUFFER_SRGB);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_MULTISAMPLE);
-    //glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
     
 }
 
@@ -219,7 +217,7 @@ void Render::render(Game& game) {
         removeCount += deltaTime;
         float broke_time;
         if (game.game_mode == GOD_MODE) {
-            broke_time = 0.3;
+            broke_time = 0.05;
         } else {
             broke_time = BlockInfoMap[chosen_block_type].broke_time;
         }
@@ -558,30 +556,25 @@ void Render::processInput(GLFWwindow *window, Game &game)
     cameraRight_XZ.y = 0;
     cameraRight_XZ = glm::normalize(cameraRight_XZ);
     glm::vec3 cameraFront_Y = glm::vec3(0.0f, 1.0f, 0.0f);
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        new_position = game.steve_position + cameraSpeed * glm::vec3(cameraFront_XZ.x, 0.0f, 0.0f);
-        game.move(new_position);
-        new_position = game.steve_position + cameraSpeed * glm::vec3(0.0, 0.0f, cameraFront_XZ.z);
-        game.move(new_position);
-    }
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        new_position = game.steve_position - cameraSpeed * glm::vec3(cameraFront_XZ.x, 0.0f, 0.0f);
-        game.move(new_position);
-        new_position = game.steve_position - cameraSpeed * glm::vec3(0.0, 0.0f, cameraFront_XZ.z);
-        game.move(new_position);
-    }
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        new_position = game.steve_position - cameraSpeed * glm::vec3(cameraRight_XZ.x, 0.0f, 0.0f);
-        game.move(new_position);
-        new_position = game.steve_position - cameraSpeed * glm::vec3(0.0, 0.0f, cameraRight_XZ.z);
-        game.move(new_position);
-    }
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        new_position = game.steve_position + cameraSpeed * glm::vec3(cameraRight_XZ.x, 0.0f, 0.0f);
-        game.move(new_position);
-        new_position = game.steve_position + cameraSpeed * glm::vec3(0.0, 0.0f, cameraRight_XZ.z);
-        game.move(new_position);
-    }
+    glm::vec3 move_x(0);
+    new_position = game.steve_position;
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) move_x += glm::vec3(cameraFront_XZ.x, 0.0f, 0.0f);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) move_x -= glm::vec3(cameraFront_XZ.x, 0.0f, 0.0f);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) move_x -= glm::vec3(cameraRight_XZ.x, 0.0f, 0.0f);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) move_x += glm::vec3(cameraRight_XZ.x, 0.0f, 0.0f);
+
+    glm::vec3 move_z(0);
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) move_z += glm::vec3(0.0, 0.0f, cameraFront_XZ.z);
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) move_z -= glm::vec3(0.0, 0.0f, cameraFront_XZ.z);
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) move_z -= glm::vec3(0.0, 0.0f, cameraRight_XZ.z);
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) move_z += glm::vec3(0.0, 0.0f, cameraRight_XZ.z);
+    glm::vec3 move_xz(0);
+    if (move_x+move_z != glm::vec3(0)) move_xz = glm::normalize(move_x+move_z);
+    new_position = game.steve_position + cameraSpeed * glm::vec3(move_xz.x, 0, 0);
+    game.move(new_position);
+    new_position = game.steve_position + cameraSpeed * glm::vec3(0, 0, move_xz.z);
+    game.move(new_position);
+    
     if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
         if (game.game_mode == NORMAL_MODE) {
             if (game.steve_in_water()) {
