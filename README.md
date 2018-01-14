@@ -8,7 +8,7 @@ It's a Minecraft clone with lighting effects based on modern OpengGL on MacOS us
 
 Thanks to [learnopengl](https://learnopengl.com) for example codes , [learnopengl-cn](https://learnopengl-cn.github.io) for very good translations, inspiration and some texture/model sources from [Craft](https://github.com/fogleman/Craft).
 
-![1](md_pic/1.png)
+![1](md_pic/1.jpg)
 
 ## Features
 
@@ -85,49 +85,49 @@ Just click run to get the game started
 
 #### Steve & Alex object
 
-![2](md_pic/2.png)
+![2](md_pic/2.jpg)
 
 #### Original Textures
 
-![3](md_pic/3.png)
+![3](md_pic/3.jpg)
 
 #### Sunset
 
-![4](md_pic/4.png)
+![4](md_pic/4.jpg)
 
 #### Point Light
 
-![6](md_pic/6.png)
+![6](md_pic/6.jpg)
 
 #### In-water Point Light
 
-![7](md_pic/7.png)
+![7](md_pic/7.jpg)
 
 #### Realtime Shadow Mapping
 
-![8](md_pic/8.png)
+![8](md_pic/8.jpg)
 
 #### Underwater Visual Effects
 
-![9](md_pic/9.png)
+![9](md_pic/9.jpg)
 
 #### Fog
 
-![10](md_pic/10.png)
+![10](md_pic/10.jpg)
 
 #### Moon
 
-![11](md_pic/11.png)
+![11](md_pic/11.jpg)
 
 #### Breaking Animation
 
-![12](md_pic/12.png)
+![12](md_pic/12.jpg)
 
 #### Ugly House by Author
 
-![14](md_pic/14.jpg)
+![13](md_pic/13.jpg)
 
 #### iOS MobileCraft Screenshot
 
-![16](md_pic/16.png)
+![14](md_pic/14.png)
 
