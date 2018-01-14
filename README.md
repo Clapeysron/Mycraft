@@ -89,45 +89,45 @@ Just click run to get the game started
 
 #### Original Textures
 
-![3](/Users/Clapeysron/Desktop/Mycraft/md_pic/3.png)
+![3](md_pic/3.png)
 
 #### Sunset
 
-![4](/Users/Clapeysron/Desktop/Mycraft/md_pic/4.png)
+![4](md_pic/4.png)
 
 #### Point Light
 
-![6](/Users/Clapeysron/Desktop/Mycraft/md_pic/6.png)
+![6](md_pic/6.png)
 
 #### In-water Point Light
 
-![7](/Users/Clapeysron/Desktop/Mycraft/md_pic/7.png)
+![7](md_pic/7.png)
 
 #### Realtime Shadow Mapping
 
-![8](/Users/Clapeysron/Desktop/Mycraft/md_pic/8.png)
+![8](md_pic/8.png)
 
 #### Underwater Visual Effects
 
-![9](/Users/Clapeysron/Desktop/Mycraft/md_pic/9.png)
+![9](md_pic/9.png)
 
 #### Fog
 
-![10](/Users/Clapeysron/Desktop/Mycraft/md_pic/10.png)
+![10](md_pic/10.png)
 
 #### Moon
 
-![11](/Users/Clapeysron/Desktop/Mycraft/md_pic/11.png)
+![11](md_pic/11.png)
 
 #### Breaking Animation
 
-![12](/Users/Clapeysron/Desktop/Mycraft/md_pic/12.png)
+![12](md_pic/12.png)
 
 #### Ugly House by Author
 
-![14](/Users/Clapeysron/Desktop/Mycraft/md_pic/14.jpg)
+![14](md_pic/14.jpg)
 
 #### iOS MobileCraft Screenshot
 
-![16](/Users/Clapeysron/Desktop/Mycraft/md_pic/16.png)
+![16](md_pic/16.png)
 
