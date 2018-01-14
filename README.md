@@ -12,7 +12,7 @@ Thanks to [learnopengl](https://learnopengl.com) for example codes , [learnopeng
 
 ## Features
 
-#### Render
+### Render
 
 -   Original block textures from Minecraft
 -   Simple realtime shadow mapping
@@ -26,7 +26,7 @@ Thanks to [learnopengl](https://learnopengl.com) for example codes , [learnopeng
 -   Underwater visual effects
 -   Fog effect for blocks far away
 
-#### Data
+### Data
 
 -   Infinite random map generation use perlin noise
 -   Trees / Flowers / Grass / Cloud / Lake random generation
@@ -38,27 +38,27 @@ Thanks to [learnopengl](https://learnopengl.com) for example codes , [learnopeng
 
 ## Build
 
-#### Install glfw
+### Install glfw
 
 Use [Homebrew](http://brew.sh/) to install glfw.
 
 ​	brew install glfw
 
-#### Install glad
+### Install glad
 
 Install [glad](https://github.com/Dav1dde/glad) form its [online-pack](http://glad.dav1d.de/) follow tutorial from [learnopengl - Creating a window](https://learnopengl.com/#!Getting-started/Creating-a-window).
 
-#### Set XCode working directory
+### Set XCode working directory
 
 Set your working directory to project folder in XCode-Product-Scheme-Edit Scheme-Run-Working Directory-Use ``{Where Your Place}/Mycraft/Mycraft`
 
-#### Close shadow mapping if without independent graphics
+### Close shadow mapping if without independent graphics
 
 If you use Macbook without independent graphics, the shadow mapping is too heavy for the integrated graphics just comment out the line 13 in `/src/Render.cpp`
 
 ​	//#define SHADOW_MAPPING
 
-#### Run
+### Run
 
 Just click run to get the game started
 
@@ -83,51 +83,51 @@ Just click run to get the game started
 
 ## Screenshots
 
-#### Steve & Alex object
+### Steve & Alex object
 
 ![2](md_pic/2.jpg)
 
-#### Original Textures
+### Original Textures
 
 ![3](md_pic/3.jpg)
 
-#### Sunset
+### Sunset
 
 ![4](md_pic/4.jpg)
 
-#### Point Light
+### Point Light
 
 ![6](md_pic/6.jpg)
 
-#### In-water Point Light
+### In-water Point Light
 
 ![7](md_pic/7.jpg)
 
-#### Realtime Shadow Mapping
+### Realtime Shadow Mapping
 
 ![8](md_pic/8.jpg)
 
-#### Underwater Visual Effects
+### Underwater Visual Effects
 
 ![9](md_pic/9.jpg)
 
-#### Fog
+### Fog
 
 ![10](md_pic/10.jpg)
 
-#### Moon
+### Moon
 
 ![11](md_pic/11.jpg)
 
-#### Breaking Animation
+### Breaking Animation
 
 ![12](md_pic/12.jpg)
 
-#### Ugly House by Author
+### Ugly House by Author
 
 ![13](md_pic/13.jpg)
 
-#### iOS MobileCraft Screenshot
+### iOS MobileCraft Screenshot
 
 ![14](md_pic/14.png)
 
