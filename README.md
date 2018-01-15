@@ -6,8 +6,6 @@ Mycraft is a learning-OpenGL project completed in ZJU computer graphics course.
 
 It's a Minecraft clone with lighting effects based on modern OpengGL on MacOS use C++ and build with XCode.
 
-Thanks to [learnopengl](https://learnopengl.com) for example codes , [learnopengl-cn](https://learnopengl-cn.github.io) for very good translations, inspiration and some texture/model sources from [Craft](https://github.com/fogleman/Craft).
-
 ![1](md_pic/1.jpg)
 
 ## Features
@@ -50,7 +48,7 @@ Install [glad](https://github.com/Dav1dde/glad) form its [online-pack](http://gl
 
 ### Set XCode working directory
 
-Set your working directory to project folder in XCode-Product-Scheme-Edit Scheme-Run-Working Directory-Use `{Where Your Place}/Mycraft/Mycraft`
+Set your working directory to project folder in XCode - Product - Scheme - Edit Scheme - Run - Working Directory - Use `{Where Your Place}/Mycraft/Mycraft`
 
 ### Close shadow mapping if without independent graphics
 
@@ -80,6 +78,14 @@ Just click run to get the game started
 ## Architecture Design
 
 ![mycraft_design](md_pic/mycraft_design.png)
+
+## Reference
+
+Tribute to best [Minecraft](https://minecraft.net).
+
+Modern OpenGL example codes from [learnopengl](https://learnopengl.com) and  [learnopengl-cn](https://learnopengl-cn.github.io) (Perfect chinese version :)
+
+Skybox texture & Steve model sources from [Craft](https://github.com/fogleman/Craft).
 
 ## Screenshots
 
