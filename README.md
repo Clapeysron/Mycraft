@@ -40,19 +40,26 @@ Refer to [Mobilecraft](https://github.com/Clapeysron/MobileCraft) for more infor
 
 ## Build
 
-### Install glfw
+### Install glfw & glew & assimp
 
-Install glfw with [Homebrew](http://brew.sh/).
+Install glfw & glew & assimp with [Homebrew](http://brew.sh/).
 
 	brew install glfw
+	brew install glew
+	brew install assimp
+Then add lib in Click **Project Icon in Left Navigator** - **Build Phases** - **Link Binary With Libraries** - Add `libGLFW.X.X.dylib` & `libGLEW.X.X.X.dylib` & `libassimp.X.X.X.dylib` then remove the not-found(red) lib in left navigator.
 
 ### Install glad
 
 Install [glad](https://github.com/Dav1dde/glad) from [online-pack](http://glad.dav1d.de/) following the tutorial from [learnopengl - Creating a window](https://learnopengl.com/#!Getting-started/Creating-a-window).
 
+Choose OpenGL 3.3 and **Core Profile** then generate.
+
+Then move header folder glad / KHR to `/usr/local/include`
+
 ### Set XCode working directory
 
-Set your working directory in XCode - Product - Scheme - Edit Scheme - Run - Working Directory to `{Where Your Place}/Mycraft/Mycraft`
+Set your working directory in **XCode** - **Product** - **Scheme** - **Edit Scheme** - **Run** - **Working Directory** to `{Where Your Place}/Mycraft/Mycraft`
 
 ### Close shadow mapping if without independent graphics
 
@@ -141,4 +148,3 @@ Skybox texture & Steve model sources from [Craft](https://github.com/fogleman/Cr
 ### iOS MobileCraft Screenshot
 
 ![14](md_pic/14.png)
-
