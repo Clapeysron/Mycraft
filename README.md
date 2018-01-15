@@ -6,6 +6,8 @@ Mycraft is a learning-OpenGL project completed in ZJU computer graphics course.
 
 It's a Minecraft clone with lighting effects based on modern OpengGL on MacOS use C++ and build with XCode.
 
+Its iOS transplant Version [Mobilecraft](https://github.com/Clapeysron/MobileCraft) use most of the data part c++ code in this project and use GLKit to render and Objective-C for bridging.
+
 ![1](md_pic/1.jpg)
 
 ## Features
