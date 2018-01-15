@@ -2,11 +2,12 @@
 
 ![mycraft](md_pic/mycraft.png)
 
-Mycraft is a learning-OpenGL project completed in ZJU computer graphics course.
+Mycraft is our Computer Graphics curriculum design based on modern OpengGL. 
 
-It's a Minecraft clone with lighting effects based on modern OpengGL on MacOS use C++ and build with XCode.
+It's a clone of Minecraft mainly written in C++ and we have implemented both Mac version and iOS version for it.
 
-Its iOS transplant Version [Mobilecraft](https://github.com/Clapeysron/MobileCraft) use most of the data part c++ code in this project and use GLKit to render and Objective-C for bridging.
+Refer to [Mobilecraft](https://github.com/Clapeysron/MobileCraft) for more information about the iOS version.
+
 
 ![1](md_pic/1.jpg)
 
@@ -17,22 +18,23 @@ Its iOS transplant Version [Mobilecraft](https://github.com/Clapeysron/MobileCra
 -   Original block textures from Minecraft
 -   Simple realtime shadow mapping
 -   Corner shadow to simulate SSAO effect
--   Point light with smooth diffusion from Torch / Glowstone
+-   Brightness-diffusion of point light such as Torch & Glowstone
 -   Time pass effect with Sunrise / Sunset / Moon & Starry sky
--   Animation when break a block / Highlight when choose a block
--   Transparent / translucent block like water / glass
--   Simple gravity engine for on-the-ground and below-water
+-   Breaking aniamtion & highlight of the block selected
+-   Transparent / translucent block such as water & glass
+-   Simple on-ground and below-water gravity engine 
 -   Jitter perspective to simulate running effect
 -   Underwater visual effects
--   Fog effect for blocks far away
+-   Fog that hides far away chunks
 
 ### Data
 
--   Infinite random map generation use perlin noise
--   Trees / Flowers / Grass / Cloud / Lake random generation
--   Visible face culling and frustum culling for faster rendering
--   Closed space testing and neighboring visible chunks culling
--   Corner shadow / Point light effect generate and update
+-   Terrain & cloud generation with perlin noise
+-   Random generation of Flora
+-   Hidden surface removal & invisible subchunk removal
+-   frustum culling
+-   Enclosed space detection
+-   Corner shadow & brightness calculation
 -   Adjustable game settings in `src/game_settings.h`
 -   Map storage not done yet :(
 
@@ -40,21 +42,21 @@ Its iOS transplant Version [Mobilecraft](https://github.com/Clapeysron/MobileCra
 
 ### Install glfw
 
-Use [Homebrew](http://brew.sh/) to install glfw.
+Install glfw with [Homebrew](http://brew.sh/).
 
 	brew install glfw
 
 ### Install glad
 
-Install [glad](https://github.com/Dav1dde/glad) form its [online-pack](http://glad.dav1d.de/) follow tutorial from [learnopengl - Creating a window](https://learnopengl.com/#!Getting-started/Creating-a-window).
+Install [glad](https://github.com/Dav1dde/glad) from [online-pack](http://glad.dav1d.de/) following the tutorial from [learnopengl - Creating a window](https://learnopengl.com/#!Getting-started/Creating-a-window).
 
 ### Set XCode working directory
 
-Set your working directory to project folder in XCode - Product - Scheme - Edit Scheme - Run - Working Directory - Use `{Where Your Place}/Mycraft/Mycraft`
+Set your working directory in XCode - Product - Scheme - Edit Scheme - Run - Working Directory to `{Where Your Place}/Mycraft/Mycraft`
 
 ### Close shadow mapping if without independent graphics
 
-If you use Macbook without independent graphics, the shadow mapping is too heavy for the integrated graphics just comment out the line 13 in `/src/Render.cpp`
+For Macbook without discrete graphics, the game may lose its fluency greatly with the shadow on. You can comment out line 13 in `/src/Render.cpp` to ban it.
 
     //#define SHADOW_MAPPING
 
@@ -62,10 +64,11 @@ If you use Macbook without independent graphics, the shadow mapping is too heavy
 
 Just click run to get the game started
 
-## Game Controls
+## Game Control
 
--   WASD to move and Space to jump
--   Press mouse left to break and click mouse right to place block
+-   Press WASD to move and press Space to jump
+-   Long press the left mouth button to break the selected block 
+-   Click the right mouth button to place a block
 -   Use space to fly and F to fall in god mode
 -   ← & → to switch blocks for placing
 -   ↑ & ↓ to switch options now choose (default is fov(1) )
@@ -85,7 +88,7 @@ Just click run to get the game started
 
 Tribute to best [Minecraft](https://minecraft.net).
 
-Modern OpenGL example codes from [learnopengl](https://learnopengl.com) and  [learnopengl-cn](https://learnopengl-cn.github.io) (Perfect chinese version :)
+Modern OpenGL example code from [learnopengl](https://learnopengl.com) and  [learnopengl-cn](https://learnopengl-cn.github.io) (Perfect chinese version :)
 
 Skybox texture & Steve model sources from [Craft](https://github.com/fogleman/Craft).
 
