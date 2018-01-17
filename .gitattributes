@@ -1,2 +1,2 @@
-/Mycraft/library/* linguist-vendored
-*.vs linguist-language=GLSL
+Mycraft/library/* linguist-vendored
+Mycraft/shader/*.vs linguist-language=GLSL
