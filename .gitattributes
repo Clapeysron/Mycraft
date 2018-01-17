@@ -1,1 +1,2 @@
 /Mycraft/library/* linguist-vendored
+*.vs linguist-language=GLSL
