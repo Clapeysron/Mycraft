@@ -634,33 +634,33 @@ inline void VisibleChunks::addTransQuads(int dir, int y, int x, int z) {
 //广度优先搜索寻找渲染区块
 void SubChunk::adjBlocksEnqueue(){
     
-    if((adjVisibility&LEFT) != 0 && xNeg != NULL && xNeg->pathHistory == 0 && (pathHistory & RIGHT) == 0 /*&& inFrustum(x-16, y, z)*/)
+    if((adjVisibility&LEFT) != 0 && xNeg != NULL && xNeg->pathHistory == 0 && (pathHistory & RIGHT) == 0 && inFrustum(x-16, y, z))
     {
         xNeg->pathHistory |= LEFT|pathHistory;
         scanQueue.push(xNeg);
     }//同时满足邻接可见性+非边界+没有入队过+不是在走回头路+通过视锥体裁剪5个条件时，邻居区块入队
-    if((adjVisibility&RIGHT) != 0 && xPos != NULL && xPos->pathHistory == 0 && (pathHistory & LEFT) == 0 /*&& inFrustum(x+16, y, z)*/)
+    if((adjVisibility&RIGHT) != 0 && xPos != NULL && xPos->pathHistory == 0 && (pathHistory & LEFT) == 0 && inFrustum(x+16, y, z))
     {
         xPos->pathHistory |= RIGHT|pathHistory;
         scanQueue.push(xPos);
     }
-    if((adjVisibility&BEHIND) != 0 && zNeg != NULL && zNeg->pathHistory == 0 && (pathHistory & FRONT) == 0 /*&& inFrustum(x, y, z-16)*/)
+    if((adjVisibility&BEHIND) != 0 && zNeg != NULL && zNeg->pathHistory == 0 && (pathHistory & FRONT) == 0 && inFrustum(x, y, z-16))
     {
         zNeg->pathHistory |= BEHIND|pathHistory;
         scanQueue.push(zNeg);
     }
-    if((adjVisibility&FRONT) != 0 && zPos != NULL && zPos->pathHistory == 0 && (pathHistory & BEHIND) == 0 /*&& inFrustum(x, y, z+16)*/)
+    if((adjVisibility&FRONT) != 0 && zPos != NULL && zPos->pathHistory == 0 && (pathHistory & BEHIND) == 0 && inFrustum(x, y, z+16))
     {
         zPos->pathHistory |= FRONT|pathHistory;
         scanQueue.push(zPos);
     }
-    if((adjVisibility&DOWN) != 0 && yNeg != NULL && yNeg->pathHistory == 0 && (pathHistory & UP) == 0 /*&&inFrustum(x, y-16, z)*/)
+    if((adjVisibility&DOWN) != 0 && yNeg != NULL && yNeg->pathHistory == 0 && (pathHistory & UP) == 0 &&inFrustum(x, y-16, z))
     {
         yNeg->pathHistory |= DOWN|pathHistory;
         scanQueue.push(yNeg);
     }
-    if((adjVisibility&UP) != 0 && yPos != NULL && yPos->pathHistory == 0 && (pathHistory & DOWN) == 0 /*&&
-                                                                                                       inFrustum(x, y+16, z)*/)
+    if((adjVisibility&UP) != 0 && yPos != NULL && yPos->pathHistory == 0 && (pathHistory & DOWN) == 0 &&
+                                                                                                       inFrustum(x, y+16, z))
     {
         yPos->pathHistory |= UP|pathHistory;
         scanQueue.push(yPos);
@@ -2197,7 +2197,7 @@ void VisibleChunks::drawDepth(Shader& Depth_Shader, unsigned int texture_pic) {
 
 //计算视锥体各个面的方程
 void VisibleChunks::calcFrustumPlane(glm::mat4 view, glm::mat4 projection){
-    glm::mat4 matrix = projection*view;
+    glm::mat4 matrix = view*projection;
     for(int i = 0; i < 6; i++)
     {
         for(int j = 0; j < 4; j++)
