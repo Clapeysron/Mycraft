@@ -1,2 +1,3 @@
 Mycraft/library/* linguist-vendored
+Mycraft/src/*.h	linguist-language=C++
 Mycraft/shader/*.vs linguist-language=GLSL
