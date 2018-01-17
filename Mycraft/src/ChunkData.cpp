@@ -22,10 +22,6 @@ Block *SubChunk::getBufferObject(){
 
 inline SubChunk* SubChunk::recycle(int y, int x, int z){
     isEmpty = true;
-    Quads.clear();
-    
-    //Quads.swap(tmp);
-    Quads.shrink_to_fit();
     count = 0;
     pathHistory = 0;
     adjVisibility = 0;
@@ -91,9 +87,7 @@ void SubChunk::updateQuads(){
     char zPosType;
     char yNegType;
     char yPosType;
-    
-    Quads.clear();
-    Quads.shrink_to_fit();
+    vector<float> Quads;
     //Water.clear();
     //Water.shrink_to_fit();
     
@@ -142,7 +136,7 @@ void SubChunk::updateQuads(){
                         else if(i < 15 && vertexShadow[i+1][j][k] == 0) {
                             addVertexShadow(i+1, j, k);
                         }
-                        addVertices(YPOS, i, j, k);
+                        addVertices(YPOS, i, j, k, &Quads);
                     } //如果相邻方块为透明或未填满，则该面为可见面
                     if(yNegType & 0x80) //down
                     {
@@ -152,7 +146,7 @@ void SubChunk::updateQuads(){
                         else if(i > 0 && vertexShadow[i-1][j][k] == 0) {
                             addVertexShadow(i-1, j, k);
                         }
-                        addVertices(YNEG, i, j, k);
+                        addVertices(YNEG, i, j, k, &Quads);
                     }
                     if(xPosType & 0x80) //right
                     {
@@ -162,7 +156,7 @@ void SubChunk::updateQuads(){
                         else if(j < 15 && vertexShadow[i][j+1][k] == 0) {
                             addVertexShadow(i, j+1, k);
                         }
-                        addVertices(XPOS, i, j, k);
+                        addVertices(XPOS, i, j, k, &Quads);
                     }
                     if(xNegType & 0x80) //left
                     {
@@ -172,7 +166,7 @@ void SubChunk::updateQuads(){
                         else if(j > 0 && vertexShadow[i][j-1][k] == 0) {
                             addVertexShadow(i, j-1, k);
                         }
-                        addVertices(XNEG, i, j, k);
+                        addVertices(XNEG, i, j, k, &Quads);
                     }
                     if(zPosType & 0x80) //front
                     {
@@ -182,7 +176,7 @@ void SubChunk::updateQuads(){
                         else if(k < 15 && vertexShadow[i][j][k+1] == 0) {
                             addVertexShadow(i, j, k+1);
                         }
-                        addVertices(ZPOS, i, j, k);
+                        addVertices(ZPOS, i, j, k, &Quads);
                     }
                     if(zNegType & 0x80) //behind
                     {
@@ -192,18 +186,20 @@ void SubChunk::updateQuads(){
                         else if(k > 0 && vertexShadow[i][j][k-1] == 0) {
                             addVertexShadow(i, j, k-1);
                         }
-                        addVertices(ZNEG, i, j, k);
+                        addVertices(ZNEG, i, j, k, &Quads);
                     }
                 }
                 else if((BlockType[i][j][k]&0xf0) != 0xf0) {
-                    addVertices(XCENTER, i, j, k);
-                    addVertices(ZCENTER, i, j, k);
+                    addVertices(XCENTER, i, j, k, &Quads);
+                    addVertices(ZCENTER, i, j, k, &Quads);
                 }
             }
         }
     }
-    if(Quads.size() > 0)
+    if(Quads.size() > 0) {
+        QuadSize = Quads.size();
         bufferObject.updateBuffer(true, &Quads[0], Quads.size()); //更新VBO绑定数据
+    }
 }
 
 void SubChunk::addVertexShadow(int y, int x, int z) {
@@ -371,7 +367,7 @@ int faceShadow[6][6] = {
 
 
 //向vector中添加一个面的数据(QUAD_SIZE个float)
-void SubChunk::addVertices(int dir, int y, int x, int z)
+void SubChunk::addVertices(int dir, int y, int x, int z, vector<float> *Quads)
 {
     if(dir < XNEG || dir > ZCENTER)
         return;
@@ -610,7 +606,7 @@ void SubChunk::addVertices(int dir, int y, int x, int z)
             tmp[m+2] += absz;
         }
         
-        Quads.insert(Quads.end(), tmp, tmp+QUAD_SIZE);
+        Quads->insert(Quads->end(), tmp, tmp+QUAD_SIZE);
     }
 }
 
@@ -833,7 +829,7 @@ char SubChunk::removeBlock(int y, int x, int z){
 bool SubChunk::placeBlock(char type, int dir, int y, int x, int z){
     set<SubChunk *> redrawChunk;
     if(type == (char)AIR || !(BlockType[y][x][z] == (char)AIR || BlockType[y][x][z] == (char)WATER) ||
-       (dir != YPOS && (type&0xf0) != 0xf0 && (type&0xc0) == 0xc0))
+       ((dir != YPOS || BlockType[y][x][z] == (char)WATER) && (type&0xf0) != 0xf0 && (type&0xc0) == 0xc0))
     {
         return false;
     } //如果人物手中什么都没有，不放置方块
@@ -2048,7 +2044,7 @@ void VisibleChunks::getRenderingSubChunks(int y, int x, int z){
             //cout<<scanQueue.size()<<endl;
             tmp = scanQueue.front();
             tmp->adjBlocksEnqueue();
-            if(tmp->Quads.size()){
+            if(tmp->QuadSize){
                 renderQueue.push(tmp);
                 if(tmp->y == 240) {
                     int m = 0;
@@ -2189,7 +2185,7 @@ void VisibleChunks::drawDepth(Shader& Depth_Shader, unsigned int texture_pic) {
     {
         tmp = renderQueue.front();
         glBindVertexArray(tmp->bufferObject.getVAO());
-        glDrawArrays(GL_TRIANGLES, 0, (int)(tmp->Quads.size()/VERTEX_SIZE));
+        glDrawArrays(GL_TRIANGLES, 0, (int)(tmp->QuadSize/VERTEX_SIZE));
         renderQueue.pop();
         //renderQueue.push(tmp);
     }
@@ -2243,7 +2239,7 @@ void VisibleChunks::drawNormQuads(glm::vec3 cameraPos, Shader& Block_Shader){
     {
         tmp = renderQueue.front();
         glBindVertexArray(tmp->bufferObject.getVAO());
-        glDrawArrays(GL_TRIANGLES, 0, (int)(tmp->Quads.size()/VERTEX_SIZE));
+        glDrawArrays(GL_TRIANGLES, 0, (int)(tmp->QuadSize/VERTEX_SIZE));
         renderQueue.pop();
         renderQueue.push(tmp);
     }

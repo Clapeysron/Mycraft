@@ -97,6 +97,7 @@ public:
         pathHistory = 0;
         adjVisibility = ALL_DIR;
         xNeg = xPos = zNeg = zPos = yNeg = yPos = NULL;
+        QuadSize = 0;
         this->y = y;
         this->x = x;
         this->z = z;
@@ -116,7 +117,7 @@ public:
     void updateQuads(); //for walking update
     void updateQuads(int side); //for walkong update
     void adjBlocksEnqueue(); //for rendering
-    void addVertices(int dir, int y, int x, int z); //called by updateQuads
+    void addVertices(int dir, int y, int x, int z, vector<float> *Quads); //called by updateQuads
     void addVertexShadow(int y, int x, int z);
     //只有移动或者放置非透明块时有影响
     char removeBlock(int y, int x, int z);
@@ -145,6 +146,7 @@ private:
     bool isEmpty;
     int pathHistory;
     int adjVisibility;
+    long QuadSize;
     //neighbor subchunks
     Chunk* parent;
     SubChunk *xNeg;
@@ -154,7 +156,6 @@ private:
     SubChunk *yNeg;
     SubChunk *yPos;
     //Quads need rendering
-    vector<float> Quads;
     set<LuminousObj *> luminousObjs;
     Block bufferObject;
     bool inFrustum(int x, int y, int z);
